@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#14261c"/>
+      <stop offset="100%" stop-color="#0b100d"/>
+    </linearGradient>
+    <linearGradient id="emerald" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6ee7b7"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#10b981" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Background Rounded Squircle -->
+  <rect width="512" height="512" rx="128" fill="url(#bg)"/>
+  <rect width="508" height="508" x="2" y="2" rx="126" fill="none" stroke="#253d2d" stroke-width="4"/>
+
+  <!-- Wallet Icon Graphic -->
+  <g transform="translate(106, 116)" filter="url(#shadow)">
+    <!-- Wallet Back/Flap -->
+    <path d="M 30 50 C 30 25, 45 10, 75 10 L 255 10 C 285 10, 300 25, 300 50 L 300 90 L 30 90 Z" fill="#0c1811" stroke="#34d399" stroke-width="8"/>
+    
+    <!-- Main Wallet Body -->
+    <rect x="15" y="70" width="270" height="200" rx="36" fill="url(#emerald)"/>
+
+    <!-- Inner Card Peak -->
+    <rect x="50" y="45" width="200" height="40" rx="12" fill="#34d399" opacity="0.6"/>
+
+    <!-- Wallet Clasp / Fastener -->
+    <rect x="200" y="140" width="85" height="60" rx="18" fill="#0c1811" stroke="#a7f3d0" stroke-width="6"/>
+    <!-- Gold/Emerald Coin Button -->
+    <circle cx="235" cy="170" r="14" fill="#6ee7b7"/>
+  </g>
+</svg>
+
