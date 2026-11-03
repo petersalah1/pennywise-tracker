@@ -55,93 +55,110 @@ const DEFAULT_DATA: FinanceData = {
 
 const FinanceContext = createContext<FinanceContextValue | null>(null);
 
+function getCacheKey(userId?: string | null) {
+  return userId ? `egp-tracker-user-${userId}` : STORAGE_KEY;
+}
+
 export function FinanceProvider({ children }: { children: React.ReactNode }) {
   const { user, isConfigured } = useAuth();
+  const userId = user?.id;
   const [data, setData] = useState<FinanceData>(DEFAULT_DATA);
   const [ready, setReady] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(false);
 
-  // Load from localStorage on mount (for offline/guest mode)
+  // Helper to save to local cache safely
+  const persistLocally = (freshData: FinanceData, targetUserId?: string | null) => {
+    try {
+      const key = getCacheKey(targetUserId !== undefined ? targetUserId : userId);
+      localStorage.setItem(key, JSON.stringify(freshData));
+      // Also maintain general storage fallback
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(freshData));
+    } catch (e) {
+      console.error("Local storage persist error", e);
+    }
+  };
+
+  // 1. Initial Load from LocalStorage Cache on Mount
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
+      const activeKey = getCacheKey(userId);
+      let saved = localStorage.getItem(activeKey);
+      if (!saved && userId) {
+        saved = localStorage.getItem(STORAGE_KEY);
+      }
+      if (!saved) {
+        saved = localStorage.getItem(LEGACY_STORAGE_KEY_V2);
+      }
+
       if (saved) {
         const parsed = JSON.parse(saved);
         setData({
           userName: parsed.userName || "بيتر صلاح",
-          openingBalance: parsed.openingBalance || 0,
+          openingBalance: Number(parsed.openingBalance) || 0,
           wallets: parsed.wallets && parsed.wallets.length > 0 ? parsed.wallets : DEFAULT_WALLETS,
           transactions: parsed.transactions || [],
           categories:
             parsed.categories && parsed.categories.length > 0 ? parsed.categories : DEFAULT_CATEGORIES,
         });
-      } else {
-        const v2 = localStorage.getItem(LEGACY_STORAGE_KEY_V2);
-        if (v2) {
-          const parsed = JSON.parse(v2);
-          setData({
-            userName: parsed.userName || "بيتر صلاح",
-            openingBalance: parsed.openingBalance || 0,
-            wallets: DEFAULT_WALLETS,
-            transactions: parsed.transactions || [],
-            categories: parsed.categories || DEFAULT_CATEGORIES,
-          });
-        }
       }
     } catch (error) {
       console.error("Could not load local finance data", error);
     } finally {
       setReady(true);
     }
-  }, []);
+  }, [userId]);
 
-  // Save to localStorage when in guest mode
+  // 2. Always persist any state changes to Local Storage
   useEffect(() => {
-    if (ready && !user) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    if (ready) {
+      persistLocally(data, userId);
     }
-  }, [data, ready, user]);
+  }, [data, ready, userId]);
 
-  // When user signs in, load data from Supabase
+  // 3. Supabase Cloud Sync & Self-Healing
   useEffect(() => {
-    if (!user || !supabase || !isConfigured) return;
+    if (!userId || !supabase || !isConfigured) return;
 
     let isMounted = true;
+
     async function fetchCloudData() {
       setIsLoadingData(true);
       try {
-        // 1. Fetch profile
+        // Read local cached data first so we don't accidentally lose offline items
+        const cacheKey = getCacheKey(userId);
+        const cachedRaw = localStorage.getItem(cacheKey) || localStorage.getItem(STORAGE_KEY);
+        let cachedData: FinanceData | null = null;
+        if (cachedRaw) {
+          try {
+            cachedData = JSON.parse(cachedRaw);
+          } catch {}
+        }
+
+        // A. Profile
         const { data: profile } = await supabase!
           .from("profiles")
           .select("user_name, opening_balance")
-          .eq("id", user!.id)
-          .single();
+          .eq("id", userId)
+          .maybeSingle();
 
-        // 2. Fetch categories
+        // If profile doesn't exist yet in Supabase, create it
+        if (!profile) {
+          await supabase!.from("profiles").upsert({
+            id: userId,
+            user_name: cachedData?.userName || "بيتر صلاح",
+            opening_balance: cachedData?.openingBalance || 0,
+          });
+        }
+
+        // B. Categories
         const { data: categoriesData } = await supabase!
           .from("categories")
           .select("*")
-          .eq("user_id", user!.id)
+          .eq("user_id", userId)
           .order("created_at", { ascending: true });
 
-        // 3. Fetch wallets (if table exists)
-        const { data: walletsData } = await supabase!
-          .from("wallets")
-          .select("*")
-          .eq("user_id", user!.id)
-          .order("created_at", { ascending: true });
-
-        // 4. Fetch transactions
-        const { data: transactionsData } = await supabase!
-          .from("transactions")
-          .select("*")
-          .eq("user_id", user!.id)
-          .order("date", { ascending: false });
-
-        if (!isMounted) return;
-
-        const loadedCategories: Category[] = (categoriesData || []).map((c) => ({
-          id: c.id,
+        let loadedCategories: Category[] = (categoriesData || []).map((c) => ({
+          id: String(c.id),
           name: c.name,
           type: c.type,
           color: c.color,
@@ -149,36 +166,131 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
           budget: c.budget ? Number(c.budget) : undefined,
         }));
 
-        const loadedWallets: Wallet[] = (walletsData || []).map((w) => ({
-          id: w.id,
+        // If user has no categories in Supabase, seed defaults
+        if (loadedCategories.length === 0) {
+          const toSeed = (cachedData?.categories && cachedData.categories.length > 0)
+            ? cachedData.categories
+            : DEFAULT_CATEGORIES;
+
+          loadedCategories = toSeed.map((c) => ({
+            ...c,
+            id: c.id.includes("_") ? c.id : `${c.id}_${userId}`,
+          }));
+
+          for (const cat of loadedCategories) {
+            await supabase!.from("categories").upsert({
+              id: cat.id,
+              user_id: userId,
+              name: cat.name,
+              type: cat.type,
+              color: cat.color,
+              icon: cat.icon || "tag",
+              budget: cat.budget || null,
+            });
+          }
+        }
+
+        // C. Wallets
+        const { data: walletsData } = await supabase!
+          .from("wallets")
+          .select("*")
+          .eq("user_id", userId)
+          .order("created_at", { ascending: true });
+
+        let loadedWallets: Wallet[] = (walletsData || []).map((w) => ({
+          id: String(w.id),
           name: w.name,
           type: w.type,
           initialBalance: Number(w.initial_balance) || 0,
           color: w.color,
-          icon: w.icon,
+          icon: w.icon || "wallet",
         }));
 
-        const loadedTransactions: Transaction[] = (transactionsData || []).map((t) => ({
-          id: t.id,
+        // If user has no wallets in Supabase, seed defaults
+        if (loadedWallets.length === 0) {
+          const toSeed = (cachedData?.wallets && cachedData.wallets.length > 0)
+            ? cachedData.wallets
+            : DEFAULT_WALLETS;
+
+          loadedWallets = toSeed.map((w) => ({
+            ...w,
+            id: w.id.includes("_") ? w.id : `${w.id}_${userId}`,
+          }));
+
+          for (const wal of loadedWallets) {
+            await supabase!.from("wallets").upsert({
+              id: wal.id,
+              user_id: userId,
+              name: wal.name,
+              type: wal.type,
+              initial_balance: wal.initialBalance,
+              color: wal.color,
+              icon: wal.icon || "wallet",
+            });
+          }
+        }
+
+        // D. Transactions
+        const { data: transactionsData, error: txError } = await supabase!
+          .from("transactions")
+          .select("*")
+          .eq("user_id", userId)
+          .order("date", { ascending: false });
+
+        if (txError) {
+          console.error("Failed to query transactions from Supabase", txError);
+        }
+
+        let loadedTransactions: Transaction[] = (transactionsData || []).map((t) => ({
+          id: String(t.id),
           title: t.title,
           amount: Number(t.amount),
           type: t.type,
-          categoryId: t.category_id || "",
-          walletId: t.wallet_id || undefined,
-          toWalletId: t.to_wallet_id || undefined,
+          categoryId: String(t.category_id || ""),
+          walletId: t.wallet_id ? String(t.wallet_id) : undefined,
+          toWalletId: t.to_wallet_id ? String(t.to_wallet_id) : undefined,
           date: t.date,
           note: t.note || undefined,
         }));
 
-        setData({
-          userName: profile?.user_name || "بيتر صلاح",
-          openingBalance: Number(profile?.opening_balance) || 0,
-          wallets: loadedWallets.length > 0 ? loadedWallets : DEFAULT_WALLETS,
-          categories: loadedCategories.length > 0 ? loadedCategories : DEFAULT_CATEGORIES,
+        // SAFETY NET: If Supabase returns 0 transactions but local cache has transactions,
+        // DO NOT wipe them out! Instead, push local transactions up to Supabase!
+        if (
+          loadedTransactions.length === 0 &&
+          cachedData?.transactions &&
+          cachedData.transactions.length > 0
+        ) {
+          loadedTransactions = cachedData.transactions;
+          for (const tx of loadedTransactions) {
+            await supabase!.from("transactions").upsert({
+              id: tx.id,
+              user_id: userId,
+              category_id: tx.categoryId || null,
+              wallet_id: tx.walletId || null,
+              to_wallet_id: tx.toWalletId || null,
+              title: tx.title,
+              amount: tx.amount,
+              type: tx.type,
+              date: tx.date,
+              note: tx.note || null,
+            });
+          }
+        }
+
+        if (!isMounted) return;
+
+        const mergedData: FinanceData = {
+          userName: profile?.user_name || cachedData?.userName || "بيتر صلاح",
+          openingBalance: Number(profile?.opening_balance ?? cachedData?.openingBalance ?? 0),
+          wallets: loadedWallets,
+          categories: loadedCategories,
           transactions: loadedTransactions,
-        });
+        };
+
+        setData(mergedData);
+        persistLocally(mergedData, userId);
       } catch (err) {
-        console.error("Failed to load Supabase data", err);
+        console.error("Failed to load Supabase cloud data", err);
       } finally {
         if (isMounted) setIsLoadingData(false);
       }
@@ -189,9 +301,9 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
     return () => {
       isMounted = false;
     };
-  }, [user, isConfigured]);
+  }, [userId, isConfigured]);
 
-  // Calculate live balances for each wallet
+  // Live Balances
   const walletBalances = useMemo(() => {
     const balances: Record<string, number> = {};
 
@@ -227,7 +339,6 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
       .filter((item) => item.type === "expense")
       .reduce((sum, item) => sum + item.amount, 0);
 
-    // Total net balance = openingBalance + income - expenses
     const balance = data.openingBalance + income - expenses;
 
     return {
@@ -245,16 +356,20 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
       walletId: input.walletId || data.wallets[0]?.id || "cash",
     };
 
-    setData((current) => ({
-      ...current,
-      transactions: [newTx, ...current.transactions],
-    }));
+    // 1. Update state
+    const nextTransactions = [newTx, ...data.transactions];
+    const nextData = { ...data, transactions: nextTransactions };
+    setData(nextData);
 
-    if (user && supabase) {
+    // 2. Persist locally immediately
+    persistLocally(nextData, userId);
+
+    // 3. Persist to Supabase
+    if (userId && supabase) {
       try {
-        await supabase.from("transactions").insert({
+        const { error } = await supabase.from("transactions").insert({
           id: newId,
-          user_id: user.id,
+          user_id: userId,
           category_id: input.categoryId || null,
           wallet_id: newTx.walletId || null,
           to_wallet_id: input.toWalletId || null,
@@ -264,6 +379,10 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
           date: input.date,
           note: input.note || null,
         });
+
+        if (error) {
+          console.error("Supabase insert error details:", error);
+        }
       } catch (err) {
         console.error("Error inserting transaction to Supabase", err);
       }
@@ -271,16 +390,16 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
   };
 
   const editTransaction = async (id: string, input: Omit<Transaction, "id">) => {
-    setData((current) => ({
-      ...current,
-      transactions: current.transactions.map((item) =>
-        item.id === id ? { ...input, id } : item
-      ),
-    }));
+    const nextTransactions = data.transactions.map((item) =>
+      item.id === id ? { ...input, id } : item
+    );
+    const nextData = { ...data, transactions: nextTransactions };
+    setData(nextData);
+    persistLocally(nextData, userId);
 
-    if (user && supabase) {
+    if (userId && supabase) {
       try {
-        await supabase
+        const { error } = await supabase
           .from("transactions")
           .update({
             category_id: input.categoryId || null,
@@ -293,7 +412,11 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
             note: input.note || null,
           })
           .eq("id", id)
-          .eq("user_id", user.id);
+          .eq("user_id", userId);
+
+        if (error) {
+          console.error("Supabase update error:", error);
+        }
       } catch (err) {
         console.error("Error updating transaction in Supabase", err);
       }
@@ -301,18 +424,22 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
   };
 
   const deleteTransaction = async (id: string) => {
-    setData((current) => ({
-      ...current,
-      transactions: current.transactions.filter((item) => item.id !== id),
-    }));
+    const nextTransactions = data.transactions.filter((item) => item.id !== id);
+    const nextData = { ...data, transactions: nextTransactions };
+    setData(nextData);
+    persistLocally(nextData, userId);
 
-    if (user && supabase) {
+    if (userId && supabase) {
       try {
-        await supabase
+        const { error } = await supabase
           .from("transactions")
           .delete()
           .eq("id", id)
-          .eq("user_id", user.id);
+          .eq("user_id", userId);
+
+        if (error) {
+          console.error("Supabase delete error:", error);
+        }
       } catch (err) {
         console.error("Error deleting transaction from Supabase", err);
       }
@@ -335,7 +462,7 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
       title,
       amount: input.amount,
       type: "transfer",
-      categoryId: "", // transfers don't consume budget
+      categoryId: "",
       walletId: input.fromWalletId,
       toWalletId: input.toWalletId,
       date: input.date,
@@ -347,22 +474,26 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
     const newId = crypto.randomUUID();
     const newWallet: Wallet = { ...input, id: newId };
 
-    setData((current) => ({
-      ...current,
-      wallets: [...current.wallets, newWallet],
-    }));
+    const nextWallets = [...data.wallets, newWallet];
+    const nextData = { ...data, wallets: nextWallets };
+    setData(nextData);
+    persistLocally(nextData, userId);
 
-    if (user && supabase) {
+    if (userId && supabase) {
       try {
-        await supabase.from("wallets").insert({
+        const { error } = await supabase.from("wallets").insert({
           id: newId,
-          user_id: user.id,
+          user_id: userId,
           name: input.name,
           type: input.type,
           initial_balance: input.initialBalance,
           color: input.color,
           icon: input.icon || "wallet",
         });
+
+        if (error) {
+          console.error("Supabase add wallet error:", error);
+        }
       } catch (err) {
         console.error("Error inserting wallet to Supabase", err);
       }
@@ -370,16 +501,16 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
   };
 
   const editWallet = async (id: string, input: Partial<Omit<Wallet, "id">>) => {
-    setData((current) => ({
-      ...current,
-      wallets: current.wallets.map((item) =>
-        item.id === id ? { ...item, ...input } : item
-      ),
-    }));
+    const nextWallets = data.wallets.map((item) =>
+      item.id === id ? { ...item, ...input } : item
+    );
+    const nextData = { ...data, wallets: nextWallets };
+    setData(nextData);
+    persistLocally(nextData, userId);
 
-    if (user && supabase) {
+    if (userId && supabase) {
       try {
-        await supabase
+        const { error } = await supabase
           .from("wallets")
           .update({
             ...(input.name ? { name: input.name } : {}),
@@ -388,7 +519,11 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
             ...(input.color ? { color: input.color } : {}),
           })
           .eq("id", id)
-          .eq("user_id", user.id);
+          .eq("user_id", userId);
+
+        if (error) {
+          console.error("Supabase edit wallet error:", error);
+        }
       } catch (err) {
         console.error("Error updating wallet in Supabase", err);
       }
@@ -407,22 +542,18 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
     if (usedCount > 0) {
       return {
         success: false,
-        message: `لا يمكن حذف هذه المحفظة لأنها مرتبطة بـ ${usedCount} معاملة مسجلة. يرجى تعديل المعاملات أو تحويلها لمحفظة أخرى أولاً.`,
+        message: `لا يمكن حذف هذه المحفظة لأنها مرتبطة بـ ${usedCount} معاملة مسجلة. يرجى تعديل المعاملات أولاً.`,
       };
     }
 
-    setData((current) => ({
-      ...current,
-      wallets: current.wallets.filter((item) => item.id !== id),
-    }));
+    const nextWallets = data.wallets.filter((item) => item.id !== id);
+    const nextData = { ...data, wallets: nextWallets };
+    setData(nextData);
+    persistLocally(nextData, userId);
 
-    if (user && supabase) {
+    if (userId && supabase) {
       try {
-        await supabase
-          .from("wallets")
-          .delete()
-          .eq("id", id)
-          .eq("user_id", user.id);
+        await supabase.from("wallets").delete().eq("id", id).eq("user_id", userId);
       } catch (err) {
         console.error("Error deleting wallet from Supabase", err);
       }
@@ -435,22 +566,26 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
     const newId = crypto.randomUUID();
     const newCat: Category = { ...input, id: newId };
 
-    setData((current) => ({
-      ...current,
-      categories: [...current.categories, newCat],
-    }));
+    const nextCategories = [...data.categories, newCat];
+    const nextData = { ...data, categories: nextCategories };
+    setData(nextData);
+    persistLocally(nextData, userId);
 
-    if (user && supabase) {
+    if (userId && supabase) {
       try {
-        await supabase.from("categories").insert({
+        const { error } = await supabase.from("categories").insert({
           id: newId,
-          user_id: user.id,
+          user_id: userId,
           name: input.name,
           type: input.type,
           color: input.color,
           icon: input.icon || "tag",
           budget: input.budget || null,
         });
+
+        if (error) {
+          console.error("Supabase add category error:", error);
+        }
       } catch (err) {
         console.error("Error inserting category to Supabase", err);
       }
@@ -458,16 +593,16 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
   };
 
   const editCategory = async (id: string, input: Partial<Omit<Category, "id">>) => {
-    setData((current) => ({
-      ...current,
-      categories: current.categories.map((item) =>
-        item.id === id ? { ...item, ...input } : item
-      ),
-    }));
+    const nextCategories = data.categories.map((item) =>
+      item.id === id ? { ...item, ...input } : item
+    );
+    const nextData = { ...data, categories: nextCategories };
+    setData(nextData);
+    persistLocally(nextData, userId);
 
-    if (user && supabase) {
+    if (userId && supabase) {
       try {
-        await supabase
+        const { error } = await supabase
           .from("categories")
           .update({
             ...(input.name ? { name: input.name } : {}),
@@ -476,7 +611,11 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
             ...(input.budget !== undefined ? { budget: input.budget } : {}),
           })
           .eq("id", id)
-          .eq("user_id", user.id);
+          .eq("user_id", userId);
+
+        if (error) {
+          console.error("Supabase edit category error:", error);
+        }
       } catch (err) {
         console.error("Error updating category in Supabase", err);
       }
@@ -488,22 +627,18 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
     if (usedCount > 0) {
       return {
         success: false,
-        message: `لا يمكن حذف هذا التصنيف لأنه مستخدم في ${usedCount} معاملة مسجلة. يرجى تعديل المعاملات أولاً أو تغيير تصنيفها.`,
+        message: `لا يمكن حذف هذا التصنيف لأنه مستخدم في ${usedCount} معاملة مسجلة.`,
       };
     }
 
-    setData((current) => ({
-      ...current,
-      categories: current.categories.filter((item) => item.id !== id),
-    }));
+    const nextCategories = data.categories.filter((item) => item.id !== id);
+    const nextData = { ...data, categories: nextCategories };
+    setData(nextData);
+    persistLocally(nextData, userId);
 
-    if (user && supabase) {
+    if (userId && supabase) {
       try {
-        await supabase
-          .from("categories")
-          .delete()
-          .eq("id", id)
-          .eq("user_id", user.id);
+        await supabase.from("categories").delete().eq("id", id).eq("user_id", userId);
       } catch (err) {
         console.error("Error deleting category from Supabase", err);
       }
@@ -513,14 +648,16 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
   };
 
   const updateOpeningBalance = async (value: number) => {
-    setData((current) => ({ ...current, openingBalance: value }));
+    const nextData = { ...data, openingBalance: value };
+    setData(nextData);
+    persistLocally(nextData, userId);
 
-    if (user && supabase) {
+    if (userId && supabase) {
       try {
         await supabase
           .from("profiles")
           .update({ opening_balance: value })
-          .eq("id", user.id);
+          .eq("id", userId);
       } catch (err) {
         console.error("Error updating balance in Supabase", err);
       }
@@ -528,14 +665,16 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
   };
 
   const updateUserName = async (name: string) => {
-    setData((current) => ({ ...current, userName: name }));
+    const nextData = { ...data, userName: name };
+    setData(nextData);
+    persistLocally(nextData, userId);
 
-    if (user && supabase) {
+    if (userId && supabase) {
       try {
         await supabase
           .from("profiles")
           .update({ user_name: name })
-          .eq("id", user.id);
+          .eq("id", userId);
       } catch (err) {
         console.error("Error updating username in Supabase", err);
       }
@@ -543,10 +682,10 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
   };
 
   const syncLocalToCloud = async () => {
-    if (!user || !supabase) return;
+    if (!userId || !supabase) return;
     try {
       await supabase.from("profiles").upsert({
-        id: user.id,
+        id: userId,
         user_name: data.userName,
         opening_balance: data.openingBalance,
       });
@@ -554,7 +693,7 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
       for (const cat of data.categories) {
         await supabase.from("categories").upsert({
           id: cat.id,
-          user_id: user.id,
+          user_id: userId,
           name: cat.name,
           type: cat.type,
           color: cat.color,
@@ -566,7 +705,7 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
       for (const wal of data.wallets) {
         await supabase.from("wallets").upsert({
           id: wal.id,
-          user_id: user.id,
+          user_id: userId,
           name: wal.name,
           type: wal.type,
           initial_balance: wal.initialBalance,
@@ -578,7 +717,7 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
       for (const tx of data.transactions) {
         await supabase.from("transactions").upsert({
           id: tx.id,
-          user_id: user.id,
+          user_id: userId,
           category_id: tx.categoryId || null,
           wallet_id: tx.walletId || null,
           to_wallet_id: tx.toWalletId || null,
@@ -598,6 +737,9 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
     setData(DEFAULT_DATA);
     localStorage.removeItem(STORAGE_KEY);
     localStorage.removeItem(LEGACY_STORAGE_KEY_V2);
+    if (userId) {
+      localStorage.removeItem(getCacheKey(userId));
+    }
   };
 
   const importData = (imported: FinanceData) => {
@@ -605,13 +747,15 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
       if (!Array.isArray(imported.transactions) || !Array.isArray(imported.categories)) {
         return false;
       }
-      setData({
+      const nextData: FinanceData = {
         userName: imported.userName || "بيتر صلاح",
         openingBalance: Number(imported.openingBalance) || 0,
         wallets: Array.isArray(imported.wallets) ? imported.wallets : DEFAULT_WALLETS,
         transactions: imported.transactions,
         categories: imported.categories,
-      });
+      };
+      setData(nextData);
+      persistLocally(nextData, userId);
       return true;
     } catch {
       return false;
@@ -624,7 +768,7 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
     categories: data.categories,
     wallets: data.wallets,
     openingBalance: data.openingBalance,
-    isCloudSynced: Boolean(user && isConfigured),
+    isCloudSynced: Boolean(userId && isConfigured),
     isLoadingData,
     walletBalances,
     getWalletBalance,
