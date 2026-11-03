@@ -30,19 +30,25 @@ export function WeeklyChart() {
   const { transactions } = useFinance();
 
   const data = useMemo(() => {
-    // 7 days starting from Saturday (or 7 days backwards ending today)
     const arabicDays = ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
     const now = new Date();
+    now.setHours(0, 0, 0, 0);
+
     const day = now.getDay();
-    const diff = (day + 1) % 7; // diff from Saturday
+    const diff = (day + 1) % 7;
+
     const sat = new Date(now);
-    sat.setHours(0, 0, 0, 0);
     sat.setDate(sat.getDate() - diff);
 
     return Array.from({ length: 7 }, (_, index) => {
       const date = new Date(sat);
       date.setDate(date.getDate() + index);
-      const key = date.toISOString().slice(0, 10);
+
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      const key = `${year}-${month}-${d}`;
+
       const dayName = arabicDays[date.getDay()];
 
       const amount = transactions
@@ -55,6 +61,7 @@ export function WeeklyChart() {
       };
     });
   }, [transactions]);
+
 
   return (
     <div className="h-[230px] w-full" dir="ltr">
