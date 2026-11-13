@@ -30,6 +30,7 @@ export type Transaction = {
   toWalletId?: string; // المحفظة المحول إليها (في حالة التحويل)
   date: string; // YYYY-MM-DD
   note?: string;
+  isOneOff?: boolean; // استبعاد من حساب المتوسط اليومي (مصروف استثنائي/كبير)
 };
 
 export type FinanceData = {

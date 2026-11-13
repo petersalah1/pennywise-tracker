@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { Category, FinanceData, Transaction, TransactionType, Wallet } from "@/types/transaction";
-import { DEFAULT_CATEGORIES, DEFAULT_WALLETS, INITIAL_TRANSACTIONS } from "@/lib/finance";
+import { DEFAULT_CATEGORIES, DEFAULT_WALLETS, INITIAL_TRANSACTIONS, encodeNoteWithOneOff, isOneOffTransaction } from "@/lib/finance";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
 
@@ -36,6 +36,7 @@ type FinanceContextValue = {
   addTransaction: (input: Omit<Transaction, "id">) => Promise<void>;
   editTransaction: (id: string, input: Omit<Transaction, "id">) => Promise<void>;
   deleteTransaction: (id: string) => Promise<void>;
+  toggleTransactionOneOff: (id: string) => Promise<void>;
   addCategory: (input: Omit<Category, "id">) => Promise<void>;
   editCategory: (id: string, input: Partial<Omit<Category, "id">>) => Promise<void>;
   deleteCategory: (id: string) => Promise<{ success: boolean; message?: string }>;
@@ -448,6 +449,7 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
           toWalletId: t.to_wallet_id ? String(t.to_wallet_id) : undefined,
           date: t.date,
           note: t.note || undefined,
+          isOneOff: Boolean((t as { is_one_off?: boolean }).is_one_off || (t.note && t.note.includes("[استثنائي]"))),
         }));
 
         // OFFLINE RECONCILIATION: Check if local cache has any transactions not yet recorded in Supabase
@@ -550,10 +552,13 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
 
   const addTransaction = async (input: Omit<Transaction, "id">) => {
     const newId = crypto.randomUUID();
+    const encodedNote = encodeNoteWithOneOff(input.note, input.isOneOff);
     const newTx: Transaction = {
       ...input,
       id: newId,
       walletId: input.walletId || data.wallets[0]?.id || "cash",
+      note: encodedNote,
+      isOneOff: Boolean(input.isOneOff),
     };
 
     // 1. Update state
@@ -586,7 +591,7 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
           amount: input.amount,
           type: input.type,
           date: input.date,
-          note: input.note || null,
+          note: encodedNote || null,
         });
 
         if (error) {
@@ -609,7 +614,13 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
   };
 
   const editTransaction = async (id: string, input: Omit<Transaction, "id">) => {
-    const updatedTx: Transaction = { ...input, id };
+    const encodedNote = encodeNoteWithOneOff(input.note, input.isOneOff);
+    const updatedTx: Transaction = {
+      ...input,
+      id,
+      note: encodedNote,
+      isOneOff: Boolean(input.isOneOff),
+    };
     const nextTransactions = data.transactions.map((item) =>
       item.id === id ? updatedTx : item
     );
@@ -638,7 +649,7 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
             amount: input.amount,
             type: input.type,
             date: input.date,
-            note: input.note || null,
+            note: encodedNote || null,
           })
           .eq("id", id)
           .eq("user_id", userId);
@@ -660,6 +671,18 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
         });
       }
     }
+  };
+
+  const toggleTransactionOneOff = async (id: string) => {
+    const target = data.transactions.find((item) => item.id === id);
+    if (!target) return;
+    const nextIsOneOff = !isOneOffTransaction(target);
+    const nextNote = encodeNoteWithOneOff(target.note, nextIsOneOff);
+    await editTransaction(id, {
+      ...target,
+      note: nextNote,
+      isOneOff: nextIsOneOff,
+    });
   };
 
   const deleteTransaction = async (id: string) => {
@@ -1218,6 +1241,7 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
     addTransaction,
     editTransaction,
     deleteTransaction,
+    toggleTransactionOneOff,
     addCategory,
     editCategory,
     deleteCategory,

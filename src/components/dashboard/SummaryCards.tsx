@@ -2,7 +2,7 @@
 
 import { ArrowDownLeft, ArrowUpRight, Wallet, TrendingUp } from "lucide-react";
 import { useFinance } from "@/context/FinanceContext";
-import { formatEGP } from "@/lib/finance";
+import { formatEGP, isOneOffTransaction } from "@/lib/finance";
 
 export default function SummaryCards() {
   const { balance, income, expenses, transactions } = useFinance();
@@ -22,11 +22,17 @@ export default function SummaryCards() {
     .filter((item) => item.type === "expense" && new Date(`${item.date}T00:00:00`) >= weekStart)
     .reduce((sum, item) => sum + item.amount, 0);
 
-  const monthly = transactions
-    .filter((item) => item.type === "expense" && new Date(`${item.date}T00:00:00`) >= monthStart)
+  const monthlyExpenses = transactions.filter(
+    (item) => item.type === "expense" && new Date(`${item.date}T00:00:00`) >= monthStart
+  );
+  const monthly = monthlyExpenses.reduce((sum, item) => sum + item.amount, 0);
+
+  const oneOffMonthly = monthlyExpenses
+    .filter(isOneOffTransaction)
     .reduce((sum, item) => sum + item.amount, 0);
 
-  const dailyAverageThisMonth = monthly / Math.max(currentDay, 1);
+  const routineMonthly = Math.max(monthly - oneOffMonthly, 0);
+  const dailyAverageThisMonth = routineMonthly / Math.max(currentDay, 1);
 
   const cards = [
     {
@@ -55,7 +61,10 @@ export default function SummaryCards() {
       value: formatEGP(monthly),
       icon: TrendingUp,
       color: "amber",
-      note: `المتوسط اليومي: ${formatEGP(dailyAverageThisMonth)} • الأسبوع: ${formatEGP(weekly)}`,
+      note:
+        oneOffMonthly > 0
+          ? `المعدل اليومي: ${formatEGP(dailyAverageThisMonth)} (مستبعد ${formatEGP(oneOffMonthly)} استثنائي)`
+          : `المعدل اليومي: ${formatEGP(dailyAverageThisMonth)} • الأسبوع: ${formatEGP(weekly)}`,
     },
   ];
 

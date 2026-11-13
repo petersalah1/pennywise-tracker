@@ -12,7 +12,7 @@ import {
   Wallet as WalletIcon,
 } from "lucide-react";
 import { useFinance } from "@/context/FinanceContext";
-import { exportTransactionsToCSV, formatEGP, getCategory, getWallet } from "@/lib/finance";
+import { exportTransactionsToCSV, formatEGP, formatNoteForDisplay, getCategory, getWallet, isOneOffTransaction } from "@/lib/finance";
 import type { Transaction } from "@/types/transaction";
 import TransactionForm from "./TransactionForm";
 
@@ -204,12 +204,22 @@ export default function TransactionTable({ limit }: { limit?: number }) {
                           )}
                         </span>
                         <div className="min-w-0">
-                          <p className="truncate text-xs font-semibold text-[#e8eee9]">
-                            {item.title}
-                          </p>
+                          <div className="flex items-center gap-1.5">
+                            <p className="truncate text-xs font-semibold text-[#e8eee9]">
+                              {item.title}
+                            </p>
+                            {isOneOffTransaction(item) && (
+                              <span
+                                title="مصروف استثنائي (مستبعد من المعدل اليومي)"
+                                className="shrink-0 rounded-md border border-amber-500/30 bg-amber-950/40 px-1.5 py-0.5 text-[9px] font-semibold text-amber-300"
+                              >
+                                استثنائي
+                              </span>
+                            )}
+                          </div>
                           {item.note && (
                             <p className="mt-0.5 max-w-[200px] truncate text-[11px] text-[#718077]">
-                              {item.note}
+                              {formatNoteForDisplay(item.note)}
                             </p>
                           )}
                         </div>

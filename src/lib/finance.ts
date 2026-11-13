@@ -38,6 +38,25 @@ export function getWallet(wallets: Wallet[], id?: string) {
   return wallets.find((wallet) => wallet.id === id);
 }
 
+export const ONE_OFF_TAG = "[استثنائي]";
+
+export function isOneOffTransaction(t: { isOneOff?: boolean; note?: string }): boolean {
+  return Boolean(t.isOneOff || (t.note && t.note.includes(ONE_OFF_TAG)));
+}
+
+export function formatNoteForDisplay(note?: string): string {
+  if (!note) return "";
+  return note.replace(ONE_OFF_TAG, "").trim();
+}
+
+export function encodeNoteWithOneOff(note: string | undefined, isOneOff?: boolean): string | undefined {
+  const clean = (note || "").replace(ONE_OFF_TAG, "").trim();
+  if (isOneOff) {
+    return clean ? `${clean} ${ONE_OFF_TAG}` : ONE_OFF_TAG;
+  }
+  return clean || undefined;
+}
+
 export function exportTransactionsToCSV(
   transactions: Transaction[],
   categories: Category[],

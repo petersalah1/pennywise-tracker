@@ -1,21 +1,25 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   Clock,
   Target,
   Flame,
   Sparkles,
-  TrendingDown,
-  TrendingUp,
   CalendarDays,
   PieChart as PieIcon,
   Zap,
+  SlidersHorizontal,
+  ChevronDown,
+  ChevronUp,
+  CheckCircle2,
+  Ban,
+  Tag,
 } from "lucide-react";
 import AppShell from "@/components/layout/AppShell";
 import { CategoryChart, WeeklyChart } from "@/components/charts/SpendingCharts";
 import { useFinance } from "@/context/FinanceContext";
-import { formatEGP } from "@/lib/finance";
+import { formatEGP, getCategory, isOneOffTransaction } from "@/lib/finance";
 
 const ARABIC_MONTHS = [
   "يناير",
@@ -33,9 +37,11 @@ const ARABIC_MONTHS = [
 ];
 
 export default function AnalyticsPage() {
-  const { transactions, categories, income, expenses } = useFinance();
+  const { transactions, categories, income, expenses, toggleTransactionOneOff } = useFinance();
+  const [calculationMode, setCalculationMode] = useState<"routine" | "all">("routine");
+  const [managerOpen, setManagerOpen] = useState(false);
 
-  // 1. Daily Spending Intelligence
+  // 1. Daily Spending Intelligence (with One-off / Irregular expense control)
   const dailyStats = useMemo(() => {
     const now = new Date();
     const currentDay = now.getDate();
@@ -43,16 +49,35 @@ export default function AnalyticsPage() {
     const remainingDaysInMonth = Math.max(daysInMonth - currentDay, 1);
     const thisMonthPrefix = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
 
-    const thisMonthExpenses = transactions.filter(
-      (t) => t.type === "expense" && t.date.startsWith(thisMonthPrefix)
-    );
-    const totalSpentThisMonth = thisMonthExpenses.reduce((sum, t) => sum + t.amount, 0);
-    const dailyAverageThisMonth = totalSpentThisMonth / Math.max(currentDay, 1);
-    const projectedMonthlySpend = dailyAverageThisMonth * daysInMonth;
+    // All this month's expenses
+    const thisMonthExpenses = transactions
+      .filter((t) => t.type === "expense" && t.date.startsWith(thisMonthPrefix))
+      .sort((a, b) => b.amount - a.amount);
 
-    // Daily breakdown & Peak spending day
+    const totalSpentThisMonth = thisMonthExpenses.reduce((sum, t) => sum + t.amount, 0);
+
+    // Filter out one-off expenses (like buying a mobile phone, laptop, course fees, etc.)
+    const oneOffExpenses = thisMonthExpenses.filter(isOneOffTransaction);
+    const oneOffTotal = oneOffExpenses.reduce((sum, t) => sum + t.amount, 0);
+
+    const routineExpenses = thisMonthExpenses.filter((t) => !isOneOffTransaction(t));
+    const routineTotal = routineExpenses.reduce((sum, t) => sum + t.amount, 0);
+
+    // Active spend based on chosen mode
+    const activeSpent = calculationMode === "routine" ? routineTotal : totalSpentThisMonth;
+    const dailyAverageThisMonth = activeSpent / Math.max(currentDay, 1);
+
+    // Realistic projection: routine pace * full month + fixed one-off purchases
+    const projectedMonthlySpend =
+      calculationMode === "routine"
+        ? dailyAverageThisMonth * daysInMonth + oneOffTotal
+        : dailyAverageThisMonth * daysInMonth;
+
+    // Daily breakdown & Peak spending day (based on active calculation mode)
+    const targetExpensesForPeak =
+      calculationMode === "routine" ? routineExpenses : thisMonthExpenses;
     const dailySpendMap: Record<string, number> = {};
-    thisMonthExpenses.forEach((t) => {
+    targetExpensesForPeak.forEach((t) => {
       dailySpendMap[t.date] = (dailySpendMap[t.date] || 0) + t.amount;
     });
 
@@ -103,6 +128,12 @@ export default function AnalyticsPage() {
       daysInMonth,
       remainingDaysInMonth,
       totalSpentThisMonth,
+      oneOffTotal,
+      oneOffCount: oneOffExpenses.length,
+      oneOffExpenses,
+      routineTotal,
+      routineCount: routineExpenses.length,
+      thisMonthExpenses,
       dailyAverageThisMonth,
       projectedMonthlySpend,
       peakDayAmount,
@@ -115,7 +146,7 @@ export default function AnalyticsPage() {
       zeroSpendDays,
       activeDays,
     };
-  }, [transactions, categories]);
+  }, [transactions, categories, calculationMode]);
 
   // 2. 6 Months trend comparison
   const months = useMemo(() => {
@@ -148,13 +179,13 @@ export default function AnalyticsPage() {
   return (
     <AppShell
       title="التقارير والتحليلات"
-      subtitle="فهم أعمق لحركة أموالك وتحليل نمط الصرف والادخار ومتوسط الإنفاق اليومي"
+      subtitle="فهم أعمق لحركة أموالك وتحليل نمط الصرف ومتوسط الإنفاق اليومي مع عزل المصاريف الاستثنائية"
     >
       <div className="mb-7">
         <p className="text-xs font-semibold tracking-wider text-[#69d994]">الرؤى والاتجاهات المالية</p>
         <h2 className="mt-1.5 text-2xl font-bold text-white">التحليلات ومتوسط الإنفاق</h2>
         <p className="mt-1 text-xs text-[#829087]">
-          رؤية متكاملة توضح معدل استهلاكك اليومي، اتجاهات المصروفات، وتوقعات نهاية الشهر.
+          رؤية متكاملة توضح معدل استهلاكك اليومي، وتتيح لك عزل المصروفات الاستثنائية (كالموبايل أو الكورسات) لضبط دقة التقسيم.
         </p>
       </div>
 
@@ -181,26 +212,144 @@ export default function AnalyticsPage() {
 
       {/* Daily Spending Intelligence Section */}
       <section className="mb-6 rounded-2xl border border-white/[.065] bg-[#111914] p-5">
-        <div className="mb-4 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
+        <div className="mb-4 flex flex-col justify-between gap-3 lg:flex-row lg:items-center">
           <div>
-            <h3 className="flex items-center gap-2 text-sm font-bold text-white">
-              <Clock size={16} className="text-[#69d994]" />
-              <span>تحليل متوسط الإنفاق اليومي ووتيرة الصرف</span>
-            </h3>
+            <div className="flex items-center gap-2">
+              <Clock size={17} className="text-[#69d994]" />
+              <h3 className="text-sm font-bold text-white">
+                تحليل متوسط الإنفاق اليومي ووتيرة الصرف
+              </h3>
+            </div>
             <p className="mt-1 text-[11px] text-[#718078]">
-              مؤشرات دقيقة لمعدل استهلاكك المالي يومياً وسرعة الصرف خلال هذا الشهر
+              {calculationMode === "routine"
+                ? "يتم الآن عزل المصروفات الكبيرة/الاستثنائية ليعكس المتوسط وتيرة معيشتك اليومية الفعلية."
+                : "يتم الآن حساب كافة المصروفات شاملة المشتريات الاستثنائية والكبيرة."}
             </p>
           </div>
-          <span className="rounded-lg bg-[#142319] px-2.5 py-1 text-[11px] font-semibold text-[#82e6a7]">
-            اليوم {dailyStats.currentDay} من {dailyStats.daysInMonth} يوماً ({dailyStats.remainingDaysInMonth} يوماً متبقية)
-          </span>
+
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Mode Switcher */}
+            <div className="grid grid-cols-2 rounded-xl bg-[#0c120e] p-1 text-xs">
+              <button
+                type="button"
+                onClick={() => setCalculationMode("routine")}
+                className={`rounded-lg px-3 py-1.5 font-semibold transition ${
+                  calculationMode === "routine"
+                    ? "bg-[#1c3827] text-[#7ce0a5] shadow"
+                    : "text-[#809087] hover:text-white"
+                }`}
+              >
+                مصاريف يومية عادية
+              </button>
+              <button
+                type="button"
+                onClick={() => setCalculationMode("all")}
+                className={`rounded-lg px-3 py-1.5 font-semibold transition ${
+                  calculationMode === "all"
+                    ? "bg-[#1c3827] text-[#7ce0a5] shadow"
+                    : "text-[#809087] hover:text-white"
+                }`}
+              >
+                شامل كل المصروفات
+              </button>
+            </div>
+
+            {/* Toggle Drawer to manage exclusions */}
+            <button
+              type="button"
+              onClick={() => setManagerOpen(!managerOpen)}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-950/20 px-3 py-1.5 text-xs font-semibold text-amber-300 transition hover:bg-amber-950/40"
+            >
+              <SlidersHorizontal size={13} />
+              <span>
+                التحكم بالاستثناءات ({dailyStats.oneOffCount})
+              </span>
+              {managerOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+            </button>
+          </div>
         </div>
 
+        {/* Manager Drawer: List expenses to include/exclude with 1-click */}
+        {managerOpen && (
+          <div className="mb-5 rounded-xl border border-white/[.07] bg-[#0c120e] p-4 animate-in fade-in duration-200">
+            <div className="mb-3 flex items-center justify-between border-b border-white/[.05] pb-2.5">
+              <div>
+                <p className="text-xs font-bold text-white">
+                  تحديد المصروفات المستبعدة من بند التقسيم اليومي
+                </p>
+                <p className="mt-0.5 text-[10px] text-[#718077]">
+                  المصروفات المستبعدة تظل مسجلة في رصيدك ومحفظتك، ولكن لا تُقسم على الأيام حتى لا تُشوه معدل الصرف اليومي (مثل شراء موبايل، كورس، لابتوب).
+                </p>
+              </div>
+              <span className="shrink-0 text-xs text-[#8da094]">
+                مستبعد: <strong className="text-amber-300">{formatEGP(dailyStats.oneOffTotal)}</strong> ({dailyStats.oneOffCount} عناصر)
+              </span>
+            </div>
+
+            <div className="max-h-[260px] space-y-2 overflow-y-auto pr-1">
+              {dailyStats.thisMonthExpenses.map((t) => {
+                const isExcluded = isOneOffTransaction(t);
+                const category = getCategory(categories, t.categoryId);
+
+                return (
+                  <div
+                    key={t.id}
+                    className={`flex items-center justify-between gap-3 rounded-lg border p-2.5 transition ${
+                      isExcluded
+                        ? "border-amber-500/30 bg-amber-950/20 text-amber-200"
+                        : "border-white/[.04] bg-[#121a15] text-[#dfe6e1]"
+                    }`}
+                  >
+                    <div className="flex min-w-0 items-center gap-2.5">
+                      <span
+                        className="h-2.5 w-2.5 shrink-0 rounded-full"
+                        style={{ background: category?.color || "#888" }}
+                      />
+                      <div className="min-w-0">
+                        <p className="truncate text-xs font-semibold text-white">{t.title}</p>
+                        <p className="text-[10px] text-[#718077]">
+                          {category?.name || "عام"} · {t.date}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs font-bold tabular-nums text-white" dir="ltr">
+                        {formatEGP(t.amount)}
+                      </span>
+
+                      <button
+                        type="button"
+                        onClick={() => toggleTransactionOneOff(t.id)}
+                        className={`rounded-lg px-2.5 py-1 text-[11px] font-semibold transition ${
+                          isExcluded
+                            ? "border border-amber-500/40 bg-amber-500/20 text-amber-300 hover:bg-amber-500/30"
+                            : "border border-white/10 bg-white/5 text-[#8ca094] hover:bg-white/10 hover:text-white"
+                        }`}
+                      >
+                        {isExcluded ? "⭐ مستبعد من التقسيم" : "محسوب بالتقسيم"}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+
+              {dailyStats.thisMonthExpenses.length === 0 && (
+                <p className="py-4 text-center text-xs text-[#718077]">
+                  لا توجد مصروفات مسجلة في هذا الشهر حتى الآن.
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Card 1: Daily Average (This Month) */}
+          {/* Card 1: Daily Average */}
           <div className="rounded-xl border border-white/[.05] bg-[#0c120e] p-4 transition hover:border-white/[.1]">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-[#87998e]">متوسط الصرف اليومي</span>
+              <span className="text-xs text-[#87998e]">
+                {calculationMode === "routine" ? "المعدل اليومي الروتيني" : "المعدل اليومي الكلي"}
+              </span>
               <span className="grid h-7 w-7 place-items-center rounded-lg bg-[#1c3526] text-[#75dfa0]">
                 <Clock size={14} />
               </span>
@@ -210,7 +359,9 @@ export default function AnalyticsPage() {
               <span className="text-xs font-normal text-[#75847b]"> / يوم</span>
             </p>
             <p className="mt-2 text-[10px] text-[#69796e]">
-              محسوب على مدار {dailyStats.currentDay} يوماً من هذا الشهر
+              {calculationMode === "routine" && dailyStats.oneOffTotal > 0
+                ? `مستبعد ${formatEGP(dailyStats.oneOffTotal)} لمصاريف استثنائية`
+                : `محسوب على ${dailyStats.currentDay} يوماً من هذا الشهر`}
             </p>
           </div>
 
@@ -234,7 +385,7 @@ export default function AnalyticsPage() {
               {dailyStats.totalMonthlyBudget > 0
                 ? dailyStats.isBudgetOver
                   ? "تجاوزت سقف الميزانية الإجمالي!"
-                  : `متاح للصرف لـ ${dailyStats.remainingDaysInMonth} يوماً دون تجاوز الميزانية`
+                  : `متاح للصرف لـ ${dailyStats.remainingDaysInMonth} يوماً قادمة`
                 : "متوسط إنفاقك لآخر 30 يوماً"}
             </p>
           </div>
@@ -267,7 +418,7 @@ export default function AnalyticsPage() {
               {formatEGP(dailyStats.projectedMonthlySpend)}
             </p>
             <p className="mt-2 text-[10px] text-[#718077]">
-              بناءً على وتيرة الصرف الحالية ({dailyStats.zeroSpendDays} أيام بدون صرف)
+              توقع واقعي شامل للمعيشة والمشتريات الكبيرة
             </p>
           </div>
         </div>
@@ -278,13 +429,13 @@ export default function AnalyticsPage() {
           <span>
             {dailyStats.totalSpentThisMonth === 0 ? (
               "لم تسجل أي مصروفات خلال هذا الشهر حتى الآن."
-            ) : dailyStats.dailyAverageThisMonth > dailyStats.dailyAverage30Days && dailyStats.dailyAverage30Days > 0 ? (
+            ) : dailyStats.oneOffTotal > 0 && calculationMode === "routine" ? (
               <>
-                معدل صرفك اليومي هذا الشهر ({formatEGP(dailyStats.dailyAverageThisMonth)}/يوم) <strong>أعلى</strong> من معدل آخر 30 يوماً ({formatEGP(dailyStats.dailyAverage30Days)}/يوم). احرص على ترشيد النفقات في الأيام القادمة.
+                تم بنجاح استبعاد <strong>{formatEGP(dailyStats.oneOffTotal)}</strong> (المتعلقة بالمشتريات الكبيرة/الاستثنائية كالموبايل أو الكورسات). معدل صرفك اليومي الفعلي الآن هو <strong>{formatEGP(dailyStats.dailyAverageThisMonth)} / يوم</strong>.
               </>
             ) : (
               <>
-                معدل صرفك اليومي الحالي ({formatEGP(dailyStats.dailyAverageThisMonth)}/يوم) متزن ومستقر مقارنة بالشهر السابق. أحسنت!
+                معدل صرفك اليومي الحالي ({formatEGP(dailyStats.dailyAverageThisMonth)}/يوم). يمكنك في أي وقت استبعاد أي بند استثنائي عبر زر «التحكم بالاستثناءات» بالأعلى.
               </>
             )}
           </span>

@@ -5,7 +5,7 @@ import type { FormEvent } from "react";
 import { X, ArrowDownLeft, ArrowUpRight, ArrowLeftRight, Info } from "lucide-react";
 import { useFinance } from "@/context/FinanceContext";
 import type { Transaction, TransactionType } from "@/types/transaction";
-import { formatEGP } from "@/lib/finance";
+import { formatEGP, formatNoteForDisplay, isOneOffTransaction } from "@/lib/finance";
 
 export default function TransactionForm({
   onClose,
@@ -26,7 +26,12 @@ export default function TransactionForm({
   const [date, setDate] = useState(
     transactionToEdit?.date ?? new Date().toISOString().slice(0, 10)
   );
-  const [note, setNote] = useState(transactionToEdit?.note ?? "");
+  const [note, setNote] = useState(
+    transactionToEdit ? formatNoteForDisplay(transactionToEdit.note) : ""
+  );
+  const [isOneOff, setIsOneOff] = useState(
+    transactionToEdit ? isOneOffTransaction(transactionToEdit) : false
+  );
   const [error, setError] = useState<string | null>(null);
 
   const availableCategories = categories.filter(
@@ -122,6 +127,7 @@ export default function TransactionForm({
         walletId,
         date,
         note: note.trim() || undefined,
+        isOneOff: type === "expense" ? isOneOff : false,
       });
     } else {
       addTransaction({
@@ -132,6 +138,7 @@ export default function TransactionForm({
         walletId,
         date,
         note: note.trim() || undefined,
+        isOneOff: type === "expense" ? isOneOff : false,
       });
     }
     onClose();
@@ -357,6 +364,25 @@ export default function TransactionForm({
               className="field"
             />
           </label>
+
+          {type === "expense" && (
+            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/[.07] bg-[#0c120e] p-3.5 transition hover:border-[#65d891]/30">
+              <input
+                type="checkbox"
+                checked={isOneOff}
+                onChange={(e) => setIsOneOff(e.target.checked)}
+                className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded accent-[#65d891]"
+              />
+              <div className="text-right">
+                <span className="block text-xs font-semibold text-white">
+                  مصروف استثنائي / شراء كبير (استبعاد من حساب المعدل اليومي)
+                </span>
+                <span className="mt-0.5 block text-[11px] leading-4 text-[#75847b]">
+                  مثل: شراء موبايل، كورس، أجهزة، أو مصاريف غير متكررة حتى لا تُضخم معدل الصرف اليومي المعتاد.
+                </span>
+              </div>
+            </label>
+          )}
         </div>
 
         <div className="mt-6 flex gap-3">
