@@ -12,6 +12,8 @@ import {
   RotateCcw,
   Check,
   AlertTriangle,
+  Cloud,
+  RefreshCw,
 } from "lucide-react";
 import AppShell from "@/components/layout/AppShell";
 import { useFinance } from "@/context/FinanceContext";
@@ -26,8 +28,12 @@ export default function SettingsPage() {
     balance,
     transactions,
     categories,
+    wallets,
     resetAllData,
     importData,
+    syncLocalToCloud,
+    isCloudSynced,
+    isLoadingData,
   } = useFinance();
 
   const [nameInput, setNameInput] = useState(userName);
@@ -68,10 +74,11 @@ export default function SettingsPage() {
     const backupData = {
       userName,
       openingBalance,
+      wallets,
       transactions,
       categories,
       exportedAt: new Date().toISOString(),
-      version: 2,
+      version: 3,
     };
 
     const blob = new Blob([JSON.stringify(backupData, null, 2)], {
@@ -112,6 +119,23 @@ export default function SettingsPage() {
       }
     };
     reader.readAsText(file);
+  }
+
+  const [syncing, setSyncing] = useState(false);
+
+  async function handleSyncToCloud() {
+    if (!isCloudSynced) return;
+    setSyncing(true);
+    try {
+      await syncLocalToCloud();
+      setFeedback({ text: "تمت مزامنة كافة البيانات مع السحابة بنجاح!" });
+      setTimeout(() => setFeedback(null), 3500);
+    } catch {
+      setFeedback({ text: "حدث خطأ أثناء المزامنة، يرجى المحاولة مرة أخرى.", error: true });
+      setTimeout(() => setFeedback(null), 4000);
+    } finally {
+      setSyncing(false);
+    }
   }
 
   function handleReset() {
@@ -249,6 +273,18 @@ export default function SettingsPage() {
               >
                 <RotateCcw size={15} /> إعادة ضبط المصنع
               </button>
+
+              {isCloudSynced && (
+                <button
+                  type="button"
+                  onClick={handleSyncToCloud}
+                  disabled={syncing}
+                  className="inline-flex items-center gap-2 rounded-xl border border-emerald-500/20 bg-[#14261b] px-4 py-2.5 text-xs font-semibold text-[#82e6a7] transition hover:bg-[#1f3326] disabled:opacity-50"
+                >
+                  <RefreshCw size={15} className={syncing ? "animate-spin" : ""} />
+                  {syncing ? "جارٍ المزامنة..." : "مزامنة البيانات مع السحابة"}
+                </button>
+              )}
             </div>
           </div>
         </div>

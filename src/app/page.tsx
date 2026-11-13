@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Plus, ArrowLeft, CalendarDays, PieChart as PieIcon, ShieldAlert } from "lucide-react";
+import { Plus, ArrowLeft, CalendarDays, PieChart as PieIcon } from "lucide-react";
 import AppShell from "@/components/layout/AppShell";
 import SummaryCards from "@/components/dashboard/SummaryCards";
 import WalletsOverview from "@/components/wallets/WalletsOverview";

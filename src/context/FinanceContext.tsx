@@ -64,7 +64,7 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
   const userId = user?.id;
   const [data, setData] = useState<FinanceData>(DEFAULT_DATA);
   const [ready, setReady] = useState(false);
-  const [isLoadingData, setIsLoadingData] = useState(false);
+  const [isLoadingData, setIsLoadingData] = useState(true);
 
   // Helper to save to local cache safely
   const persistLocally = (freshData: FinanceData, targetUserId?: string | null) => {
