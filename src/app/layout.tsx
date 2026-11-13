@@ -3,6 +3,8 @@ import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { FinanceProvider } from "@/context/FinanceContext";
 import PWAInstallPrompt from "@/components/layout/PWAInstallPrompt";
+import ServiceWorkerRegister from "@/components/layout/ServiceWorkerRegister";
+import OfflineNotice from "@/components/layout/OfflineNotice";
 
 export const viewport: Viewport = {
   themeColor: "#0b100d",
@@ -39,6 +41,8 @@ export default function RootLayout({
           <FinanceProvider>
             {children}
             <PWAInstallPrompt />
+            <OfflineNotice />
+            <ServiceWorkerRegister />
           </FinanceProvider>
         </AuthProvider>
       </body>

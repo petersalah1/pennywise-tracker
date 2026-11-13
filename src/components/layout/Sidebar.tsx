@@ -15,6 +15,7 @@ import {
   LogIn,
   LogOut,
   Cloud,
+  WifiOff,
 } from "lucide-react";
 import { useFinance } from "@/context/FinanceContext";
 import { useAuth } from "@/context/AuthContext";
@@ -36,7 +37,7 @@ export default function Sidebar({
   onClose: () => void;
 }) {
   const pathname = usePathname();
-  const { userName, isCloudSynced } = useFinance();
+  const { userName, isCloudSynced, isOnline } = useFinance();
   const { user, signOut } = useAuth();
 
   const userInitial = userName
@@ -134,7 +135,12 @@ export default function Sidebar({
             <div className="min-w-0 flex-1">
               <p className="truncate text-xs font-semibold text-white">{userName}</p>
               <p className="flex items-center gap-1 text-[10px] text-[#718078]">
-                {isCloudSynced ? (
+                {!isOnline ? (
+                  <span className="flex items-center gap-1 text-amber-400">
+                    <WifiOff size={10} />
+                    <span>غير متصل (أوفلاين)</span>
+                  </span>
+                ) : isCloudSynced ? (
                   <>
                     <Cloud size={10} className="text-[#65d891]" />
                     <span className="truncate">{user?.email}</span>

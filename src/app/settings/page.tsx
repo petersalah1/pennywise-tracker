@@ -14,6 +14,8 @@ import {
   AlertTriangle,
   Cloud,
   RefreshCw,
+  Wifi,
+  WifiOff,
 } from "lucide-react";
 import AppShell from "@/components/layout/AppShell";
 import { useFinance } from "@/context/FinanceContext";
@@ -34,6 +36,10 @@ export default function SettingsPage() {
     syncLocalToCloud,
     isCloudSynced,
     isLoadingData,
+    isOnline,
+    pendingSyncCount,
+    isSyncingOffline,
+    flushSyncQueue,
   } = useFinance();
 
   const [nameInput, setNameInput] = useState(userName);
@@ -124,11 +130,19 @@ export default function SettingsPage() {
   const [syncing, setSyncing] = useState(false);
 
   async function handleSyncToCloud() {
-    if (!isCloudSynced) return;
+    if (!isOnline) {
+      setFeedback({
+        text: "أنت غير متصل بالإنترنت حالياً؛ سيتم رفع التعديلات تلقائياً بمجرد استعادة الاتصال.",
+        error: true,
+      });
+      setTimeout(() => setFeedback(null), 3500);
+      return;
+    }
     setSyncing(true);
     try {
+      await flushSyncQueue();
       await syncLocalToCloud();
-      setFeedback({ text: "تمت مزامنة كافة البيانات مع السحابة بنجاح!" });
+      setFeedback({ text: "تمت مزامنة كافة البيانات والعمليات المعلقة مع السحابة بنجاح!" });
       setTimeout(() => setFeedback(null), 3500);
     } catch {
       setFeedback({ text: "حدث خطأ أثناء المزامنة، يرجى المحاولة مرة أخرى.", error: true });
@@ -313,6 +327,51 @@ export default function SettingsPage() {
                 <span className="font-semibold text-white">{categories.length}</span>
               </div>
             </div>
+          </div>
+
+          {/* Offline & Sync Status Card */}
+          <div className="rounded-2xl border border-white/[.06] bg-[#111914] p-5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                {isOnline ? (
+                  <Wifi size={17} className="text-[#65d891]" />
+                ) : (
+                  <WifiOff size={17} className="text-amber-400" />
+                )}
+                <h4 className="text-xs font-bold text-white">حالة الاتصال والمزامنة (Offline)</h4>
+              </div>
+              <span
+                className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold ${
+                  isOnline
+                    ? "bg-emerald-500/20 text-[#86efac]"
+                    : "bg-amber-500/20 text-amber-300"
+                }`}
+              >
+                {isOnline ? "متصل أونلاين" : "غير متصل (أوفلاين)"}
+              </span>
+            </div>
+
+            <div className="mt-4 space-y-2 text-[11px] text-[#7b8c81]">
+              <div className="flex justify-between">
+                <span>تخزين التطبيق (PWA Cache):</span>
+                <span className="font-semibold text-emerald-400">مفعّل (يعمل بدون إنترنت)</span>
+              </div>
+              <div className="flex justify-between">
+                <span>العمليات المعلقة للمزامنة:</span>
+                <span
+                  className={`font-semibold ${
+                    pendingSyncCount > 0 ? "text-amber-300" : "text-white"
+                  }`}
+                >
+                  {pendingSyncCount > 0 ? `${pendingSyncCount} معلقة` : "جميع البيانات متزامنة"}
+                </span>
+              </div>
+            </div>
+
+            <p className="mt-3 text-[11px] leading-5 text-[#88988d]">
+              يمكنك استخدام التطبيق وتسجيل أي معاملات أو تعديلات حتى أثناء انقطاع الإنترنت؛ يتم
+              حفظها فورياً على جهازك وتُرفع تلقائياً عند عودة الاتصال.
+            </p>
           </div>
 
           <div className="rounded-2xl border border-white/[.06] bg-[#111914] p-5">

@@ -6,6 +6,15 @@ import { DEFAULT_CATEGORIES, DEFAULT_WALLETS, INITIAL_TRANSACTIONS } from "@/lib
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
 
+export type OfflineSyncAction =
+  | { id: string; type: "upsert_transaction"; data: Transaction }
+  | { id: string; type: "delete_transaction"; targetId: string }
+  | { id: string; type: "upsert_wallet"; data: Wallet }
+  | { id: string; type: "delete_wallet"; targetId: string }
+  | { id: string; type: "upsert_category"; data: Category }
+  | { id: string; type: "delete_category"; targetId: string }
+  | { id: string; type: "update_profile"; data: { userName?: string; openingBalance?: number } };
+
 type FinanceContextValue = {
   userName: string;
   transactions: Transaction[];
@@ -17,6 +26,10 @@ type FinanceContextValue = {
   expenses: number;
   isCloudSynced: boolean;
   isLoadingData: boolean;
+  isOnline: boolean;
+  pendingSyncCount: number;
+  isSyncingOffline: boolean;
+  flushSyncQueue: () => Promise<void>;
   walletBalances: Record<string, number>;
   getWalletBalance: (id: string) => number;
   updateUserName: (name: string) => Promise<void>;
@@ -59,12 +72,40 @@ function getCacheKey(userId?: string | null) {
   return userId ? `egp-tracker-user-${userId}` : STORAGE_KEY;
 }
 
+function getSyncQueueKey(userId?: string | null) {
+  return userId ? `egp-tracker-sync-queue-${userId}` : "egp-tracker-sync-queue-guest";
+}
+
+function loadSyncQueue(userId?: string | null): OfflineSyncAction[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(getSyncQueueKey(userId));
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveSyncQueue(queue: OfflineSyncAction[], userId?: string | null) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(getSyncQueueKey(userId), JSON.stringify(queue));
+  } catch (e) {
+    console.error("Failed to save sync queue", e);
+  }
+}
+
 export function FinanceProvider({ children }: { children: React.ReactNode }) {
   const { user, isConfigured } = useAuth();
   const userId = user?.id;
   const [data, setData] = useState<FinanceData>(DEFAULT_DATA);
   const [ready, setReady] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(true);
+
+  // Offline / Network States
+  const [isOnline, setIsOnline] = useState<boolean>(true);
+  const [pendingSyncCount, setPendingSyncCount] = useState<number>(0);
+  const [isSyncingOffline, setIsSyncingOffline] = useState<boolean>(false);
 
   // Helper to save to local cache safely
   const persistLocally = (freshData: FinanceData, targetUserId?: string | null) => {
@@ -76,6 +117,122 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
     } catch (e) {
       console.error("Local storage persist error", e);
     }
+  };
+
+  // Enqueue an action to be synchronized when back online
+  const enqueueOfflineAction = (action: OfflineSyncAction) => {
+    const currentQueue = loadSyncQueue(userId);
+
+    // Filter out previous pending action for the exact same entity to avoid redundant ops
+    const filtered = currentQueue.filter((item) => {
+      if (item.type === action.type) {
+        if ("targetId" in item && "targetId" in action) {
+          return item.targetId !== action.targetId;
+        }
+        if ("data" in item && "data" in action && "id" in item.data && "id" in action.data) {
+          return item.data.id !== action.data.id;
+        }
+      }
+      return true;
+    });
+
+    const updated = [...filtered, action];
+    saveSyncQueue(updated, userId);
+    setPendingSyncCount(updated.length);
+  };
+
+  // Flush pending offline changes to Supabase
+  const flushSyncQueue = async () => {
+    if (!userId || !supabase || isSyncingOffline) return;
+
+    const queue = loadSyncQueue(userId);
+    if (queue.length === 0) {
+      setPendingSyncCount(0);
+      return;
+    }
+
+    setIsSyncingOffline(true);
+    const failedQueue: OfflineSyncAction[] = [];
+
+    for (const action of queue) {
+      try {
+        if (action.type === "upsert_transaction") {
+          const tx = action.data;
+          const { error } = await supabase.from("transactions").upsert({
+            id: tx.id,
+            user_id: userId,
+            category_id: tx.categoryId || null,
+            wallet_id: tx.walletId || null,
+            to_wallet_id: tx.toWalletId || null,
+            title: tx.title,
+            amount: tx.amount,
+            type: tx.type,
+            date: tx.date,
+            note: tx.note || null,
+          });
+          if (error) failedQueue.push(action);
+        } else if (action.type === "delete_transaction") {
+          const { error } = await supabase
+            .from("transactions")
+            .delete()
+            .eq("id", action.targetId)
+            .eq("user_id", userId);
+          if (error) failedQueue.push(action);
+        } else if (action.type === "upsert_wallet") {
+          const w = action.data;
+          const { error } = await supabase.from("wallets").upsert({
+            id: w.id,
+            user_id: userId,
+            name: w.name,
+            type: w.type,
+            initial_balance: w.initialBalance,
+            color: w.color,
+            icon: w.icon || "wallet",
+          });
+          if (error) failedQueue.push(action);
+        } else if (action.type === "delete_wallet") {
+          const { error } = await supabase
+            .from("wallets")
+            .delete()
+            .eq("id", action.targetId)
+            .eq("user_id", userId);
+          if (error) failedQueue.push(action);
+        } else if (action.type === "upsert_category") {
+          const c = action.data;
+          const { error } = await supabase.from("categories").upsert({
+            id: c.id,
+            user_id: userId,
+            name: c.name,
+            type: c.type,
+            color: c.color,
+            icon: c.icon || "tag",
+            budget: c.budget || null,
+          });
+          if (error) failedQueue.push(action);
+        } else if (action.type === "delete_category") {
+          const { error } = await supabase
+            .from("categories")
+            .delete()
+            .eq("id", action.targetId)
+            .eq("user_id", userId);
+          if (error) failedQueue.push(action);
+        } else if (action.type === "update_profile") {
+          const { error } = await supabase.from("profiles").upsert({
+            id: userId,
+            user_name: action.data.userName,
+            opening_balance: action.data.openingBalance,
+          });
+          if (error) failedQueue.push(action);
+        }
+      } catch (err) {
+        console.error("Failed executing sync action", action, err);
+        failedQueue.push(action);
+      }
+    }
+
+    saveSyncQueue(failedQueue, userId);
+    setPendingSyncCount(failedQueue.length);
+    setIsSyncingOffline(false);
   };
 
   // 1. Initial Load from LocalStorage Cache on Mount
@@ -105,26 +262,64 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
       console.error("Could not load local finance data", error);
     } finally {
       setReady(true);
+      if (!userId || !isConfigured) {
+        setIsLoadingData(false);
+      }
     }
+  }, [userId, isConfigured]);
+
+  // 2. Network Status & Auto-Sync Listener
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    setIsOnline(navigator.onLine);
+    setPendingSyncCount(loadSyncQueue(userId).length);
+
+    const handleOnline = () => {
+      setIsOnline(true);
+      // Flush queue automatically when network is back
+      flushSyncQueue();
+    };
+
+    const handleOffline = () => {
+      setIsOnline(false);
+    };
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
   }, [userId]);
 
-  // 2. Always persist any state changes to Local Storage
+  // 3. Always persist any state changes to Local Storage
   useEffect(() => {
     if (ready) {
       persistLocally(data, userId);
     }
   }, [data, ready, userId]);
 
-  // 3. Supabase Cloud Sync & Self-Healing
+  // 4. Supabase Cloud Sync & Self-Healing (With Offline-First Resilience)
   useEffect(() => {
     if (!userId || !supabase || !isConfigured) return;
+
+    // If completely offline on boot, skip cloud fetch to avoid hanging; local data is already ready
+    if (typeof navigator !== "undefined" && !navigator.onLine) {
+      setIsLoadingData(false);
+      return;
+    }
 
     let isMounted = true;
 
     async function fetchCloudData() {
       setIsLoadingData(true);
       try {
-        // Read local cached data first so we don't accidentally lose offline items
+        // First: flush any pending offline writes before fetching to prevent overwriting
+        await flushSyncQueue();
+
+        // Read local cached data first
         const cacheKey = getCacheKey(userId);
         const cachedRaw = localStorage.getItem(cacheKey) || localStorage.getItem(STORAGE_KEY);
         let cachedData: FinanceData | null = null;
@@ -168,9 +363,10 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
 
         // If user has no categories in Supabase, seed defaults
         if (loadedCategories.length === 0) {
-          const toSeed = (cachedData?.categories && cachedData.categories.length > 0)
-            ? cachedData.categories
-            : DEFAULT_CATEGORIES;
+          const toSeed =
+            cachedData?.categories && cachedData.categories.length > 0
+              ? cachedData.categories
+              : DEFAULT_CATEGORIES;
 
           loadedCategories = toSeed.map((c) => ({
             ...c,
@@ -208,9 +404,10 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
 
         // If user has no wallets in Supabase, seed defaults
         if (loadedWallets.length === 0) {
-          const toSeed = (cachedData?.wallets && cachedData.wallets.length > 0)
-            ? cachedData.wallets
-            : DEFAULT_WALLETS;
+          const toSeed =
+            cachedData?.wallets && cachedData.wallets.length > 0
+              ? cachedData.wallets
+              : DEFAULT_WALLETS;
 
           loadedWallets = toSeed.map((w) => ({
             ...w,
@@ -253,15 +450,18 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
           note: t.note || undefined,
         }));
 
-        // SAFETY NET: If Supabase returns 0 transactions but local cache has transactions,
-        // DO NOT wipe them out! Instead, push local transactions up to Supabase!
-        if (
-          loadedTransactions.length === 0 &&
-          cachedData?.transactions &&
-          cachedData.transactions.length > 0
-        ) {
-          loadedTransactions = cachedData.transactions;
-          for (const tx of loadedTransactions) {
+        // OFFLINE RECONCILIATION: Check if local cache has any transactions not yet recorded in Supabase
+        const cloudTxIds = new Set(loadedTransactions.map((t) => t.id));
+        const localTransactions = cachedData?.transactions || [];
+        const unsyncedLocals = localTransactions.filter((lt) => !cloudTxIds.has(lt.id));
+
+        if (unsyncedLocals.length > 0) {
+          // Add unsynced local transactions and push them up
+          loadedTransactions = [...unsyncedLocals, ...loadedTransactions].sort((a, b) =>
+            b.date.localeCompare(a.date)
+          );
+
+          for (const tx of unsyncedLocals) {
             await supabase!.from("transactions").upsert({
               id: tx.id,
               user_id: userId,
@@ -364,8 +564,17 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
     // 2. Persist locally immediately
     persistLocally(nextData, userId);
 
-    // 3. Persist to Supabase
+    // 3. Persist to Supabase or queue offline
     if (userId && supabase) {
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        enqueueOfflineAction({
+          id: crypto.randomUUID(),
+          type: "upsert_transaction",
+          data: newTx,
+        });
+        return;
+      }
+
       try {
         const { error } = await supabase.from("transactions").insert({
           id: newId,
@@ -381,23 +590,43 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
         });
 
         if (error) {
-          console.error("Supabase insert error details:", error);
+          console.warn("Supabase insert failed, queueing offline:", error);
+          enqueueOfflineAction({
+            id: crypto.randomUUID(),
+            type: "upsert_transaction",
+            data: newTx,
+          });
         }
       } catch (err) {
-        console.error("Error inserting transaction to Supabase", err);
+        console.warn("Network error inserting transaction, queueing offline:", err);
+        enqueueOfflineAction({
+          id: crypto.randomUUID(),
+          type: "upsert_transaction",
+          data: newTx,
+        });
       }
     }
   };
 
   const editTransaction = async (id: string, input: Omit<Transaction, "id">) => {
+    const updatedTx: Transaction = { ...input, id };
     const nextTransactions = data.transactions.map((item) =>
-      item.id === id ? { ...input, id } : item
+      item.id === id ? updatedTx : item
     );
     const nextData = { ...data, transactions: nextTransactions };
     setData(nextData);
     persistLocally(nextData, userId);
 
     if (userId && supabase) {
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        enqueueOfflineAction({
+          id: crypto.randomUUID(),
+          type: "upsert_transaction",
+          data: updatedTx,
+        });
+        return;
+      }
+
       try {
         const { error } = await supabase
           .from("transactions")
@@ -415,10 +644,20 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
           .eq("user_id", userId);
 
         if (error) {
-          console.error("Supabase update error:", error);
+          console.warn("Supabase update failed, queueing offline:", error);
+          enqueueOfflineAction({
+            id: crypto.randomUUID(),
+            type: "upsert_transaction",
+            data: updatedTx,
+          });
         }
       } catch (err) {
-        console.error("Error updating transaction in Supabase", err);
+        console.warn("Network error updating transaction, queueing offline:", err);
+        enqueueOfflineAction({
+          id: crypto.randomUUID(),
+          type: "upsert_transaction",
+          data: updatedTx,
+        });
       }
     }
   };
@@ -430,6 +669,15 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
     persistLocally(nextData, userId);
 
     if (userId && supabase) {
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        enqueueOfflineAction({
+          id: crypto.randomUUID(),
+          type: "delete_transaction",
+          targetId: id,
+        });
+        return;
+      }
+
       try {
         const { error } = await supabase
           .from("transactions")
@@ -438,10 +686,20 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
           .eq("user_id", userId);
 
         if (error) {
-          console.error("Supabase delete error:", error);
+          console.warn("Supabase delete failed, queueing offline:", error);
+          enqueueOfflineAction({
+            id: crypto.randomUUID(),
+            type: "delete_transaction",
+            targetId: id,
+          });
         }
       } catch (err) {
-        console.error("Error deleting transaction from Supabase", err);
+        console.warn("Network error deleting transaction, queueing offline:", err);
+        enqueueOfflineAction({
+          id: crypto.randomUUID(),
+          type: "delete_transaction",
+          targetId: id,
+        });
       }
     }
   };
@@ -480,6 +738,15 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
     persistLocally(nextData, userId);
 
     if (userId && supabase) {
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        enqueueOfflineAction({
+          id: crypto.randomUUID(),
+          type: "upsert_wallet",
+          data: newWallet,
+        });
+        return;
+      }
+
       try {
         const { error } = await supabase.from("wallets").insert({
           id: newId,
@@ -492,23 +759,48 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
         });
 
         if (error) {
-          console.error("Supabase add wallet error:", error);
+          console.warn("Supabase add wallet failed, queueing offline:", error);
+          enqueueOfflineAction({
+            id: crypto.randomUUID(),
+            type: "upsert_wallet",
+            data: newWallet,
+          });
         }
       } catch (err) {
-        console.error("Error inserting wallet to Supabase", err);
+        console.warn("Network error inserting wallet, queueing offline:", err);
+        enqueueOfflineAction({
+          id: crypto.randomUUID(),
+          type: "upsert_wallet",
+          data: newWallet,
+        });
       }
     }
   };
 
   const editWallet = async (id: string, input: Partial<Omit<Wallet, "id">>) => {
-    const nextWallets = data.wallets.map((item) =>
-      item.id === id ? { ...item, ...input } : item
-    );
+    let updatedWallet: Wallet | null = null;
+    const nextWallets = data.wallets.map((item) => {
+      if (item.id === id) {
+        updatedWallet = { ...item, ...input };
+        return updatedWallet;
+      }
+      return item;
+    });
+
     const nextData = { ...data, wallets: nextWallets };
     setData(nextData);
     persistLocally(nextData, userId);
 
-    if (userId && supabase) {
+    if (userId && supabase && updatedWallet) {
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        enqueueOfflineAction({
+          id: crypto.randomUUID(),
+          type: "upsert_wallet",
+          data: updatedWallet,
+        });
+        return;
+      }
+
       try {
         const { error } = await supabase
           .from("wallets")
@@ -522,10 +814,20 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
           .eq("user_id", userId);
 
         if (error) {
-          console.error("Supabase edit wallet error:", error);
+          console.warn("Supabase edit wallet failed, queueing offline:", error);
+          enqueueOfflineAction({
+            id: crypto.randomUUID(),
+            type: "upsert_wallet",
+            data: updatedWallet,
+          });
         }
       } catch (err) {
-        console.error("Error updating wallet in Supabase", err);
+        console.warn("Network error updating wallet, queueing offline:", err);
+        enqueueOfflineAction({
+          id: crypto.randomUUID(),
+          type: "upsert_wallet",
+          data: updatedWallet,
+        });
       }
     }
   };
@@ -552,10 +854,31 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
     persistLocally(nextData, userId);
 
     if (userId && supabase) {
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        enqueueOfflineAction({
+          id: crypto.randomUUID(),
+          type: "delete_wallet",
+          targetId: id,
+        });
+        return { success: true };
+      }
+
       try {
-        await supabase.from("wallets").delete().eq("id", id).eq("user_id", userId);
+        const { error } = await supabase.from("wallets").delete().eq("id", id).eq("user_id", userId);
+        if (error) {
+          enqueueOfflineAction({
+            id: crypto.randomUUID(),
+            type: "delete_wallet",
+            targetId: id,
+          });
+        }
       } catch (err) {
-        console.error("Error deleting wallet from Supabase", err);
+        console.warn("Network error deleting wallet, queueing offline:", err);
+        enqueueOfflineAction({
+          id: crypto.randomUUID(),
+          type: "delete_wallet",
+          targetId: id,
+        });
       }
     }
 
@@ -572,6 +895,15 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
     persistLocally(nextData, userId);
 
     if (userId && supabase) {
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        enqueueOfflineAction({
+          id: crypto.randomUUID(),
+          type: "upsert_category",
+          data: newCat,
+        });
+        return;
+      }
+
       try {
         const { error } = await supabase.from("categories").insert({
           id: newId,
@@ -584,23 +916,48 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
         });
 
         if (error) {
-          console.error("Supabase add category error:", error);
+          console.warn("Supabase add category failed, queueing offline:", error);
+          enqueueOfflineAction({
+            id: crypto.randomUUID(),
+            type: "upsert_category",
+            data: newCat,
+          });
         }
       } catch (err) {
-        console.error("Error inserting category to Supabase", err);
+        console.warn("Network error inserting category, queueing offline:", err);
+        enqueueOfflineAction({
+          id: crypto.randomUUID(),
+          type: "upsert_category",
+          data: newCat,
+        });
       }
     }
   };
 
   const editCategory = async (id: string, input: Partial<Omit<Category, "id">>) => {
-    const nextCategories = data.categories.map((item) =>
-      item.id === id ? { ...item, ...input } : item
-    );
+    let updatedCat: Category | null = null;
+    const nextCategories = data.categories.map((item) => {
+      if (item.id === id) {
+        updatedCat = { ...item, ...input };
+        return updatedCat;
+      }
+      return item;
+    });
+
     const nextData = { ...data, categories: nextCategories };
     setData(nextData);
     persistLocally(nextData, userId);
 
-    if (userId && supabase) {
+    if (userId && supabase && updatedCat) {
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        enqueueOfflineAction({
+          id: crypto.randomUUID(),
+          type: "upsert_category",
+          data: updatedCat,
+        });
+        return;
+      }
+
       try {
         const { error } = await supabase
           .from("categories")
@@ -614,10 +971,20 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
           .eq("user_id", userId);
 
         if (error) {
-          console.error("Supabase edit category error:", error);
+          console.warn("Supabase edit category failed, queueing offline:", error);
+          enqueueOfflineAction({
+            id: crypto.randomUUID(),
+            type: "upsert_category",
+            data: updatedCat,
+          });
         }
       } catch (err) {
-        console.error("Error updating category in Supabase", err);
+        console.warn("Network error updating category, queueing offline:", err);
+        enqueueOfflineAction({
+          id: crypto.randomUUID(),
+          type: "upsert_category",
+          data: updatedCat,
+        });
       }
     }
   };
@@ -637,10 +1004,31 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
     persistLocally(nextData, userId);
 
     if (userId && supabase) {
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        enqueueOfflineAction({
+          id: crypto.randomUUID(),
+          type: "delete_category",
+          targetId: id,
+        });
+        return { success: true };
+      }
+
       try {
-        await supabase.from("categories").delete().eq("id", id).eq("user_id", userId);
+        const { error } = await supabase.from("categories").delete().eq("id", id).eq("user_id", userId);
+        if (error) {
+          enqueueOfflineAction({
+            id: crypto.randomUUID(),
+            type: "delete_category",
+            targetId: id,
+          });
+        }
       } catch (err) {
-        console.error("Error deleting category from Supabase", err);
+        console.warn("Network error deleting category, queueing offline:", err);
+        enqueueOfflineAction({
+          id: crypto.randomUUID(),
+          type: "delete_category",
+          targetId: id,
+        });
       }
     }
 
@@ -653,13 +1041,35 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
     persistLocally(nextData, userId);
 
     if (userId && supabase) {
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        enqueueOfflineAction({
+          id: crypto.randomUUID(),
+          type: "update_profile",
+          data: { openingBalance: value },
+        });
+        return;
+      }
+
       try {
-        await supabase
+        const { error } = await supabase
           .from("profiles")
           .update({ opening_balance: value })
           .eq("id", userId);
+
+        if (error) {
+          enqueueOfflineAction({
+            id: crypto.randomUUID(),
+            type: "update_profile",
+            data: { openingBalance: value },
+          });
+        }
       } catch (err) {
-        console.error("Error updating balance in Supabase", err);
+        console.warn("Network error updating balance, queueing offline:", err);
+        enqueueOfflineAction({
+          id: crypto.randomUUID(),
+          type: "update_profile",
+          data: { openingBalance: value },
+        });
       }
     }
   };
@@ -670,13 +1080,35 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
     persistLocally(nextData, userId);
 
     if (userId && supabase) {
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        enqueueOfflineAction({
+          id: crypto.randomUUID(),
+          type: "update_profile",
+          data: { userName: name },
+        });
+        return;
+      }
+
       try {
-        await supabase
+        const { error } = await supabase
           .from("profiles")
           .update({ user_name: name })
           .eq("id", userId);
+
+        if (error) {
+          enqueueOfflineAction({
+            id: crypto.randomUUID(),
+            type: "update_profile",
+            data: { userName: name },
+          });
+        }
       } catch (err) {
-        console.error("Error updating username in Supabase", err);
+        console.warn("Network error updating username, queueing offline:", err);
+        enqueueOfflineAction({
+          id: crypto.randomUUID(),
+          type: "update_profile",
+          data: { userName: name },
+        });
       }
     }
   };
@@ -684,6 +1116,9 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
   const syncLocalToCloud = async () => {
     if (!userId || !supabase) return;
     try {
+      // First, flush any actions from the queue
+      await flushSyncQueue();
+
       await supabase.from("profiles").upsert({
         id: userId,
         user_name: data.userName,
@@ -730,6 +1165,7 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (err) {
       console.error("Sync to cloud error", err);
+      throw err;
     }
   };
 
@@ -739,7 +1175,9 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem(LEGACY_STORAGE_KEY_V2);
     if (userId) {
       localStorage.removeItem(getCacheKey(userId));
+      localStorage.removeItem(getSyncQueueKey(userId));
     }
+    setPendingSyncCount(0);
   };
 
   const importData = (imported: FinanceData) => {
@@ -770,6 +1208,10 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
     openingBalance: data.openingBalance,
     isCloudSynced: Boolean(userId && isConfigured),
     isLoadingData,
+    isOnline,
+    pendingSyncCount,
+    isSyncingOffline,
+    flushSyncQueue,
     walletBalances,
     getWalletBalance,
     updateUserName,
@@ -798,5 +1240,3 @@ export function useFinance() {
   if (!context) throw new Error("useFinance must be used inside FinanceProvider");
   return context;
 }
-
-export type { TransactionType };
