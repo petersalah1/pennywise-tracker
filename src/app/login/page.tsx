@@ -9,9 +9,9 @@ import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { signIn, signUp, isConfigured, user } = useAuth();
+  const { signIn, signUp, resetPassword, isConfigured, user } = useAuth();
 
-  const [mode, setMode] = useState<"login" | "register">("login");
+  const [mode, setMode] = useState<"login" | "register" | "forgot">("login");
   const [userName, setUserName] = useState("بيتر صلاح");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -38,7 +38,7 @@ export default function LoginPage() {
         } else {
           router.push("/");
         }
-      } else {
+      } else if (mode === "register") {
         const res = await signUp(email, password, userName);
         if (res.error) {
           setErrorMsg(res.error);
@@ -47,6 +47,15 @@ export default function LoginPage() {
           setTimeout(() => {
             router.push("/");
           }, 1500);
+        }
+      } else if (mode === "forgot") {
+        const res = await resetPassword(email);
+        if (res.error) {
+          setErrorMsg(res.error);
+        } else {
+          setSuccessMsg(
+            "تم إرسال رابط استعادة كلمة المرور إلى بريدك الإلكتروني بنجاح! يرجى مراجعة صندوق الوارد ومجلد الرسائل غير المرغوب فيها (Spam)."
+          );
         }
       }
     } catch {
@@ -78,12 +87,18 @@ export default function LoginPage() {
         <div className="rounded-3xl border border-white/[.08] bg-[#111914] p-6 shadow-2xl sm:p-8">
           <div className="mb-6">
             <h2 className="text-xl font-bold text-white">
-              {mode === "login" ? "تسجيل الدخول إلى حسابك" : "إنشاء حساب سحابي جديد"}
+              {mode === "login"
+                ? "تسجيل الدخول إلى حسابك"
+                : mode === "register"
+                ? "إنشاء حساب سحابي جديد"
+                : "استعادة كلمة المرور"}
             </h2>
             <p className="mt-1 text-xs text-[#829087]">
               {mode === "login"
                 ? "احفظ بياناتك ومعاملاتك مشفرة ومتاحة على أي جهاز."
-                : "سجل حسابك لتبدأ حفظ ومزامنة أموالك سحابياً بكل أمان."}
+                : mode === "register"
+                ? "سجل حسابك لتبدأ حفظ ومزامنة أموالك سحابياً بكل أمان."
+                : "أدخل بريدك الإلكتروني وسنرسل لك رابطاً لإعادة تعيين كلمة المرور."}
             </p>
           </div>
 
@@ -111,37 +126,55 @@ export default function LoginPage() {
             </div>
           )}
 
-          {/* Mode Switch Tabs */}
-          <div className="mb-6 grid grid-cols-2 rounded-xl bg-[#0c120e] p-1">
-            <button
-              type="button"
-              onClick={() => {
-                setMode("login");
-                setErrorMsg(null);
-              }}
-              className={`rounded-lg py-2 text-xs font-semibold transition ${
-                mode === "login"
-                  ? "bg-[#1c3526] text-[#75dfa0] shadow"
-                  : "text-[#819087] hover:text-white"
-              }`}
-            >
-              تسجيل الدخول
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setMode("register");
-                setErrorMsg(null);
-              }}
-              className={`rounded-lg py-2 text-xs font-semibold transition ${
-                mode === "register"
-                  ? "bg-[#1c3526] text-[#75dfa0] shadow"
-                  : "text-[#819087] hover:text-white"
-              }`}
-            >
-              حساب جديد
-            </button>
-          </div>
+          {/* Mode Switch Tabs (only if not in forgot mode) */}
+          {mode !== "forgot" ? (
+            <div className="mb-6 grid grid-cols-2 rounded-xl bg-[#0c120e] p-1">
+              <button
+                type="button"
+                onClick={() => {
+                  setMode("login");
+                  setErrorMsg(null);
+                  setSuccessMsg(null);
+                }}
+                className={`rounded-lg py-2 text-xs font-semibold transition ${
+                  mode === "login"
+                    ? "bg-[#1c3526] text-[#75dfa0] shadow"
+                    : "text-[#819087] hover:text-white"
+                }`}
+              >
+                تسجيل الدخول
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setMode("register");
+                  setErrorMsg(null);
+                  setSuccessMsg(null);
+                }}
+                className={`rounded-lg py-2 text-xs font-semibold transition ${
+                  mode === "register"
+                    ? "bg-[#1c3526] text-[#75dfa0] shadow"
+                    : "text-[#819087] hover:text-white"
+                }`}
+              >
+                حساب جديد
+              </button>
+            </div>
+          ) : (
+            <div className="mb-5 flex items-center justify-between">
+              <button
+                type="button"
+                onClick={() => {
+                  setMode("login");
+                  setErrorMsg(null);
+                  setSuccessMsg(null);
+                }}
+                className="text-xs font-semibold text-[#82e6a7] hover:underline"
+              >
+                &rarr; العودة لتسجيل الدخول
+              </button>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {mode === "register" && (
@@ -176,21 +209,41 @@ export default function LoginPage() {
               </div>
             </label>
 
-            <label className="block">
-              <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">كلمة المرور</span>
-              <div className="relative">
-                <input
-                  required
-                  minLength={6}
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="field pl-9"
-                />
-                <Lock size={15} className="absolute left-3 top-3 text-[#627368]" />
+            {mode !== "forgot" && (
+              <div>
+                <label className="block">
+                  <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">كلمة المرور</span>
+                  <div className="relative">
+                    <input
+                      required
+                      minLength={6}
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="field pl-9"
+                    />
+                    <Lock size={15} className="absolute left-3 top-3 text-[#627368]" />
+                  </div>
+                </label>
+
+                {mode === "login" && (
+                  <div className="mt-2 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMode("forgot");
+                        setErrorMsg(null);
+                        setSuccessMsg(null);
+                      }}
+                      className="text-[11px] font-semibold text-[#82e6a7] transition hover:text-[#9ef0be] hover:underline"
+                    >
+                      نسيت كلمة المرور؟
+                    </button>
+                  </div>
+                )}
               </div>
-            </label>
+            )}
 
             <button
               type="submit"
@@ -201,7 +254,13 @@ export default function LoginPage() {
                 <span>جاري المعالجة...</span>
               ) : (
                 <>
-                  <span>{mode === "login" ? "دخول إلى الحساب" : "إنشاء الحساب والمزامنة"}</span>
+                  <span>
+                    {mode === "login"
+                      ? "دخول إلى الحساب"
+                      : mode === "register"
+                      ? "إنشاء الحساب والمزامنة"
+                      : "إرسال رابط استعادة كلمة المرور"}
+                  </span>
                   <ArrowRight size={15} className="rotate-180" />
                 </>
               )}

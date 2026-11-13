@@ -12,6 +12,8 @@ type AuthContextValue = {
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
   signUp: (email: string, password: string, userName?: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
+  resetPassword: (email: string) => Promise<{ error?: string; success?: boolean }>;
+  updatePassword: (newPassword: string) => Promise<{ error?: string; success?: boolean }>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -120,6 +122,55 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setSession(null);
   };
 
+  const resetPassword = async (email: string): Promise<{ error?: string; success?: boolean }> => {
+    if (!supabase) {
+      return { error: "لم يتم ضبط إعدادات السحابة (Supabase) بعد." };
+    }
+
+    try {
+      const redirectUrl =
+        typeof window !== "undefined"
+          ? `${window.location.origin}/reset-password`
+          : undefined;
+
+      const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+        redirectTo: redirectUrl,
+      });
+
+      if (error) {
+        return { error: error.message };
+      }
+
+      return { success: true };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "حدث خطأ أثناء إرسال الرابط";
+      return { error: msg };
+    }
+  };
+
+  const updatePassword = async (
+    newPassword: string
+  ): Promise<{ error?: string; success?: boolean }> => {
+    if (!supabase) {
+      return { error: "لم يتم ضبط إعدادات السحابة (Supabase) بعد." };
+    }
+
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword,
+      });
+
+      if (error) {
+        return { error: error.message };
+      }
+
+      return { success: true };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "حدث خطأ أثناء تحديث كلمة المرور";
+      return { error: msg };
+    }
+  };
+
   const value: AuthContextValue = {
     user,
     session,
@@ -128,6 +179,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signIn,
     signUp,
     signOut,
+    resetPassword,
+    updatePassword,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
