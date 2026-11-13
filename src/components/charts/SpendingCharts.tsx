@@ -62,38 +62,46 @@ export function WeeklyChart() {
     });
   }, [transactions]);
 
+  const totalWeekly = data.reduce((s, d) => s + d.amount, 0);
+  const avgDailyWeekly = totalWeekly / 7;
 
   return (
-    <div className="h-[230px] w-full" dir="ltr">
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
-          <CartesianGrid stroke="#253129" strokeDasharray="3 5" vertical={false} />
-          <XAxis
-            dataKey="day"
-            tick={{ fill: "#75837a", fontSize: 11 }}
-            axisLine={false}
-            tickLine={false}
-          />
-          <YAxis
-            tick={{ fill: "#75837a", fontSize: 10 }}
-            axisLine={false}
-            tickLine={false}
-            tickFormatter={(val) => `${val}`}
-          />
-          <Tooltip
-            contentStyle={tooltipStyle}
-            formatter={(value) => [formatEGP(Number(value)), "المصروفات"]}
-            labelFormatter={(label) => `يوم ${label}`}
-          />
-          <Bar
-            dataKey="amount"
-            name="المصروفات"
-            fill="#62d58f"
-            radius={[6, 6, 0, 0]}
-            maxBarSize={34}
-          />
-        </BarChart>
-      </ResponsiveContainer>
+    <div>
+      <div className="mb-2 flex items-center justify-between text-[11px] text-[#78897f]">
+        <span>إجمالي الأسبوع: <strong className="text-white">{formatEGP(totalWeekly)}</strong></span>
+        <span>متوسط الإنفاق اليومي: <strong className="text-[#69d994]">{formatEGP(avgDailyWeekly)} / يوم</strong></span>
+      </div>
+      <div className="h-[205px] w-full" dir="ltr">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={data} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
+            <CartesianGrid stroke="#253129" strokeDasharray="3 5" vertical={false} />
+            <XAxis
+              dataKey="day"
+              tick={{ fill: "#75837a", fontSize: 11 }}
+              axisLine={false}
+              tickLine={false}
+            />
+            <YAxis
+              tick={{ fill: "#75837a", fontSize: 10 }}
+              axisLine={false}
+              tickLine={false}
+              tickFormatter={(val) => `${val}`}
+            />
+            <Tooltip
+              contentStyle={tooltipStyle}
+              formatter={(value) => [formatEGP(Number(value)), "المصروفات"]}
+              labelFormatter={(label) => `يوم ${label}`}
+            />
+            <Bar
+              dataKey="amount"
+              name="المصروفات"
+              fill="#62d58f"
+              radius={[6, 6, 0, 0]}
+              maxBarSize={34}
+            />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }

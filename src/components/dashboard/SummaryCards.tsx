@@ -16,6 +16,7 @@ export default function SummaryCards() {
   weekStart.setDate(weekStart.getDate() - diff);
 
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  const currentDay = now.getDate();
 
   const weekly = transactions
     .filter((item) => item.type === "expense" && new Date(`${item.date}T00:00:00`) >= weekStart)
@@ -24,6 +25,8 @@ export default function SummaryCards() {
   const monthly = transactions
     .filter((item) => item.type === "expense" && new Date(`${item.date}T00:00:00`) >= monthStart)
     .reduce((sum, item) => sum + item.amount, 0);
+
+  const dailyAverageThisMonth = monthly / Math.max(currentDay, 1);
 
   const cards = [
     {
@@ -52,7 +55,7 @@ export default function SummaryCards() {
       value: formatEGP(monthly),
       icon: TrendingUp,
       color: "amber",
-      note: `مصروفات هذا الأسبوع: ${formatEGP(weekly)}`,
+      note: `المتوسط اليومي: ${formatEGP(dailyAverageThisMonth)} • الأسبوع: ${formatEGP(weekly)}`,
     },
   ];
 
