@@ -2,7 +2,7 @@
 // Pennywise PWA - Service Worker (Offline First)
 // ================================================================
 
-const CACHE_NAME = "pennywise-cache-v1";
+const CACHE_NAME = "pennywise-cache-v2";
 
 // Essential routes & assets to cache on install
 const PRECACHE_URLS = [
@@ -73,12 +73,17 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // 3. Skip Supabase API calls (let the application's offline sync queue handle data persistence)
+  // 3. Never cache or intercept in local development (localhost / 127.0.0.1) so Turbopack HMR works smoothly
+  if (url.hostname === "localhost" || url.hostname === "127.0.0.1") {
+    return;
+  }
+
+  // 4. Skip Supabase API calls (let the application's offline sync queue handle data persistence)
   if (url.hostname.includes("supabase.co")) {
     return;
   }
 
-  // 4. Next.js Static Chunks & Assets (/_next/static/...) -> Cache-First
+  // 5. Next.js Static Chunks & Assets (/_next/static/...) -> Cache-First in production
   if (url.pathname.startsWith("/_next/static/")) {
     event.respondWith(
       caches.match(request).then((cachedResponse) => {
