@@ -152,14 +152,14 @@ export default function SettingsPage() {
     }
   }
 
-  function handleReset() {
+  async function handleReset() {
     if (
       window.confirm(
         "تحذير: هل أنت متأكد من رغبتك في مسح كافة البيانات والعودة للوضع الافتراضي؟ لا يمكن التراجع عن هذا الإجراء!"
       )
     ) {
-      resetAllData();
-      setFeedback({ text: "تمت إعادة ضبط كافة البيانات إلى الحالة الافتراضية." });
+      await resetAllData();
+      setFeedback({ text: "تمت إعادة ضبط كافة البيانات إلى الحالة الافتراضية بنجاح." });
       setTimeout(() => setFeedback(null), 3000);
     }
   }

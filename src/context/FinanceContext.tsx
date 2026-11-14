@@ -51,7 +51,7 @@ type FinanceContextValue = {
     note?: string;
   }) => Promise<void>;
   updateOpeningBalance: (value: number) => Promise<void>;
-  resetAllData: () => void;
+  resetAllData: () => Promise<void>;
   importData: (data: FinanceData) => boolean;
   syncLocalToCloud: () => Promise<void>;
 };
@@ -259,9 +259,13 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
         transactions: [],
         categories: DEFAULT_CATEGORIES,
       });
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(LEGACY_STORAGE_KEY_V2);
     }
     setPrevUserId(userId);
-  }, [userId]);  // 1. Initial Load from LocalStorage Cache on Mount
+  }, [userId]);
+
+  // 1. Initial Load from LocalStorage Cache on Mount
   useEffect(() => {
     try {
       // IMPORTANT: Only load user-specific cache when logged in.
@@ -363,9 +367,9 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
         // First: flush any pending offline writes before fetching to prevent overwriting
         await flushSyncQueue();
 
-        // Read local cached data first
+        // Read local cached data strictly for THIS user
         const cacheKey = getCacheKey(userId);
-        const cachedRaw = localStorage.getItem(cacheKey) || localStorage.getItem(STORAGE_KEY);
+        const cachedRaw = localStorage.getItem(cacheKey);
         let cachedData: FinanceData | null = null;
         if (cachedRaw) {
           try {
@@ -380,12 +384,14 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
           .eq("id", userId)
           .maybeSingle();
 
+        const defaultName = (user?.user_metadata?.user_name as string) || "مستخدم جديد";
+
         // If profile doesn't exist yet in Supabase, create it
         if (!profile) {
           await supabase!.from("profiles").upsert({
             id: userId,
-            user_name: cachedData?.userName || "بيتر صلاح",
-            opening_balance: cachedData?.openingBalance || 0,
+            user_name: defaultName,
+            opening_balance: 0,
           });
         }
 
@@ -405,16 +411,13 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
           budget: c.budget ? Number(c.budget) : undefined,
         }));
 
-        // If user has no categories in Supabase, seed defaults
+        // If user has no categories in Supabase, seed clean defaults
         if (loadedCategories.length === 0) {
-          const toSeed =
-            cachedData?.categories && cachedData.categories.length > 0
-              ? cachedData.categories
-              : DEFAULT_CATEGORIES;
+          const toSeed = DEFAULT_CATEGORIES;
 
           loadedCategories = toSeed.map((c) => ({
             ...c,
-            id: c.id.includes("_") ? c.id : `${c.id}_${userId}`,
+            id: `${c.id}_${userId}`,
           }));
 
           for (const cat of loadedCategories) {
@@ -446,16 +449,13 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
           icon: w.icon || "wallet",
         }));
 
-        // If user has no wallets in Supabase, seed defaults
+        // If user has no wallets in Supabase, seed clean defaults
         if (loadedWallets.length === 0) {
-          const toSeed =
-            cachedData?.wallets && cachedData.wallets.length > 0
-              ? cachedData.wallets
-              : DEFAULT_WALLETS;
+          const toSeed = DEFAULT_WALLETS;
 
           loadedWallets = toSeed.map((w) => ({
             ...w,
-            id: w.id.includes("_") ? w.id : `${w.id}_${userId}`,
+            id: `${w.id}_${userId}`,
           }));
 
           for (const wal of loadedWallets) {
@@ -495,13 +495,12 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
           isOneOff: Boolean((t as { is_one_off?: boolean }).is_one_off || (t.note && t.note.includes("[استثنائي]"))),
         }));
 
-        // OFFLINE RECONCILIATION: Check if local cache has any transactions not yet recorded in Supabase
+        // OFFLINE RECONCILIATION: Only check this specific user's cached transactions
         const cloudTxIds = new Set(loadedTransactions.map((t) => t.id));
         const localTransactions = cachedData?.transactions || [];
         const unsyncedLocals = localTransactions.filter((lt) => !cloudTxIds.has(lt.id));
 
         if (unsyncedLocals.length > 0) {
-          // Add unsynced local transactions and push them up
           loadedTransactions = [...unsyncedLocals, ...loadedTransactions].sort((a, b) =>
             b.date.localeCompare(a.date)
           );
@@ -525,8 +524,8 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
         if (!isMounted) return;
 
         const mergedData: FinanceData = {
-          userName: profile?.user_name || cachedData?.userName || "بيتر صلاح",
-          openingBalance: Number(profile?.opening_balance ?? cachedData?.openingBalance ?? 0),
+          userName: profile?.user_name || defaultName,
+          openingBalance: Number(profile?.opening_balance ?? 0),
           wallets: loadedWallets,
           categories: loadedCategories,
           transactions: loadedTransactions,
@@ -1235,13 +1234,47 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const resetAllData = () => {
-    setData(DEFAULT_DATA);
+  const resetAllData = async () => {
+    const cleanCategories = DEFAULT_CATEGORIES.map((c) => ({
+      ...c,
+      id: userId ? `${c.id}_${userId}` : c.id,
+    }));
+    const cleanWallets = DEFAULT_WALLETS.map((w) => ({
+      ...w,
+      id: userId ? `${w.id}_${userId}` : w.id,
+    }));
+    const cleanName = (user?.user_metadata?.user_name as string) || "مستخدم جديد";
+
+    const cleanData: FinanceData = {
+      userName: cleanName,
+      openingBalance: 0,
+      wallets: cleanWallets,
+      transactions: [],
+      categories: cleanCategories,
+    };
+
+    setData(cleanData);
     localStorage.removeItem(STORAGE_KEY);
     localStorage.removeItem(LEGACY_STORAGE_KEY_V2);
     if (userId) {
       localStorage.removeItem(getCacheKey(userId));
       localStorage.removeItem(getSyncQueueKey(userId));
+      persistLocally(cleanData, userId);
+
+      if (supabase) {
+        try {
+          // Remove all transactions from cloud for this user
+          await supabase.from("transactions").delete().eq("user_id", userId);
+          // Reset opening balance
+          await supabase.from("profiles").upsert({
+            id: userId,
+            opening_balance: 0,
+            user_name: cleanName,
+          });
+        } catch (err) {
+          console.error("Failed clearing user cloud data", err);
+        }
+      }
     }
     setPendingSyncCount(0);
   };
