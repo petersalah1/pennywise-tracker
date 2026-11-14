@@ -108,9 +108,20 @@ export default function ResetPasswordPage() {
           )}
 
           {errorMsg && (
-            <div className="mb-5 flex items-center gap-2.5 rounded-2xl border border-red-500/20 bg-red-950/30 p-3.5 text-xs text-red-300">
-              <AlertCircle size={17} className="shrink-0" />
-              <span>{errorMsg}</span>
+            <div className="mb-5 rounded-2xl border border-red-500/20 bg-red-950/30 p-3.5 text-xs text-red-300">
+              <div className="flex items-center gap-2.5">
+                <AlertCircle size={17} className="shrink-0" />
+                <span>{errorMsg}</span>
+              </div>
+              <div className="mt-3 border-t border-red-500/20 pt-2.5 text-left">
+                <Link
+                  href="/login?mode=forgot"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-red-500/20 px-3 py-1.5 text-[11px] font-semibold text-red-200 transition hover:bg-red-500/30"
+                >
+                  <span>طلب رابط استعادة جديد</span>
+                  <ArrowRight size={13} className="rotate-180" />
+                </Link>
+              </div>
             </div>
           )}
 

@@ -39,11 +39,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Listen to auth changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
       setIsLoading(false);
+
+      if (event === "PASSWORD_RECOVERY") {
+        if (typeof window !== "undefined" && !window.location.pathname.includes("/reset-password")) {
+          window.location.href = "/reset-password";
+        }
+      }
     });
+
+    // Check if user landed on home or other page with recovery or error hash
+    if (typeof window !== "undefined") {
+      const hash = window.location.hash;
+      const pathname = window.location.pathname;
+      if (
+        hash &&
+        (hash.includes("type=recovery") ||
+          hash.includes("error_code=otp_expired") ||
+          hash.includes("error_description=")) &&
+        !pathname.includes("/reset-password") &&
+        !pathname.includes("/login")
+      ) {
+        window.location.href = `/reset-password${hash}`;
+      }
+    }
 
     return () => {
       subscription.unsubscribe();
@@ -128,12 +150,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
-      const currentOrigin =
-        typeof window !== "undefined" && window.location.origin.includes("vercel.app")
+      const origin =
+        typeof window !== "undefined" && window.location.origin
           ? window.location.origin
-          : "https://pennywise-tracker-orcin.vercel.app";
+          : "https://pennywise-tracker1.vercel.app";
 
-      const redirectUrl = `${currentOrigin}/reset-password`;
+      const redirectUrl = `${origin}/reset-password`;
 
       const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
         redirectTo: redirectUrl,

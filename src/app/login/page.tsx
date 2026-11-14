@@ -24,9 +24,16 @@ export default function LoginPage() {
     if (user) router.push("/");
   }, [user, router]);
 
-  // Check URL hash for error parameters (e.g. expired reset link)
+  // Check URL query parameters and hash for error/mode parameters
   useEffect(() => {
     if (typeof window === "undefined") return;
+
+    // Support direct navigation like /login?mode=forgot
+    const searchParams = new URLSearchParams(window.location.search);
+    if (searchParams.get("mode") === "forgot" || searchParams.get("tab") === "forgot") {
+      setMode("forgot");
+    }
+
     const hash = window.location.hash;
     if (hash && hash.includes("error=")) {
       const params = new URLSearchParams(hash.replace(/^#/, ""));
