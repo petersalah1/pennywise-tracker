@@ -149,16 +149,17 @@ export default function TransactionForm({
 
   return (
     <div
-      className="fixed inset-0 z-[70] flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[70] flex items-center justify-center bg-black/80 p-0 sm:p-4 backdrop-blur-sm"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onClose();
       }}
     >
       <form
         onSubmit={submit}
-        className="w-full max-w-[500px] rounded-2xl border border-white/10 bg-[#141c17] p-5 shadow-2xl sm:p-6"
+        className="w-full h-full sm:h-auto sm:max-h-[92vh] sm:max-w-[500px] rounded-none sm:rounded-2xl border-0 sm:border sm:border-white/10 bg-[#141c17] shadow-2xl flex flex-col overflow-hidden"
       >
-        <div className="mb-5 flex items-start justify-between">
+        {/* Sticky Header on Mobile */}
+        <div className="flex items-start justify-between p-5 sm:p-6 pb-4 border-b border-white/[.07] bg-[#141c17] shrink-0">
           <div>
             <h3 className="text-lg font-bold text-white">
               {isEditing ? "تعديل المعاملة" : "إضافة حركة مالية جديدة"}
@@ -177,14 +178,16 @@ export default function TransactionForm({
           </button>
         </div>
 
-        {error && (
-          <div className="mb-4 rounded-xl border border-red-500/20 bg-red-950/30 p-3 text-xs text-red-300">
-            {error}
-          </div>
-        )}
+        {/* Scrollable Form Body without visible scrollbar */}
+        <div className="flex-1 overflow-y-auto no-scrollbar p-5 sm:p-6 space-y-4">
+          {error && (
+            <div className="rounded-xl border border-red-500/20 bg-red-950/30 p-3 text-xs text-red-300">
+              {error}
+            </div>
+          )}
 
-        {/* 3 Mode Tabs: Expense / Income / Transfer */}
-        <div className="mb-5 grid grid-cols-3 rounded-xl bg-[#0c120e] p-1 text-xs">
+          {/* 3 Mode Tabs: Expense / Income / Transfer */}
+          <div className="grid grid-cols-3 rounded-xl bg-[#0c120e] p-1 text-xs">
           <button
             type="button"
             onClick={() => setType("expense")}
@@ -231,10 +234,9 @@ export default function TransactionForm({
           </div>
         )}
 
-        <div className="space-y-4">
-          {type === "transfer" ? (
-            /* Transfer Source and Destination */
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        {type === "transfer" ? (
+          /* Transfer Source and Destination */
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <label className="block">
                 <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">
                   من محفظة (المصدر)
@@ -385,7 +387,8 @@ export default function TransactionForm({
           )}
         </div>
 
-        <div className="mt-6 flex gap-3">
+        {/* Sticky Action Footer on Mobile */}
+        <div className="flex gap-3 p-4 sm:p-6 pt-3 border-t border-white/[.07] bg-[#141c17] shrink-0 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] sm:pb-6">
           <button
             type="button"
             onClick={onClose}

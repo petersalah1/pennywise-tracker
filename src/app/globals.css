@@ -71,3 +71,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 ::selection {
   background: rgba(105, 217, 148, 0.3);
 }
+
+/* Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
