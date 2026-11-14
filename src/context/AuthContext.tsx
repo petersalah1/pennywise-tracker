@@ -162,6 +162,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
 
       if (error) {
+        if (
+          error.message.toLowerCase().includes("rate limit") ||
+          error.message.toLowerCase().includes("over_email_send_rate_limit")
+        ) {
+          return {
+            error:
+              "تم تجاوز الحد المسموح لإرسال الرسائل مؤقتاً (Rate Limit). تم إرسال عدة رسائل متتالية؛ يرجى الانتظار 3 إلى 5 دقائق ثم المحاولة مرة واحدة فقط.",
+          };
+        }
         return { error: error.message };
       }
 
