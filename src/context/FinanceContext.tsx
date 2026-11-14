@@ -99,9 +99,18 @@ function saveSyncQueue(queue: OfflineSyncAction[], userId?: string | null) {
 export function FinanceProvider({ children }: { children: React.ReactNode }) {
   const { user, isConfigured } = useAuth();
   const userId = user?.id;
-  const [data, setData] = useState<FinanceData>(DEFAULT_DATA);
+  const [data, setData] = useState<FinanceData>({
+    userName: "مستخدم جديد",
+    openingBalance: 0,
+    wallets: DEFAULT_WALLETS,
+    transactions: [],
+    categories: DEFAULT_CATEGORIES,
+  });
   const [ready, setReady] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(true);
+
+  // Track previous userId to detect account switches
+  const [prevUserId, setPrevUserId] = useState<string | undefined>(undefined);
 
   // Offline / Network States
   const [isOnline, setIsOnline] = useState<boolean>(true);
@@ -113,8 +122,10 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
     try {
       const key = getCacheKey(targetUserId !== undefined ? targetUserId : userId);
       localStorage.setItem(key, JSON.stringify(freshData));
-      // Also maintain general storage fallback
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(freshData));
+      // Only update the shared STORAGE_KEY for guest users (no userId)
+      if (!userId && targetUserId === undefined) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(freshData));
+      }
     } catch (e) {
       console.error("Local storage persist error", e);
     }
@@ -236,27 +247,59 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
     setIsSyncingOffline(false);
   };
 
-  // 1. Initial Load from LocalStorage Cache on Mount
+  // 0. When user switches accounts or logs out: reset data immediately to prevent leakage
+  useEffect(() => {
+    if (prevUserId !== undefined && prevUserId !== userId) {
+      // User changed (logout or different account) — wipe state immediately
+      setReady(false);
+      setData({
+        userName: "مستخدم جديد",
+        openingBalance: 0,
+        wallets: DEFAULT_WALLETS,
+        transactions: [],
+        categories: DEFAULT_CATEGORIES,
+      });
+    }
+    setPrevUserId(userId);
+  }, [userId]);  // 1. Initial Load from LocalStorage Cache on Mount
   useEffect(() => {
     try {
+      // IMPORTANT: Only load user-specific cache when logged in.
+      // Never fall back to the shared STORAGE_KEY for a logged-in user to prevent
+      // data leakage between accounts.
       const activeKey = getCacheKey(userId);
-      let saved = localStorage.getItem(activeKey);
-      if (!saved && userId) {
+      let saved: string | null = null;
+
+      if (userId) {
+        // Logged-in user: load only their own cache key
+        saved = localStorage.getItem(activeKey);
+        // Do NOT fall back to generic STORAGE_KEY — that belongs to the previous/other user
+      } else {
+        // Guest user: load from generic cache or legacy
         saved = localStorage.getItem(STORAGE_KEY);
-      }
-      if (!saved) {
-        saved = localStorage.getItem(LEGACY_STORAGE_KEY_V2);
+        if (!saved) {
+          saved = localStorage.getItem(LEGACY_STORAGE_KEY_V2);
+        }
       }
 
       if (saved) {
         const parsed = JSON.parse(saved);
         setData({
-          userName: parsed.userName || "بيتر صلاح",
+          userName: parsed.userName || "مستخدم جديد",
           openingBalance: Number(parsed.openingBalance) || 0,
           wallets: parsed.wallets && parsed.wallets.length > 0 ? parsed.wallets : DEFAULT_WALLETS,
           transactions: parsed.transactions || [],
           categories:
             parsed.categories && parsed.categories.length > 0 ? parsed.categories : DEFAULT_CATEGORIES,
+        });
+      } else if (userId) {
+        // New logged-in user with no local cache: start fresh (cloud will fill in)
+        setData({
+          userName: "مستخدم جديد",
+          openingBalance: 0,
+          wallets: DEFAULT_WALLETS,
+          transactions: [],
+          categories: DEFAULT_CATEGORIES,
         });
       }
     } catch (error) {

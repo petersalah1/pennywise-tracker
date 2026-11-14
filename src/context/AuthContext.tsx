@@ -118,8 +118,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
 
       if (error) {
-        if (error.message.includes("already registered")) {
+        if (
+          error.message.includes("already registered") ||
+          error.message.includes("User already registered")
+        ) {
           return { error: "هذا البريد الإلكتروني مسجل بالفعل، يمكنك تسجيل الدخول مباشرة." };
+        }
+        if (
+          error.message.toLowerCase().includes("rate limit") ||
+          error.message.toLowerCase().includes("over_email_send_rate_limit") ||
+          error.message.toLowerCase().includes("email rate limit") ||
+          error.message.toLowerCase().includes("sending confirmation email")
+        ) {
+          // Email sending failed — but if user was actually created without confirm requirement,
+          // try signing them in directly
+          const { data: signInData, error: signInError } = await supabase!.auth.signInWithPassword({
+            email: email.trim(),
+            password,
+          });
+          if (!signInError && signInData.session) {
+            return {};
+          }
+          return {
+            error:
+              "تم إنشاء الحساب ولكن واجهنا مشكلة في إرسال إيميل التأكيد. جرّب تسجيل الدخول مباشرةً بنفس البريد وكلمة المرور.",
+          };
         }
         return { error: error.message };
       }
