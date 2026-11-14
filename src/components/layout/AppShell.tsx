@@ -71,7 +71,7 @@ export default function AppShell({
             ) : isCloudSynced ? (
               <div className="hidden items-center gap-2 rounded-xl border border-emerald-500/20 bg-[#14261b] px-3.5 py-2 sm:flex">
                 <Cloud size={15} className="text-[#65d891]" />
-                <span className="text-xs font-semibold text-[#82e6a7]">متصل بالسحابة (Supabase)</span>
+                <span className="text-xs font-semibold text-[#82e6a7]">متصل بالسحابة</span>
               </div>
             ) : (
               <Link

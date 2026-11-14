@@ -112,7 +112,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         password,
         options: {
           data: {
-            user_name: userName?.trim() || "بيتر صلاح",
+            user_name: userName?.trim() || "مستخدم جديد",
           },
         },
       });

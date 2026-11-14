@@ -107,7 +107,9 @@ export default function WalletsOverview() {
                       ? "حساب مصرفي"
                       : wallet.type === "instapay"
                       ? "شبكة المدفوعات اللحظية"
-                      : "محفظة ذكية"}
+                      : wallet.type === "e-wallet"
+                      ? "محفظة إلكترونية"
+                      : "حساب مالي"}
                   </span>
                   <span
                     className={`font-semibold ${

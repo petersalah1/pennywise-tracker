@@ -10,7 +10,6 @@ import {
   ChartNoAxesCombined,
   Settings,
   CreditCard,
-  Sparkles,
   X,
   LogIn,
   LogOut,

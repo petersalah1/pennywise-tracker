@@ -60,7 +60,7 @@ const STORAGE_KEY = "egp-tracker-data-v3";
 const LEGACY_STORAGE_KEY_V2 = "egp-tracker-data-v2";
 
 const DEFAULT_DATA: FinanceData = {
-  userName: "بيتر صلاح",
+  userName: "مستخدم",
   openingBalance: 0,
   wallets: DEFAULT_WALLETS,
   transactions: INITIAL_TRANSACTIONS,
@@ -1285,7 +1285,7 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
         return false;
       }
       const nextData: FinanceData = {
-        userName: imported.userName || "بيتر صلاح",
+        userName: imported.userName || "مستخدم",
         openingBalance: Number(imported.openingBalance) || 0,
         wallets: Array.isArray(imported.wallets) ? imported.wallets : DEFAULT_WALLETS,
         transactions: imported.transactions,

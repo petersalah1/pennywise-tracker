@@ -220,7 +220,7 @@ export default function SettingsPage() {
                   value={nameInput}
                   onChange={(e) => setNameInput(e.target.value)}
                   className="field font-medium"
-                  placeholder="مثلاً: بيتر صلاح"
+                  placeholder="اكتب اسمك هنا"
                 />
               </label>
 
@@ -353,8 +353,8 @@ export default function SettingsPage() {
 
             <div className="mt-4 space-y-2 text-[11px] text-[#7b8c81]">
               <div className="flex justify-between">
-                <span>تخزين التطبيق (PWA Cache):</span>
-                <span className="font-semibold text-emerald-400">مفعّل (يعمل بدون إنترنت)</span>
+                <span>التشغيل بدون إنترنت:</span>
+                <span className="font-semibold text-emerald-400">مفعّل (يعمل تلقائياً)</span>
               </div>
               <div className="flex justify-between">
                 <span>العمليات المعلقة للمزامنة:</span>
@@ -381,7 +381,7 @@ export default function SettingsPage() {
             </div>
             <p className="mt-3 text-[11px] leading-5 text-[#88988d]">
               كافة سجلاتك المالية تُحفظ مشفرة داخل متصفحك على هذا الجهاز فقط، ولن يتم إرسال أي
-              أرقام أو مبالغ إلى أي خوادم خارجية إلا عند ربط قاعدة بيانات Supabase.
+              أرقام أو مبالغ إلى أي خوادم خارجية إلا عند تفعيل المزامنة السحابية بحسابك.
             </p>
           </div>
         </div>

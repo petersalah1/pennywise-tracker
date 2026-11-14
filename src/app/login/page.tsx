@@ -12,7 +12,7 @@ export default function LoginPage() {
   const { signIn, signUp, resetPassword, isConfigured, user } = useAuth();
 
   const [mode, setMode] = useState<"login" | "register" | "forgot">("login");
-  const [userName, setUserName] = useState("بيتر صلاح");
+  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -131,10 +131,9 @@ export default function LoginPage() {
 
           {!isConfigured && (
             <div className="mb-5 rounded-2xl border border-amber-500/20 bg-amber-950/20 p-3.5 text-xs text-[#fcd34d]">
-              <p className="font-semibold">تنبيه: السحابة قيد الإعداد</p>
+              <p className="font-semibold">المزامنة السحابية غير مفعلة</p>
               <p className="mt-1 text-[11px] leading-5 text-amber-200/80">
-                لم يتم إضافة مفاتيح Supabase بعد في ملف <code>.env.local</code>. يمكنك المتابعة واستخدام التطبيق كـ
-                ضيف ببيانات محفوظة في متصفحك.
+                يمكنك المتابعة واستخدام التطبيق محلياً كـ ضيف بحفظ البيانات على هذا الجهاز.
               </p>
             </div>
           )}
@@ -213,7 +212,7 @@ export default function LoginPage() {
                     type="text"
                     value={userName}
                     onChange={(e) => setUserName(e.target.value)}
-                    placeholder="مثلاً: بيتر صلاح"
+                    placeholder="الاسم بالكامل"
                     className="field pl-9"
                   />
                   <User size={15} className="absolute left-3 top-3 text-[#627368]" />
@@ -308,7 +307,7 @@ export default function LoginPage() {
         {/* Security badge */}
         <div className="mt-6 flex items-center justify-center gap-2 text-[11px] text-[#69796f]">
           <ShieldCheck size={14} className="text-[#65d891]" />
-          <span>تشفير كامل وحماية لبياناتك المالية عبر Supabase RLS</span>
+          <span>تشفير كامل وحماية متقدمة لبياناتك المالية</span>
         </div>
       </div>
     </div>

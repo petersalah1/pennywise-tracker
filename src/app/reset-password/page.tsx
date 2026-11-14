@@ -100,9 +100,9 @@ export default function ResetPasswordPage() {
 
           {!isConfigured && (
             <div className="mb-5 rounded-2xl border border-amber-500/20 bg-amber-950/20 p-3.5 text-xs text-[#fcd34d]">
-              <p className="font-semibold">تنبيه: السحابة قيد الإعداد</p>
+              <p className="font-semibold">المزامنة السحابية غير مفعلة</p>
               <p className="mt-1 text-[11px] leading-5 text-amber-200/80">
-                لم يتم ضبط مفاتيح Supabase بعد في إعدادات البيئة.
+                خدمة استعادة الحساب السحابي غير متاحة حالياً.
               </p>
             </div>
           )}
@@ -198,7 +198,7 @@ export default function ResetPasswordPage() {
         {/* Security badge */}
         <div className="mt-6 flex items-center justify-center gap-2 text-[11px] text-[#69796f]">
           <ShieldCheck size={14} className="text-[#65d891]" />
-          <span>تشفير كامل وحماية لبياناتك المالية عبر Supabase RLS</span>
+          <span>تشفير كامل وحماية متقدمة لبياناتك المالية</span>
         </div>
       </div>
     </div>

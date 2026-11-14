@@ -5,7 +5,7 @@ import {
   Clock,
   Target,
   Flame,
-  Sparkles,
+  Calculator,
   CalendarDays,
   PieChart as PieIcon,
   Zap,
@@ -179,7 +179,7 @@ export default function AnalyticsPage() {
   return (
     <AppShell
       title="التقارير والتحليلات"
-      subtitle="فهم أعمق لحركة أموالك وتحليل نمط الصرف ومتوسط الإنفاق اليومي مع عزل المصاريف الاستثنائية"
+      subtitle="تحليل نمط المصروفات ومتوسط الإنفاق اليومي والشهري"
     >
       <div className="mb-7">
         <p className="text-xs font-semibold tracking-wider text-[#69d994]">الرؤى والاتجاهات المالية</p>
@@ -327,7 +327,7 @@ export default function AnalyticsPage() {
                             : "border border-white/10 bg-white/5 text-[#8ca094] hover:bg-white/10 hover:text-white"
                         }`}
                       >
-                        {isExcluded ? "⭐ مستبعد من التقسيم" : "محسوب بالتقسيم"}
+                        {isExcluded ? "مستبعد من الحساب" : "مشمول في الحساب"}
                       </button>
                     </div>
                   </div>
@@ -411,7 +411,7 @@ export default function AnalyticsPage() {
             <div className="flex items-center justify-between">
               <span className="text-xs text-[#87998e]">التوقع لنهاية الشهر</span>
               <span className="grid h-7 w-7 place-items-center rounded-lg bg-[#382d1c] text-[#fbbf24]">
-                <Sparkles size={14} />
+                <Calculator size={14} />
               </span>
             </div>
             <p className="mt-3 text-xl font-bold text-[#fde047]">
