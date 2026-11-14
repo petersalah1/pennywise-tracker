@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -15,6 +16,7 @@ import {
   LogOut,
   Cloud,
   WifiOff,
+  User,
 } from "lucide-react";
 import { useFinance } from "@/context/FinanceContext";
 import { useAuth } from "@/context/AuthContext";
@@ -38,6 +40,11 @@ export default function Sidebar({
   const pathname = usePathname();
   const { userName, isCloudSynced, isOnline } = useFinance();
   const { user, signOut } = useAuth();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const userInitial = userName
     ? userName
@@ -120,13 +127,20 @@ export default function Sidebar({
         {/* User Account / Auth Section */}
         <div className="mt-5 border-t border-white/[.06] pt-4 mt-auto">
           <div className="flex items-center gap-3 px-1">
-            <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#284634] text-xs font-bold text-[#9be9b5]">
-              {userInitial}
+            <div
+              suppressHydrationWarning
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#284634] text-xs font-bold text-[#9be9b5]"
+            >
+              {mounted ? userInitial : <User size={15} />}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-xs font-semibold text-white">{userName}</p>
-              <p className="flex items-center gap-1 text-[10px] text-[#718078]">
-                {!isOnline ? (
+              <p suppressHydrationWarning className="truncate text-xs font-semibold text-white">
+                {mounted ? userName : "مستخدم"}
+              </p>
+              <p suppressHydrationWarning className="flex items-center gap-1 text-[10px] text-[#718078]">
+                {!mounted ? (
+                  <span>محفظة مالية</span>
+                ) : !isOnline ? (
                   <span className="flex items-center gap-1 text-amber-400">
                     <WifiOff size={10} />
                     <span>غير متصل (أوفلاين)</span>
@@ -142,7 +156,7 @@ export default function Sidebar({
               </p>
             </div>
 
-            {user ? (
+            {mounted && user ? (
               <button
                 onClick={() => signOut()}
                 title="تسجيل الخروج"
@@ -150,7 +164,7 @@ export default function Sidebar({
               >
                 <LogOut size={15} />
               </button>
-            ) : (
+            ) : mounted ? (
               <Link
                 href="/login"
                 title="تسجيل الدخول / حفظ سحابي"
@@ -158,7 +172,7 @@ export default function Sidebar({
               >
                 <LogIn size={16} />
               </Link>
-            )}
+            ) : null}
           </div>
         </div>
       </aside>

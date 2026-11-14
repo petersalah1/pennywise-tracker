@@ -53,7 +53,7 @@ export default function DashboardPage() {
           <p className="text-xs font-semibold tracking-wider text-[#69d994]">
             لوحة المتابعة المالية
           </p>
-          <h2 className="mt-1.5 text-2xl font-bold tracking-tight text-white sm:text-[28px]">
+          <h2 suppressHydrationWarning className="mt-1.5 text-2xl font-bold tracking-tight text-white sm:text-[28px]">
             أهلاً بك مجدداً، {userName}
             <span className="text-[#70dc99]">.</span>
           </h2>

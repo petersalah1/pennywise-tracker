@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Cloud, Laptop, Loader2, Menu, WifiOff } from "lucide-react";
+import { Cloud, Laptop, Loader2, Menu, WifiOff, User } from "lucide-react";
 import Sidebar from "@/components/layout/Sidebar";
 import { useFinance } from "@/context/FinanceContext";
 
@@ -16,8 +16,13 @@ export default function AppShell({
   subtitle: string;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { userName, isCloudSynced, isLoadingData, isOnline, pendingSyncCount, isSyncingOffline } =
     useFinance();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const userInitial = userName
     ? userName
@@ -85,8 +90,11 @@ export default function AppShell({
               </Link>
             )}
 
-            <div className="grid h-9 w-9 place-items-center rounded-full border border-[#36533f] bg-[#1c3324] text-xs font-bold text-[#91e5aa]">
-              {userInitial}
+            <div
+              suppressHydrationWarning
+              className="grid h-9 w-9 place-items-center rounded-full border border-[#36533f] bg-[#1c3324] text-xs font-bold text-[#91e5aa]"
+            >
+              {mounted ? userInitial : <User size={15} />}
             </div>
           </div>
         </header>
