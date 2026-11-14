@@ -116,18 +116,10 @@ export default function Sidebar({
           </nav>
         </div>
 
-        <div className="mt-auto rounded-2xl border border-[#263b2e] bg-gradient-to-br from-[#1b3023] to-[#142019] p-4">
-          <div className="mb-2 flex items-center gap-2 text-[#7ee2a5]">
-            <Sparkles size={16} />
-            <p className="text-xs font-bold text-white">تحكّم بمصروفاتك</p>
-          </div>
-          <p className="text-[11px] leading-5 text-[#93a99a]">
-            كل جنيه تتابعه اليوم يصنع لك أماناً مالياً واستقراراً في الغد.
-          </p>
-        </div>
+      
 
         {/* User Account / Auth Section */}
-        <div className="mt-5 border-t border-white/[.06] pt-4">
+        <div className="mt-5 border-t border-white/[.06] pt-4 mt-auto">
           <div className="flex items-center gap-3 px-1">
             <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#284634] text-xs font-bold text-[#9be9b5]">
               {userInitial}

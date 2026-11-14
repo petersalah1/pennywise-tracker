@@ -24,6 +24,26 @@ export default function LoginPage() {
     if (user) router.push("/");
   }, [user, router]);
 
+  // Check URL hash for error parameters (e.g. expired reset link)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const hash = window.location.hash;
+    if (hash && hash.includes("error=")) {
+      const params = new URLSearchParams(hash.replace(/^#/, ""));
+      const errorDesc = params.get("error_description");
+      const errorCode = params.get("error_code");
+
+      if (errorCode === "otp_expired" || errorDesc?.includes("expired")) {
+        setErrorMsg(
+          "انتهت صلاحية رابط استعادة كلمة المرور أو تم استخدامه مسبقاً. يمكنك إدخال بريدك لطلب رابط جديد."
+        );
+        setMode("forgot");
+      } else if (errorDesc) {
+        setErrorMsg(decodeURIComponent(errorDesc.replace(/\+/g, " ")));
+      }
+    }
+  }, []);
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setErrorMsg(null);

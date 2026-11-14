@@ -128,10 +128,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
-      const redirectUrl =
-        typeof window !== "undefined"
-          ? `${window.location.origin}/reset-password`
-          : undefined;
+      const currentOrigin =
+        typeof window !== "undefined" && window.location.origin.includes("vercel.app")
+          ? window.location.origin
+          : "https://pennywise-tracker-orcin.vercel.app";
+
+      const redirectUrl = `${currentOrigin}/reset-password`;
 
       const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
         redirectTo: redirectUrl,

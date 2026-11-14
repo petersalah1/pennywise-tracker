@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -16,6 +16,26 @@ export default function ResetPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+
+  // Check URL hash for Supabase error or recovery tokens
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const hash = window.location.hash;
+    if (hash && hash.includes("error=")) {
+      const params = new URLSearchParams(hash.replace(/^#/, ""));
+      const errorDesc = params.get("error_description");
+      const errorCode = params.get("error_code");
+
+      if (errorCode === "otp_expired" || errorDesc?.includes("expired")) {
+        setErrorMsg(
+          "انتهت صلاحية هذا الرابط أو تم استخدامه مسبقاً. يرجى طلب رابط جديد لاستعادة كلمة المرور."
+        );
+      } else if (errorDesc) {
+        setErrorMsg(decodeURIComponent(errorDesc.replace(/\+/g, " ")));
+      }
+    }
+  }, []);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
