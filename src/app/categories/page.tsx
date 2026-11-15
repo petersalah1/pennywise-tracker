@@ -100,9 +100,9 @@ export default function CategoriesPage() {
       subtitle="تنظيم حركات الأموال وتحديد سقف المصروفات لكل فئة"
     >
       <div className="mb-7">
-        <p className="text-xs font-semibold tracking-wider text-[#69d994]">هيكلة المصروفات</p>
-        <h2 className="mt-1.5 text-2xl font-bold text-white">التصنيفات وسقف الإنفاق</h2>
-        <p className="mt-1 text-xs text-[#829087]">
+        <p className="text-xs font-semibold tracking-wider text-emerald-700">هيكلة المصروفات</p>
+        <h2 className="mt-1.5 text-2xl font-bold text-[#0f1712]">التصنيفات وسقف الإنفاق</h2>
+        <p className="mt-1 text-xs text-[#607267]">
           قسّم أموالك إلى بنود واضحة وحدد ميزانية شهرية لكل بند لضبط الاستهلاك.
         </p>
       </div>
@@ -111,8 +111,8 @@ export default function CategoriesPage() {
         <div
           className={`mb-5 flex items-center gap-2 rounded-xl border p-3.5 text-xs font-medium ${
             feedbackMessage.error
-              ? "border-red-500/20 bg-red-950/30 text-red-300"
-              : "border-emerald-500/20 bg-[#16271c] text-[#86efac]"
+              ? "border-rose-200 bg-rose-50 text-rose-700"
+              : "border-emerald-200 bg-emerald-50 text-emerald-800"
           }`}
         >
           <Check size={16} />
@@ -130,23 +130,23 @@ export default function CategoriesPage() {
             return (
               <section
                 key={kind}
-                className="rounded-2xl border border-white/[.06] bg-[#111914] p-5 shadow-sm"
+                className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs"
               >
                 <div className="mb-4 flex items-center gap-3">
                   <span
-                    className={`grid h-9 w-9 place-items-center rounded-xl ${
+                    className={`grid h-9 w-9 place-items-center rounded-xl border ${
                       isIncome
-                        ? "bg-[#1c3827] text-[#72d99b]"
-                        : "bg-[#392b1b] text-[#e7bd70]"
+                        ? "border-emerald-100 bg-emerald-50 text-emerald-600"
+                        : "border-amber-100 bg-amber-50 text-amber-600"
                     }`}
                   >
                     {isIncome ? <BriefcaseBusiness size={17} /> : <Utensils size={17} />}
                   </span>
                   <div>
-                    <h3 className="text-sm font-bold text-white">
+                    <h3 className="text-sm font-bold text-[#0f1712]">
                       {isIncome ? "تصنيفات الدخل" : "تصنيفات المصروفات"}
                     </h3>
-                    <p className="text-[11px] text-[#758279]">{list.length} تصنيفات نشطة</p>
+                    <p className="text-[11px] text-[#607267]">{list.length} تصنيفات نشطة</p>
                   </div>
                 </div>
 
@@ -154,7 +154,7 @@ export default function CategoriesPage() {
                   {list.map((category) => (
                     <div
                       key={category.id}
-                      className="group flex items-center justify-between gap-3 rounded-xl border border-white/[.03] bg-[#0c120e] px-3.5 py-3 transition hover:border-white/[.08]"
+                      className="group flex items-center justify-between gap-3 rounded-xl border border-[#e2e8e5] bg-[#f8faf9] px-3.5 py-3 transition hover:border-emerald-300 hover:bg-white"
                     >
                       <div className="flex min-w-0 items-center gap-3">
                         <span
@@ -162,11 +162,11 @@ export default function CategoriesPage() {
                           style={{ background: category.color }}
                         />
                         <div className="min-w-0">
-                          <p className="truncate text-xs font-semibold text-[#d4ded7]">
+                          <p className="truncate text-xs font-semibold text-[#0f1712]">
                             {category.name}
                           </p>
                           {category.budget && category.budget > 0 && (
-                            <p className="mt-0.5 text-[11px] text-[#74877b]">
+                            <p className="mt-0.5 text-[11px] text-[#607267]">
                               الميزانية: {formatEGP(category.budget)}
                             </p>
                           )}
@@ -177,14 +177,14 @@ export default function CategoriesPage() {
                         <button
                           title="تعديل التصنيف"
                           onClick={() => startEdit(category)}
-                          className="rounded-lg p-1.5 text-[#7e8f84] transition hover:bg-white/10 hover:text-white"
+                          className="rounded-lg p-1.5 text-[#8c9c91] transition hover:bg-[#f1f5f3] hover:text-[#0f1712]"
                         >
                           <Edit2 size={13} />
                         </button>
                         <button
                           title="حذف التصنيف"
                           onClick={() => handleDelete(category)}
-                          className="rounded-lg p-1.5 text-[#7e8f84] transition hover:bg-red-500/10 hover:text-red-400"
+                          className="rounded-lg p-1.5 text-[#8c9c91] transition hover:bg-rose-50 hover:text-rose-600"
                         >
                           <Trash2 size={13} />
                         </button>
@@ -193,7 +193,7 @@ export default function CategoriesPage() {
                   ))}
 
                   {list.length === 0 && (
-                    <p className="py-6 text-center text-xs text-[#6e7d73]">لا توجد تصنيفات بعد.</p>
+                    <p className="py-6 text-center text-xs text-[#8c9c91]">لا توجد تصنيفات بعد.</p>
                   )}
                 </div>
               </section>
@@ -204,18 +204,18 @@ export default function CategoriesPage() {
         {/* Add/Edit Form */}
         <form
           onSubmit={submit}
-          className="h-fit rounded-2xl border border-white/[.06] bg-[#111914] p-5 sm:p-6"
+          className="h-fit rounded-2xl border border-[#e5eae7] bg-white p-5 sm:p-6 shadow-xs"
         >
           <div className="mb-5 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#1c3827] text-[#72d99b]">
+              <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#ecfdf5] text-[#059669]">
                 <Tags size={17} />
               </span>
               <div>
-                <h3 className="text-sm font-bold text-white">
+                <h3 className="text-sm font-bold text-[#0f1712]">
                   {editingCategory ? "تعديل التصنيف" : "إنشاء تصنيف جديد"}
                 </h3>
-                <p className="text-[11px] text-[#758279]">
+                <p className="text-[11px] text-[#607267]">
                   {editingCategory
                     ? `تعديل بيانات: ${editingCategory.name}`
                     : "إضافة بند تصنيف جديد"}
@@ -226,7 +226,7 @@ export default function CategoriesPage() {
               <button
                 type="button"
                 onClick={cancelEdit}
-                className="flex items-center gap-1 rounded-lg border border-white/10 px-2 py-1 text-[11px] text-[#9baaa0] hover:bg-white/5"
+                className="flex items-center gap-1 rounded-lg border border-[#e2e8e5] px-2 py-1 text-[11px] text-[#607267] hover:bg-[#f3f6f4]"
               >
                 <X size={13} /> إلغاء
               </button>
@@ -234,7 +234,7 @@ export default function CategoriesPage() {
           </div>
 
           <label className="mb-4 block">
-            <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">اسم التصنيف</span>
+            <span className="mb-1.5 block text-xs font-medium text-[#526359]">اسم التصنيف</span>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -245,7 +245,7 @@ export default function CategoriesPage() {
           </label>
 
           <label className="mb-4 block">
-            <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">نوع التصنيف</span>
+            <span className="mb-1.5 block text-xs font-medium text-[#526359]">نوع التصنيف</span>
             <select
               value={type}
               onChange={(e) => setType(e.target.value as "income" | "expense")}
@@ -258,8 +258,8 @@ export default function CategoriesPage() {
 
           {type === "expense" && (
             <label className="mb-4 block">
-              <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">
-                سقف الميزانية الشهرية (ج.م) <span className="text-[#64756b]">(اختياري)</span>
+              <span className="mb-1.5 block text-xs font-medium text-[#526359]">
+                سقف الميزانية الشهرية (ج.م) <span className="text-[#8c9c91]">(اختياري)</span>
               </span>
               <input
                 type="number"
@@ -270,14 +270,14 @@ export default function CategoriesPage() {
                 placeholder="مثلاً: 3000"
                 className="field"
               />
-              <span className="mt-1 block text-[10px] text-[#6b7c72]">
+              <span className="mt-1 block text-[10px] text-[#8c9c91]">
                 سيتم تنبيهك عند اقتراب المصروفات من هذا السقف خلال الشهر.
               </span>
             </label>
           )}
 
           <div className="mb-6">
-            <span className="mb-2 block text-xs font-medium text-[#aab6ae]">لون التصنيف</span>
+            <span className="mb-2 block text-xs font-medium text-[#526359]">لون التصنيف</span>
             <div className="flex flex-wrap gap-2">
               {palette.map((item) => (
                 <button
@@ -287,7 +287,7 @@ export default function CategoriesPage() {
                   aria-label={`اختيار اللون ${item}`}
                   className={`h-7 w-7 rounded-full transition-transform ${
                     color === item
-                      ? "scale-110 ring-2 ring-white ring-offset-2 ring-offset-[#111914]"
+                      ? "scale-110 ring-2 ring-emerald-500 ring-offset-2 ring-offset-white"
                       : "hover:scale-105"
                   }`}
                   style={{ background: item }}
@@ -298,7 +298,7 @@ export default function CategoriesPage() {
 
           <button
             type="submit"
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#69d994] py-3 text-xs font-bold text-[#0a160e] transition hover:bg-[#82e6a7]"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3 text-xs font-bold text-white transition hover:bg-emerald-700 shadow-sm"
           >
             <Plus size={15} />
             {editingCategory ? "حفظ تعديل التصنيف" : "إضافة التصنيف"}

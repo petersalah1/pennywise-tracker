@@ -7,7 +7,7 @@ import ServiceWorkerRegister from "@/components/layout/ServiceWorkerRegister";
 import OfflineNotice from "@/components/layout/OfflineNotice";
 
 export const viewport: Viewport = {
-  themeColor: "#0b100d",
+  themeColor: "#f8faf9",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   applicationName: "بيني وايز",
   appleWebApp: {
     capable: true,
-    statusBarStyle: "black-translucent",
+    statusBarStyle: "default",
     title: "بيني وايز",
   },
   icons: {

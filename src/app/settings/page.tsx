@@ -170,9 +170,9 @@ export default function SettingsPage() {
       subtitle="تخصيص الحساب الشخصي وإدارة الرصيد والنسخ الاحتياطي"
     >
       <div className="mb-7">
-        <p className="text-xs font-semibold tracking-wider text-[#69d994]">تفضيلاتك الشخصية</p>
-        <h2 className="mt-1.5 text-2xl font-bold text-white">إعدادات المحفظة</h2>
-        <p className="mt-1 text-xs text-[#829087]">
+        <p className="text-xs font-semibold tracking-wider text-emerald-700">تفضيلاتك الشخصية</p>
+        <h2 className="mt-1.5 text-2xl font-bold text-[#0f1712]">إعدادات المحفظة</h2>
+        <p className="mt-1 text-xs text-[#607267]">
           تحكم في بياناتك الشخصية، رصيدك الافتتاحي، ونسخ بياناتك احتياطياً في أي وقت.
         </p>
       </div>
@@ -181,8 +181,8 @@ export default function SettingsPage() {
         <div
           className={`mb-5 flex items-center gap-2 rounded-xl border p-3.5 text-xs font-medium ${
             feedback.error
-              ? "border-red-500/20 bg-red-950/30 text-red-300"
-              : "border-emerald-500/20 bg-[#16271c] text-[#86efac]"
+              ? "border-rose-200 bg-rose-50 text-rose-700"
+              : "border-emerald-200 bg-emerald-50 text-emerald-800"
           }`}
         >
           {feedback.error ? <AlertTriangle size={16} /> : <Check size={16} />}
@@ -195,15 +195,15 @@ export default function SettingsPage() {
         <div className="space-y-6">
           <form
             onSubmit={handleSaveProfile}
-            className="rounded-2xl border border-white/[.06] bg-[#111914] p-5 sm:p-6"
+            className="rounded-2xl border border-[#e5eae7] bg-white p-5 sm:p-6 shadow-xs"
           >
             <div className="mb-5 flex items-center gap-3">
-              <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#1c3827] text-[#72d99b]">
+              <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#ecfdf5] text-[#059669]">
                 <User size={19} />
               </span>
               <div>
-                <h3 className="text-sm font-bold text-white">البيانات الشخصية والرصيد</h3>
-                <p className="text-[11px] text-[#758279]">
+                <h3 className="text-sm font-bold text-[#0f1712]">البيانات الشخصية والرصيد</h3>
+                <p className="text-[11px] text-[#607267]">
                   الاسم المعروض والرصيد الافتتاحي قبل بدء التتبع
                 </p>
               </div>
@@ -211,7 +211,7 @@ export default function SettingsPage() {
 
             <div className="space-y-4">
               <label className="block">
-                <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">
+                <span className="mb-1.5 block text-xs font-medium text-[#526359]">
                   اسمك (الذي يظهر في الواجهة)
                 </span>
                 <input
@@ -225,7 +225,7 @@ export default function SettingsPage() {
               </label>
 
               <label className="block">
-                <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">
+                <span className="mb-1.5 block text-xs font-medium text-[#526359]">
                   الرصيد الافتتاحي المبدئي (ج.م)
                 </span>
                 <input
@@ -239,7 +239,7 @@ export default function SettingsPage() {
                 />
               </label>
 
-              <p className="text-[11px] leading-5 text-[#718078]">
+              <p className="text-[11px] leading-5 text-[#607267]">
                 يُحسب رصيدك الحالي تلقائياً بناءً على: الرصيد الافتتاحي + مجموع الدخل − مجموع
                 المصروفات.
               </p>
@@ -247,16 +247,16 @@ export default function SettingsPage() {
 
             <button
               type="submit"
-              className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#69d994] px-5 py-3 text-xs font-bold text-[#0a160e] transition hover:bg-[#82e6a7]"
+              className="mt-6 inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-xs font-bold text-white transition hover:bg-emerald-700 shadow-sm"
             >
               <Save size={15} /> حفظ الإعدادات
             </button>
           </form>
 
           {/* Backup & Restore Section */}
-          <div className="rounded-2xl border border-white/[.06] bg-[#111914] p-5 sm:p-6">
-            <h3 className="text-sm font-bold text-white">النسخ الاحتياطي واستعادة البيانات</h3>
-            <p className="mt-1 text-[11px] text-[#758279]">
+          <div className="rounded-2xl border border-[#e5eae7] bg-white p-5 sm:p-6 shadow-xs">
+            <h3 className="text-sm font-bold text-[#0f1712]">النسخ الاحتياطي واستعادة البيانات</h3>
+            <p className="mt-1 text-[11px] text-[#607267]">
               احتفظ بنسخة من سجلاتك المالية على حاسوبك واسترجعها متى شئت دون فقد أي بيانات.
             </p>
 
@@ -264,12 +264,12 @@ export default function SettingsPage() {
               <button
                 type="button"
                 onClick={handleExportBackup}
-                className="inline-flex items-center gap-2 rounded-xl border border-white/[.08] bg-[#16231a] px-4 py-2.5 text-xs font-semibold text-[#82e6a7] transition hover:bg-[#1f3326]"
+                className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-[#ecfdf5] px-4 py-2.5 text-xs font-semibold text-[#059669] transition hover:bg-[#d1fae5]"
               >
                 <Download size={15} /> تصدير نسخة احتياطية (JSON)
               </button>
 
-              <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-white/[.08] bg-[#141b16] px-4 py-2.5 text-xs font-semibold text-[#cad6cf] transition hover:bg-white/5">
+              <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-[#e2e8e5] bg-[#f8faf9] px-4 py-2.5 text-xs font-semibold text-[#0f1712] transition hover:bg-[#f1f5f3]">
                 <Upload size={15} /> استيراد نسخة احتياطية
                 <input
                   ref={fileInputRef}
@@ -283,7 +283,7 @@ export default function SettingsPage() {
               <button
                 type="button"
                 onClick={handleReset}
-                className="inline-flex items-center gap-2 rounded-xl border border-red-500/20 bg-red-950/20 px-4 py-2.5 text-xs font-semibold text-red-400 transition hover:bg-red-950/40"
+                className="inline-flex items-center gap-2 rounded-xl border border-rose-200 bg-rose-50 px-4 py-2.5 text-xs font-semibold text-rose-700 transition hover:bg-rose-100"
               >
                 <RotateCcw size={15} /> إعادة ضبط المصنع
               </button>
@@ -293,7 +293,7 @@ export default function SettingsPage() {
                   type="button"
                   onClick={handleSyncToCloud}
                   disabled={syncing}
-                  className="inline-flex items-center gap-2 rounded-xl border border-emerald-500/20 bg-[#14261b] px-4 py-2.5 text-xs font-semibold text-[#82e6a7] transition hover:bg-[#1f3326] disabled:opacity-50"
+                  className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-[#ecfdf5] px-4 py-2.5 text-xs font-semibold text-[#059669] transition hover:bg-[#d1fae5] disabled:opacity-50"
                 >
                   <RefreshCw size={15} className={syncing ? "animate-spin" : ""} />
                   {syncing ? "جارٍ المزامنة..." : "مزامنة البيانات مع السحابة"}
@@ -305,62 +305,62 @@ export default function SettingsPage() {
 
         {/* Right Info Card */}
         <div className="space-y-4">
-          <div className="rounded-2xl border border-white/[.06] bg-[#111914] p-5">
-            <div className="flex items-center gap-2 text-[#76d99a]">
+          <div className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs">
+            <div className="flex items-center gap-2 text-emerald-600">
               <ShieldCheck size={18} />
-              <h3 className="text-sm font-bold text-white">الرصيد المتاح حالياً</h3>
+              <h3 className="text-sm font-bold text-[#0f1712]">الرصيد المتاح حالياً</h3>
             </div>
-            <p className="mt-4 text-2xl font-bold text-white">{formatEGP(balance)}</p>
-            <p className="mt-2 text-[11px] text-[#718078]">العملة: الجنيه المصري (EGP)</p>
+            <p className="mt-4 text-2xl font-bold text-[#0f1712]">{formatEGP(balance)}</p>
+            <p className="mt-2 text-[11px] text-[#607267]">العملة: الجنيه المصري (EGP)</p>
 
-            <div className="mt-5 space-y-2 border-t border-white/[.05] pt-4 text-[11px] text-[#7b8c81]">
+            <div className="mt-5 space-y-2 border-t border-[#f1f5f3] pt-4 text-[11px] text-[#607267]">
               <div className="flex justify-between">
                 <span>الرصيد الافتتاحي:</span>
-                <span className="font-semibold text-white">{formatEGP(openingBalance)}</span>
+                <span className="font-semibold text-[#0f1712]">{formatEGP(openingBalance)}</span>
               </div>
               <div className="flex justify-between">
                 <span>عدد المعاملات المسجلة:</span>
-                <span className="font-semibold text-white">{transactions.length}</span>
+                <span className="font-semibold text-[#0f1712]">{transactions.length}</span>
               </div>
               <div className="flex justify-between">
                 <span>عدد التصنيفات:</span>
-                <span className="font-semibold text-white">{categories.length}</span>
+                <span className="font-semibold text-[#0f1712]">{categories.length}</span>
               </div>
             </div>
           </div>
 
           {/* Offline & Sync Status Card */}
-          <div className="rounded-2xl border border-white/[.06] bg-[#111914] p-5">
+          <div className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 {isOnline ? (
-                  <Wifi size={17} className="text-[#65d891]" />
+                  <Wifi size={17} className="text-emerald-600" />
                 ) : (
-                  <WifiOff size={17} className="text-amber-400" />
+                  <WifiOff size={17} className="text-amber-600" />
                 )}
-                <h4 className="text-xs font-bold text-white">حالة الاتصال والمزامنة (Offline)</h4>
+                <h4 className="text-xs font-bold text-[#0f1712]">حالة الاتصال والمزامنة (Offline)</h4>
               </div>
               <span
-                className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold ${
+                className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold border ${
                   isOnline
-                    ? "bg-emerald-500/20 text-[#86efac]"
-                    : "bg-amber-500/20 text-amber-300"
+                    ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+                    : "border-amber-200 bg-amber-50 text-amber-800"
                 }`}
               >
                 {isOnline ? "متصل أونلاين" : "غير متصل (أوفلاين)"}
               </span>
             </div>
 
-            <div className="mt-4 space-y-2 text-[11px] text-[#7b8c81]">
+            <div className="mt-4 space-y-2 text-[11px] text-[#607267]">
               <div className="flex justify-between">
                 <span>التشغيل بدون إنترنت:</span>
-                <span className="font-semibold text-emerald-400">مفعّل (يعمل تلقائياً)</span>
+                <span className="font-semibold text-emerald-700">مفعّل (يعمل تلقائياً)</span>
               </div>
               <div className="flex justify-between">
                 <span>العمليات المعلقة للمزامنة:</span>
                 <span
                   className={`font-semibold ${
-                    pendingSyncCount > 0 ? "text-amber-300" : "text-white"
+                    pendingSyncCount > 0 ? "text-amber-700" : "text-[#0f1712]"
                   }`}
                 >
                   {pendingSyncCount > 0 ? `${pendingSyncCount} معلقة` : "جميع البيانات متزامنة"}
@@ -368,18 +368,18 @@ export default function SettingsPage() {
               </div>
             </div>
 
-            <p className="mt-3 text-[11px] leading-5 text-[#88988d]">
+            <p className="mt-3 text-[11px] leading-5 text-[#607267]">
               يمكنك استخدام التطبيق وتسجيل أي معاملات أو تعديلات حتى أثناء انقطاع الإنترنت؛ يتم
               حفظها فورياً على جهازك وتُرفع تلقائياً عند عودة الاتصال.
             </p>
           </div>
 
-          <div className="rounded-2xl border border-white/[.06] bg-[#111914] p-5">
-            <div className="flex items-center gap-2 text-[#64d78e]">
+          <div className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs">
+            <div className="flex items-center gap-2 text-emerald-600">
               <Wallet size={17} />
-              <h4 className="text-xs font-bold text-white">الخصوصية والأمان</h4>
+              <h4 className="text-xs font-bold text-[#0f1712]">الخصوصية والأمان</h4>
             </div>
-            <p className="mt-3 text-[11px] leading-5 text-[#88988d]">
+            <p className="mt-3 text-[11px] leading-5 text-[#607267]">
               كافة سجلاتك المالية تُحفظ مشفرة داخل متصفحك على هذا الجهاز فقط، ولن يتم إرسال أي
               أرقام أو مبالغ إلى أي خوادم خارجية إلا عند تفعيل المزامنة السحابية بحسابك.
             </p>

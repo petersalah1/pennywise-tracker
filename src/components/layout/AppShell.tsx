@@ -26,21 +26,21 @@ export default function AppShell({
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#0b100d] text-[#f3f7f4]">
+    <div className="min-h-screen bg-[#f8faf9] text-[#0f1712]">
       <Sidebar open={menuOpen} onClose={() => setMenuOpen(false)} />
       <div className="min-h-screen lg:pr-[258px]">
-        <header className="sticky top-0 z-30 flex h-[76px] items-center justify-between border-b border-white/[.055] bg-[#0b100d]/90 px-5 backdrop-blur-xl sm:px-8">
+        <header className="sticky top-0 z-30 flex h-[76px] items-center justify-between border-b border-[#e5eae7] bg-white/80 px-5 backdrop-blur-xl sm:px-8 shadow-xs">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMenuOpen(true)}
-              className="rounded-lg p-2 text-[#9ba99f] hover:bg-white/5 lg:hidden"
+              className="rounded-lg p-2 text-[#5c6e64] hover:bg-[#edf2ee] lg:hidden"
               aria-label="فتح القائمة"
             >
               <Menu size={20} />
             </button>
             <div>
-              <h1 className="text-[17px] font-semibold tracking-tight text-white">{title}</h1>
-              <p className="mt-0.5 text-[11px] text-[#718078]">{subtitle}</p>
+              <h1 className="text-[17px] font-semibold tracking-tight text-[#0f1712]">{title}</h1>
+              <p className="mt-0.5 text-[11px] text-[#607267]">{subtitle}</p>
             </div>
           </div>
 

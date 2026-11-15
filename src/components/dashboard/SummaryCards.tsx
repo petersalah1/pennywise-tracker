@@ -73,24 +73,24 @@ export default function SummaryCards() {
       {cards.map(({ label, value, icon: Icon, color, note }) => (
         <div
           key={label}
-          className="rounded-2xl border border-white/[.065] bg-[#111914] p-5 transition hover:border-white/[.12]"
+          className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs transition hover:border-[#ccd6d0] hover:shadow-sm"
         >
           <div className="flex items-center justify-between">
-            <p className="text-xs font-medium text-[#8d9b92]">{label}</p>
+            <p className="text-xs font-medium text-[#607267]">{label}</p>
             <span
-              className={`grid h-9 w-9 place-items-center rounded-xl ${
+              className={`grid h-9 w-9 place-items-center rounded-xl border ${
                 color === "red"
-                  ? "bg-[#392323] text-[#f18a8a]"
+                  ? "border-rose-100 bg-rose-50 text-rose-600"
                   : color === "amber"
-                  ? "bg-[#3a3020] text-[#e7bd70]"
-                  : "bg-[#1c3827] text-[#78dda0]"
+                  ? "border-amber-100 bg-amber-50 text-amber-600"
+                  : "border-emerald-100 bg-emerald-50 text-emerald-600"
               }`}
             >
               <Icon size={18} />
             </span>
           </div>
-          <p className="mt-4 text-[24px] font-bold tracking-tight text-white">{value}</p>
-          <p className="mt-2 text-[11px] text-[#6f7d74]">{note}</p>
+          <p className="mt-4 text-[24px] font-bold tracking-tight text-[#0f1712]">{value}</p>
+          <p className="mt-2 text-[11px] text-[#8c9c91]">{note}</p>
         </div>
       ))}
     </div>

@@ -134,16 +134,16 @@ export default function WalletsPage() {
     >
       <div className="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <p className="text-xs font-semibold tracking-wider text-[#69d994]">مصادر أموالك</p>
-          <h2 className="mt-1.5 text-2xl font-bold text-white">المحافظ والحسابات</h2>
-          <p className="mt-1 text-xs text-[#829087]">
+          <p className="text-xs font-semibold tracking-wider text-emerald-700">مصادر أموالك</p>
+          <h2 className="mt-1.5 text-2xl font-bold text-[#0f1712]">المحافظ والحسابات</h2>
+          <p className="mt-1 text-xs text-[#607267]">
             إجمالي رصيدك الفعلي موزعاً بدقة لمعرفة أين تتواجد أموالك الآن.
           </p>
         </div>
 
         <button
           onClick={() => setTransferOpen(true)}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#c084fc] px-4 py-3 text-xs font-bold text-[#140b1f] shadow-lg transition hover:bg-[#d8b4fe]"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-purple-600 px-4 py-3 text-xs font-bold text-white shadow-sm transition hover:bg-purple-700"
         >
           <ArrowLeftRight size={16} />
           <span>تحويل بين المحافظ</span>
@@ -154,8 +154,8 @@ export default function WalletsPage() {
         <div
           className={`mb-5 flex items-center gap-2 rounded-xl border p-3.5 text-xs font-medium ${
             feedback.error
-              ? "border-red-500/20 bg-red-950/30 text-red-300"
-              : "border-emerald-500/20 bg-[#16271c] text-[#86efac]"
+              ? "border-rose-200 bg-rose-50 text-rose-700"
+              : "border-emerald-200 bg-emerald-50 text-emerald-800"
           }`}
         >
           <Check size={16} />
@@ -164,17 +164,17 @@ export default function WalletsPage() {
       )}
 
       {/* Total Balance Card */}
-      <div className="mb-6 rounded-2xl border border-white/[.07] bg-gradient-to-br from-[#121f17] to-[#0c140f] p-5">
+      <div className="mb-6 rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs">
         <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
           <div>
-            <p className="text-xs text-[#7ea08b]">مجموع أرصدة كافة المحافظ</p>
-            <p className="mt-1 text-2xl font-extrabold text-white sm:text-3xl">
+            <p className="text-xs text-[#607267]">مجموع أرصدة كافة المحافظ</p>
+            <p className="mt-1 text-2xl font-extrabold text-[#0f1712] sm:text-3xl">
               {formatEGP(balance)}
             </p>
           </div>
-          <div className="text-xs text-[#718a7c]">
+          <div className="text-xs text-[#607267]">
             <span>عدد المحافظ النشطة: </span>
-            <span className="font-bold text-white">{wallets.length} محافظ</span>
+            <span className="font-bold text-[#0f1712]">{wallets.length} محافظ</span>
           </div>
         </div>
       </div>
@@ -190,7 +190,7 @@ export default function WalletsPage() {
               return (
                 <div
                   key={wallet.id}
-                  className="rounded-2xl border border-white/[.06] bg-[#111914] p-5 shadow-sm transition hover:border-white/[.12]"
+                  className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs transition hover:border-[#ccd6d0]"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -204,8 +204,8 @@ export default function WalletsPage() {
                         <Icon size={19} />
                       </span>
                       <div>
-                        <h4 className="text-sm font-bold text-white">{wallet.name}</h4>
-                        <p className="text-[10px] text-[#758279]">
+                        <h4 className="text-sm font-bold text-[#0f1712]">{wallet.name}</h4>
+                        <p className="text-[10px] text-[#607267]">
                           {wallet.type === "cash"
                             ? "نقدية كاش"
                             : wallet.type === "bank"
@@ -221,33 +221,33 @@ export default function WalletsPage() {
                       <button
                         title="تعديل المحفظة"
                         onClick={() => startEdit(wallet)}
-                        className="rounded-lg p-1.5 text-[#7e8f84] transition hover:bg-white/10 hover:text-white"
+                        className="rounded-lg p-1.5 text-[#8c9c91] transition hover:bg-[#f1f5f3] hover:text-[#0f1712]"
                       >
                         <Edit2 size={13} />
                       </button>
                       <button
                         title="حذف المحفظة"
                         onClick={() => handleDelete(wallet)}
-                        className="rounded-lg p-1.5 text-[#7e8f84] transition hover:bg-red-500/10 hover:text-red-400"
+                        className="rounded-lg p-1.5 text-[#8c9c91] transition hover:bg-rose-50 hover:text-rose-600"
                       >
                         <Trash2 size={13} />
                       </button>
                     </div>
                   </div>
 
-                  <div className="mt-4 border-t border-white/[.04] pt-3">
+                  <div className="mt-4 border-t border-[#f1f5f3] pt-3">
                     <div className="flex items-baseline justify-between">
-                      <span className="text-xs text-[#87998e]">الرصيد الفعلي الحالي:</span>
+                      <span className="text-xs text-[#607267]">الرصيد الفعلي الحالي:</span>
                       <span
                         className={`text-lg font-bold tabular-nums ${
-                          liveBalance >= 0 ? "text-white" : "text-[#f87171]"
+                          liveBalance >= 0 ? "text-[#0f1712]" : "text-rose-600"
                         }`}
                       >
                         {formatEGP(liveBalance)}
                       </span>
                     </div>
 
-                    <div className="mt-1 flex items-center justify-between text-[11px] text-[#5e6f64]">
+                    <div className="mt-1 flex items-center justify-between text-[11px] text-[#8c9c91]">
                       <span>الرصيد المبدئي:</span>
                       <span>{formatEGP(wallet.initialBalance)}</span>
                     </div>
@@ -261,18 +261,18 @@ export default function WalletsPage() {
         {/* Add / Edit Wallet Form */}
         <form
           onSubmit={submit}
-          className="h-fit rounded-2xl border border-white/[.06] bg-[#111914] p-5 sm:p-6"
+          className="h-fit rounded-2xl border border-[#e5eae7] bg-white p-5 sm:p-6 shadow-xs"
         >
           <div className="mb-5 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#1c3827] text-[#72d99b]">
+              <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#ecfdf5] text-[#059669]">
                 <WalletIcon size={17} />
               </span>
               <div>
-                <h3 className="text-sm font-bold text-white">
+                <h3 className="text-sm font-bold text-[#0f1712]">
                   {editingWallet ? "تعديل المحفظة" : "إضافة محفظة أو حساب جديد"}
                 </h3>
-                <p className="text-[11px] text-[#758279]">
+                <p className="text-[11px] text-[#607267]">
                   {editingWallet ? `تعديل بيانات: ${editingWallet.name}` : "إضافة مصدر مالي"}
                 </p>
               </div>
@@ -281,7 +281,7 @@ export default function WalletsPage() {
               <button
                 type="button"
                 onClick={cancelEdit}
-                className="flex items-center gap-1 rounded-lg border border-white/10 px-2 py-1 text-[11px] text-[#9baaa0] hover:bg-white/5"
+                className="flex items-center gap-1 rounded-lg border border-[#e2e8e5] px-2 py-1 text-[11px] text-[#607267] hover:bg-[#f3f6f4]"
               >
                 <X size={13} /> إلغاء
               </button>
@@ -289,7 +289,7 @@ export default function WalletsPage() {
           </div>
 
           <label className="mb-4 block">
-            <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">اسم المحفظة / الحساب</span>
+            <span className="mb-1.5 block text-xs font-medium text-[#526359]">اسم المحفظة / الحساب</span>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -300,7 +300,7 @@ export default function WalletsPage() {
           </label>
 
           <label className="mb-4 block">
-            <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">نوع الحساب</span>
+            <span className="mb-1.5 block text-xs font-medium text-[#526359]">نوع الحساب</span>
             <select
               value={type}
               onChange={(e) => setType(e.target.value as WalletType)}
@@ -315,7 +315,7 @@ export default function WalletsPage() {
           </label>
 
           <label className="mb-4 block">
-            <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">
+            <span className="mb-1.5 block text-xs font-medium text-[#526359]">
               الرصيد المبدئي الافتتاحي (ج.م)
             </span>
             <input
@@ -326,13 +326,13 @@ export default function WalletsPage() {
               placeholder="0.00"
               className="field"
             />
-            <span className="mt-1 block text-[10px] text-[#6b7c72]">
+            <span className="mt-1 block text-[10px] text-[#8c9c91]">
               المبلغ الموجود فعلياً داخل هذه المحفظة قبل تسجيل المعاملات الجديدة.
             </span>
           </label>
 
           <div className="mb-6">
-            <span className="mb-2 block text-xs font-medium text-[#aab6ae]">لون المحفظة</span>
+            <span className="mb-2 block text-xs font-medium text-[#526359]">لون المحفظة</span>
             <div className="flex flex-wrap gap-2">
               {palette.map((item) => (
                 <button
@@ -342,7 +342,7 @@ export default function WalletsPage() {
                   aria-label={`اختيار اللون ${item}`}
                   className={`h-7 w-7 rounded-full transition-transform ${
                     color === item
-                      ? "scale-110 ring-2 ring-white ring-offset-2 ring-offset-[#111914]"
+                      ? "scale-110 ring-2 ring-emerald-500 ring-offset-2 ring-offset-white"
                       : "hover:scale-105"
                   }`}
                   style={{ background: item }}
@@ -353,7 +353,7 @@ export default function WalletsPage() {
 
           <button
             type="submit"
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#69d994] py-3 text-xs font-bold text-[#0a160e] transition hover:bg-[#82e6a7]"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3 text-xs font-bold text-white transition hover:bg-emerald-700 shadow-sm"
           >
             <Plus size={15} />
             {editingWallet ? "حفظ تعديلات المحفظة" : "إضافة المحفظة"}

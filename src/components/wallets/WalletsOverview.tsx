@@ -37,11 +37,11 @@ export default function WalletsOverview() {
 
   return (
     <>
-      <section className="rounded-2xl border border-white/[.065] bg-[#111914] p-5">
+      <section className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs">
         <div className="mb-4 flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
           <div>
-            <h3 className="text-sm font-bold text-white">محافظي وحساباتي المالية</h3>
-            <p className="mt-1 text-[11px] text-[#718078]">
+            <h3 className="text-sm font-bold text-[#0f1712]">محافظي وحساباتي المالية</h3>
+            <p className="mt-1 text-[11px] text-[#607267]">
               توزيع رصيدك الفعلي بين الكاش، البنك، إنستاباي، والمحافظ الإلكترونية
             </p>
           </div>
@@ -49,7 +49,7 @@ export default function WalletsOverview() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setTransferOpen(true)}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-[#c084fc]/30 bg-[#261738] px-3 py-2 text-xs font-semibold text-[#d8b4fe] transition hover:bg-[#341e4d]"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-purple-200 bg-purple-50 px-3 py-2 text-xs font-semibold text-purple-700 transition hover:bg-purple-100"
             >
               <ArrowLeftRight size={14} />
               <span>تحويل بين المحافظ</span>
@@ -57,7 +57,7 @@ export default function WalletsOverview() {
 
             <Link
               href="/wallets"
-              className="inline-flex items-center gap-1 text-xs font-semibold text-[#78d99b] hover:text-[#a0edb9]"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 hover:text-emerald-700"
             >
               <span>إدارة الحسابات</span>
               <ArrowLeft size={14} />
@@ -74,10 +74,10 @@ export default function WalletsOverview() {
             return (
               <div
                 key={wallet.id}
-                className="relative overflow-hidden rounded-xl border border-white/[.05] bg-[#0c120e] p-4 transition hover:border-white/[.12]"
+                className="relative overflow-hidden rounded-xl border border-[#e5eae7] bg-[#f8faf9] p-4 transition hover:border-emerald-300 hover:bg-white shadow-2xs"
               >
                 <div className="flex items-center justify-between">
-                  <span className="flex items-center gap-2 text-xs font-medium text-[#8d9b92]">
+                  <span className="flex items-center gap-2 text-xs font-medium text-[#0f1712]">
                     <span
                       className="h-2.5 w-2.5 shrink-0 rounded-full"
                       style={{ background: wallet.color }}
@@ -95,11 +95,11 @@ export default function WalletsOverview() {
                   </span>
                 </div>
 
-                <p className="mt-3 text-lg font-bold tracking-tight text-white">
+                <p className="mt-3 text-lg font-bold tracking-tight text-[#0f1712]">
                   {formatEGP(balance)}
                 </p>
 
-                <div className="mt-2 flex items-center justify-between text-[10px] text-[#637368]">
+                <div className="mt-2 flex items-center justify-between text-[10px] text-[#607267]">
                   <span>
                     {wallet.type === "cash"
                       ? "نقدية في اليد"
@@ -113,7 +113,7 @@ export default function WalletsOverview() {
                   </span>
                   <span
                     className={`font-semibold ${
-                      balance >= 0 ? "text-[#65d891]" : "text-[#f87171]"
+                      balance >= 0 ? "text-emerald-600" : "text-rose-600"
                     }`}
                   >
                     {balance >= 0 ? "نشط" : "عجز"}

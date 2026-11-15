@@ -14,8 +14,8 @@ export default function TransactionsPage() {
 
   const stats = [
     { label: "كافة المعاملات المسجلة", value: `${transactions.length} معاملة` },
-    { label: "إجمالي الدخل الوارد", value: formatEGP(income), tone: "text-[#70d99a]" },
-    { label: "إجمالي المصروفات المنفقة", value: formatEGP(expenses), tone: "text-[#f18484]" },
+    { label: "إجمالي الدخل الوارد", value: formatEGP(income), tone: "text-emerald-600" },
+    { label: "إجمالي المصروفات المنفقة", value: formatEGP(expenses), tone: "text-rose-600" },
   ];
 
   return (
@@ -25,15 +25,15 @@ export default function TransactionsPage() {
     >
       <div className="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <p className="text-xs font-semibold tracking-wider text-[#69d994]">سجل النشاط المالي</p>
-          <h2 className="mt-1.5 text-2xl font-bold text-white">المعاملات المالية</h2>
-          <p className="mt-1 text-xs text-[#829087]">
+          <p className="text-xs font-semibold tracking-wider text-emerald-700">سجل النشاط المالي</p>
+          <h2 className="mt-1.5 text-2xl font-bold text-[#0f1712]">المعاملات المالية</h2>
+          <p className="mt-1 text-xs text-[#607267]">
             استعراض وتعديل وحذف الحركات المالية مع إمكانية التصدير والبحث المتقدم.
           </p>
         </div>
         <button
           onClick={() => setOpen(true)}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#69d994] px-4 py-3 text-xs font-bold text-[#0a160e] shadow-lg shadow-emerald-950/20 transition hover:bg-[#82e6a7]"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-xs font-bold text-white shadow-sm shadow-emerald-600/20 transition hover:bg-emerald-700"
         >
           <Plus size={16} /> إضافة معاملة جديدة
         </button>
@@ -43,10 +43,10 @@ export default function TransactionsPage() {
         {stats.map((item) => (
           <div
             key={item.label}
-            className="rounded-2xl border border-white/[.06] bg-[#111914] p-4 transition hover:border-white/[.1]"
+            className="rounded-2xl border border-[#e5eae7] bg-white p-4 shadow-xs"
           >
-            <p className="text-[11px] font-medium text-[#7e8c83]">{item.label}</p>
-            <p className={`mt-2 text-xl font-bold ${item.tone ?? "text-white"}`}>{item.value}</p>
+            <p className="text-[11px] font-medium text-[#607267]">{item.label}</p>
+            <p className={`mt-2 text-xl font-bold ${item.tone ?? "text-[#0f1712]"}`}>{item.value}</p>
           </div>
         ))}
       </div>

@@ -182,9 +182,9 @@ export default function AnalyticsPage() {
       subtitle="تحليل نمط المصروفات ومتوسط الإنفاق اليومي والشهري"
     >
       <div className="mb-7">
-        <p className="text-xs font-semibold tracking-wider text-[#69d994]">الرؤى والاتجاهات المالية</p>
-        <h2 className="mt-1.5 text-2xl font-bold text-white">التحليلات ومتوسط الإنفاق</h2>
-        <p className="mt-1 text-xs text-[#829087]">
+        <p className="text-xs font-semibold tracking-wider text-emerald-700">الرؤى والاتجاهات المالية</p>
+        <h2 className="mt-1.5 text-2xl font-bold text-[#0f1712]">التحليلات ومتوسط الإنفاق</h2>
+        <p className="mt-1 text-xs text-[#607267]">
           رؤية متكاملة توضح معدل استهلاكك اليومي، وتتيح لك عزل المصروفات الاستثنائية (كالموبايل أو الكورسات) لضبط دقة التقسيم.
         </p>
       </div>
@@ -192,35 +192,35 @@ export default function AnalyticsPage() {
       {/* Top Summary KPI Cards */}
       <div className="mb-6 grid gap-3 sm:grid-cols-3">
         {[
-          { label: "إجمالي الدخل الوارد", value: formatEGP(income), tone: "text-[#70d99a]" },
-          { label: "إجمالي المصروفات المنفقة", value: formatEGP(expenses), tone: "text-[#f18484]" },
+          { label: "إجمالي الدخل الوارد", value: formatEGP(income), tone: "text-emerald-600" },
+          { label: "إجمالي المصروفات المنفقة", value: formatEGP(expenses), tone: "text-rose-600" },
           {
             label: "صافي التدفق المالي (الوفر)",
             value: formatEGP(netSavings),
-            tone: netSavings >= 0 ? "text-[#70d99a]" : "text-[#f18484]",
+            tone: netSavings >= 0 ? "text-emerald-600" : "text-rose-600",
           },
         ].map((x) => (
           <div
             key={x.label}
-            className="rounded-2xl border border-white/[.06] bg-[#111914] p-4 transition hover:border-white/[.1]"
+            className="rounded-2xl border border-[#e5eae7] bg-white p-4 shadow-xs"
           >
-            <p className="text-[11px] font-medium text-[#7e8c83]">{x.label}</p>
+            <p className="text-[11px] font-medium text-[#607267]">{x.label}</p>
             <p className={`mt-2 text-xl font-bold ${x.tone}`}>{x.value}</p>
           </div>
         ))}
       </div>
 
       {/* Daily Spending Intelligence Section */}
-      <section className="mb-6 rounded-2xl border border-white/[.065] bg-[#111914] p-5">
+      <section className="mb-6 rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs">
         <div className="mb-4 flex flex-col justify-between gap-3 lg:flex-row lg:items-center">
           <div>
             <div className="flex items-center gap-2">
-              <Clock size={17} className="text-[#69d994]" />
-              <h3 className="text-sm font-bold text-white">
+              <Clock size={17} className="text-emerald-600" />
+              <h3 className="text-sm font-bold text-[#0f1712]">
                 تحليل متوسط الإنفاق اليومي ووتيرة الصرف
               </h3>
             </div>
-            <p className="mt-1 text-[11px] text-[#718078]">
+            <p className="mt-1 text-[11px] text-[#607267]">
               {calculationMode === "routine"
                 ? "يتم الآن عزل المصروفات الكبيرة/الاستثنائية ليعكس المتوسط وتيرة معيشتك اليومية الفعلية."
                 : "يتم الآن حساب كافة المصروفات شاملة المشتريات الاستثنائية والكبيرة."}
@@ -229,14 +229,14 @@ export default function AnalyticsPage() {
 
           <div className="flex flex-wrap items-center gap-2">
             {/* Mode Switcher */}
-            <div className="grid grid-cols-2 rounded-xl bg-[#0c120e] p-1 text-xs">
+            <div className="grid grid-cols-2 rounded-xl border border-[#e5eae7] bg-[#f1f5f3] p-1 text-xs">
               <button
                 type="button"
                 onClick={() => setCalculationMode("routine")}
                 className={`rounded-lg px-3 py-1.5 font-semibold transition ${
                   calculationMode === "routine"
-                    ? "bg-[#1c3827] text-[#7ce0a5] shadow"
-                    : "text-[#809087] hover:text-white"
+                    ? "bg-white text-emerald-700 shadow-xs"
+                    : "text-[#607267] hover:text-[#0f1712]"
                 }`}
               >
                 مصاريف يومية عادية
@@ -246,8 +246,8 @@ export default function AnalyticsPage() {
                 onClick={() => setCalculationMode("all")}
                 className={`rounded-lg px-3 py-1.5 font-semibold transition ${
                   calculationMode === "all"
-                    ? "bg-[#1c3827] text-[#7ce0a5] shadow"
-                    : "text-[#809087] hover:text-white"
+                    ? "bg-white text-emerald-700 shadow-xs"
+                    : "text-[#607267] hover:text-[#0f1712]"
                 }`}
               >
                 شامل كل المصروفات
@@ -258,7 +258,7 @@ export default function AnalyticsPage() {
             <button
               type="button"
               onClick={() => setManagerOpen(!managerOpen)}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-950/20 px-3 py-1.5 text-xs font-semibold text-amber-300 transition hover:bg-amber-950/40"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-amber-300 bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-800 transition hover:bg-amber-100"
             >
               <SlidersHorizontal size={13} />
               <span>
@@ -271,18 +271,18 @@ export default function AnalyticsPage() {
 
         {/* Manager Drawer: List expenses to include/exclude with 1-click */}
         {managerOpen && (
-          <div className="mb-5 rounded-xl border border-white/[.07] bg-[#0c120e] p-4 animate-in fade-in duration-200">
-            <div className="mb-3 flex items-center justify-between border-b border-white/[.05] pb-2.5">
+          <div className="mb-5 rounded-xl border border-[#e5eae7] bg-[#f8faf9] p-4 animate-in fade-in duration-200">
+            <div className="mb-3 flex items-center justify-between border-b border-[#e5eae7] pb-2.5">
               <div>
-                <p className="text-xs font-bold text-white">
+                <p className="text-xs font-bold text-[#0f1712]">
                   تحديد المصروفات المستبعدة من بند التقسيم اليومي
                 </p>
-                <p className="mt-0.5 text-[10px] text-[#718077]">
+                <p className="mt-0.5 text-[10px] text-[#607267]">
                   المصروفات المستبعدة تظل مسجلة في رصيدك ومحفظتك، ولكن لا تُقسم على الأيام حتى لا تُشوه معدل الصرف اليومي (مثل شراء موبايل، كورس، لابتوب).
                 </p>
               </div>
-              <span className="shrink-0 text-xs text-[#8da094]">
-                مستبعد: <strong className="text-amber-300">{formatEGP(dailyStats.oneOffTotal)}</strong> ({dailyStats.oneOffCount} عناصر)
+              <span className="shrink-0 text-xs text-[#607267]">
+                مستبعد: <strong className="text-amber-700">{formatEGP(dailyStats.oneOffTotal)}</strong> ({dailyStats.oneOffCount} عناصر)
               </span>
             </div>
 
@@ -296,8 +296,8 @@ export default function AnalyticsPage() {
                     key={t.id}
                     className={`flex items-center justify-between gap-3 rounded-lg border p-2.5 transition ${
                       isExcluded
-                        ? "border-amber-500/30 bg-amber-950/20 text-amber-200"
-                        : "border-white/[.04] bg-[#121a15] text-[#dfe6e1]"
+                        ? "border-amber-200 bg-amber-50/70 text-amber-900"
+                        : "border-[#e5eae7] bg-white text-[#0f1712]"
                     }`}
                   >
                     <div className="flex min-w-0 items-center gap-2.5">
@@ -306,15 +306,15 @@ export default function AnalyticsPage() {
                         style={{ background: category?.color || "#888" }}
                       />
                       <div className="min-w-0">
-                        <p className="truncate text-xs font-semibold text-white">{t.title}</p>
-                        <p className="text-[10px] text-[#718077]">
+                        <p className="truncate text-xs font-semibold text-[#0f1712]">{t.title}</p>
+                        <p className="text-[10px] text-[#607267]">
                           {category?.name || "عام"} · {t.date}
                         </p>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <span className="text-xs font-bold tabular-nums text-white" dir="ltr">
+                      <span className="text-xs font-bold tabular-nums text-[#0f1712]" dir="ltr">
                         {formatEGP(t.amount)}
                       </span>
 
@@ -323,8 +323,8 @@ export default function AnalyticsPage() {
                         onClick={() => toggleTransactionOneOff(t.id)}
                         className={`rounded-lg px-2.5 py-1 text-[11px] font-semibold transition ${
                           isExcluded
-                            ? "border border-amber-500/40 bg-amber-500/20 text-amber-300 hover:bg-amber-500/30"
-                            : "border border-white/10 bg-white/5 text-[#8ca094] hover:bg-white/10 hover:text-white"
+                            ? "border border-amber-300 bg-amber-100 text-amber-800 hover:bg-amber-200"
+                            : "border border-[#e2e8e5] bg-[#f8faf9] text-[#607267] hover:bg-[#f1f5f3] hover:text-[#0f1712]"
                         }`}
                       >
                         {isExcluded ? "مستبعد من الحساب" : "مشمول في الحساب"}
@@ -335,7 +335,7 @@ export default function AnalyticsPage() {
               })}
 
               {dailyStats.thisMonthExpenses.length === 0 && (
-                <p className="py-4 text-center text-xs text-[#718077]">
+                <p className="py-4 text-center text-xs text-[#8c9c91]">
                   لا توجد مصروفات مسجلة في هذا الشهر حتى الآن.
                 </p>
               )}
@@ -345,20 +345,20 @@ export default function AnalyticsPage() {
 
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {/* Card 1: Daily Average */}
-          <div className="rounded-xl border border-white/[.05] bg-[#0c120e] p-4 transition hover:border-white/[.1]">
+          <div className="rounded-xl border border-[#e5eae7] bg-[#f8faf9] p-4 transition hover:border-[#ccd6d0] shadow-2xs">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-[#87998e]">
+              <span className="text-xs text-[#607267]">
                 {calculationMode === "routine" ? "المعدل اليومي الروتيني" : "المعدل اليومي الكلي"}
               </span>
-              <span className="grid h-7 w-7 place-items-center rounded-lg bg-[#1c3526] text-[#75dfa0]">
+              <span className="grid h-7 w-7 place-items-center rounded-lg bg-emerald-50 text-emerald-600">
                 <Clock size={14} />
               </span>
             </div>
-            <p className="mt-3 text-xl font-bold text-white">
+            <p className="mt-3 text-xl font-bold text-[#0f1712]">
               {formatEGP(dailyStats.dailyAverageThisMonth)}
-              <span className="text-xs font-normal text-[#75847b]"> / يوم</span>
+              <span className="text-xs font-normal text-[#607267]"> / يوم</span>
             </p>
-            <p className="mt-2 text-[10px] text-[#69796e]">
+            <p className="mt-2 text-[10px] text-[#8c9c91]">
               {calculationMode === "routine" && dailyStats.oneOffTotal > 0
                 ? `مستبعد ${formatEGP(dailyStats.oneOffTotal)} لمصاريف استثنائية`
                 : `محسوب على ${dailyStats.currentDay} يوماً من هذا الشهر`}
@@ -366,22 +366,22 @@ export default function AnalyticsPage() {
           </div>
 
           {/* Card 2: Safe Daily Budget Pace */}
-          <div className="rounded-xl border border-white/[.05] bg-[#0c120e] p-4 transition hover:border-white/[.1]">
+          <div className="rounded-xl border border-[#e5eae7] bg-[#f8faf9] p-4 transition hover:border-[#ccd6d0] shadow-2xs">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-[#87998e]">
+              <span className="text-xs text-[#607267]">
                 {dailyStats.totalMonthlyBudget > 0 ? "المعدل اليومي الآمن" : "متوسط آخر 30 يوماً"}
               </span>
-              <span className="grid h-7 w-7 place-items-center rounded-lg bg-[#272138] text-[#c084fc]">
+              <span className="grid h-7 w-7 place-items-center rounded-lg bg-purple-50 text-purple-600">
                 <Target size={14} />
               </span>
             </div>
-            <p className="mt-3 text-xl font-bold text-white">
+            <p className="mt-3 text-xl font-bold text-[#0f1712]">
               {dailyStats.totalMonthlyBudget > 0 && dailyStats.dailyBudgetAllowance !== null
                 ? formatEGP(dailyStats.dailyBudgetAllowance)
                 : formatEGP(dailyStats.dailyAverage30Days)}
-              <span className="text-xs font-normal text-[#75847b]"> / يوم</span>
+              <span className="text-xs font-normal text-[#607267]"> / يوم</span>
             </p>
-            <p className="mt-2 text-[10px] text-[#69796e]">
+            <p className="mt-2 text-[10px] text-[#8c9c91]">
               {dailyStats.totalMonthlyBudget > 0
                 ? dailyStats.isBudgetOver
                   ? "تجاوزت سقف الميزانية الإجمالي!"
@@ -391,41 +391,40 @@ export default function AnalyticsPage() {
           </div>
 
           {/* Card 3: Peak Spending Day */}
-          <div className="rounded-xl border border-white/[.05] bg-[#0c120e] p-4 transition hover:border-white/[.1]">
+          <div className="rounded-xl border border-[#e5eae7] bg-[#f8faf9] p-4 transition hover:border-[#ccd6d0] shadow-2xs">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-[#87998e]">أعلى يوم إنفاقاً</span>
-              <span className="grid h-7 w-7 place-items-center rounded-lg bg-[#3a2020] text-[#f87171]">
+              <span className="text-xs text-[#607267]">أعلى يوم إنفاقاً</span>
+              <span className="grid h-7 w-7 place-items-center rounded-lg bg-rose-50 text-rose-600">
                 <Flame size={14} />
               </span>
             </div>
-            <p className="mt-3 text-xl font-bold text-[#fca5a5]">
+            <p className="mt-3 text-xl font-bold text-rose-600">
               {dailyStats.peakDayAmount > 0 ? formatEGP(dailyStats.peakDayAmount) : "0 ج.م"}
             </p>
-            <p className="mt-2 truncate text-[10px] text-[#718077]">
+            <p className="mt-2 truncate text-[10px] text-[#607267]">
               {dailyStats.formattedPeakDate}
             </p>
           </div>
 
           {/* Card 4: Projected Monthly Total */}
-          <div className="rounded-xl border border-white/[.05] bg-[#0c120e] p-4 transition hover:border-white/[.1]">
+          <div className="rounded-xl border border-[#e5eae7] bg-[#f8faf9] p-4 transition hover:border-[#ccd6d0] shadow-2xs">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-[#87998e]">التوقع لنهاية الشهر</span>
-              <span className="grid h-7 w-7 place-items-center rounded-lg bg-[#382d1c] text-[#fbbf24]">
+              <span className="text-xs text-[#607267]">التوقع لنهاية الشهر</span>
+              <span className="grid h-7 w-7 place-items-center rounded-lg bg-amber-50 text-amber-600">
                 <Calculator size={14} />
               </span>
             </div>
-            <p className="mt-3 text-xl font-bold text-[#fde047]">
+            <p className="mt-3 text-xl font-bold text-amber-700">
               {formatEGP(dailyStats.projectedMonthlySpend)}
             </p>
-            <p className="mt-2 text-[10px] text-[#718077]">
+            <p className="mt-2 text-[10px] text-[#607267]">
               توقع واقعي شامل للمعيشة والمشتريات الكبيرة
             </p>
           </div>
         </div>
 
         {/* Insight callout */}
-        <div className="mt-4 flex items-center gap-2 rounded-xl border border-[#2b4433] bg-[#0f1d14] px-4 py-2.5 text-xs text-[#a2d4b1]">
-          <Zap size={15} className="shrink-0 text-[#69d994]" />
+        <div className="mt-4 flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-xs text-emerald-800">
           <span>
             {dailyStats.totalSpentThisMonth === 0 ? (
               "لم تسجل أي مصروفات خلال هذا الشهر حتى الآن."
@@ -444,26 +443,26 @@ export default function AnalyticsPage() {
 
       {/* Charts Grid */}
       <div className="grid gap-4 xl:grid-cols-2">
-        <section className="rounded-2xl border border-white/[.06] bg-[#111914] p-5">
+        <section className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs">
           <div className="mb-4 flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold text-white">المصروفات الأسبوعية</h3>
-              <p className="mt-1 text-[11px] text-[#718078]">معدل الصرف اليومي خلال الأسبوع الجاري</p>
+              <h3 className="text-sm font-bold text-[#0f1712]">المصروفات الأسبوعية</h3>
+              <p className="mt-1 text-[11px] text-[#607267]">معدل الصرف اليومي خلال الأسبوع الجاري</p>
             </div>
-            <span className="grid h-8 w-8 place-items-center rounded-lg bg-[#1d3025] text-[#75d99b]">
+            <span className="grid h-8 w-8 place-items-center rounded-lg bg-[#ecfdf5] text-[#059669]">
               <CalendarDays size={16} />
             </span>
           </div>
           <WeeklyChart />
         </section>
 
-        <section className="rounded-2xl border border-white/[.06] bg-[#111914] p-5">
+        <section className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs">
           <div className="mb-3 flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold text-white">توزيع المصروفات حسب التصنيف</h3>
-              <p className="mt-1 text-[11px] text-[#718078]">النسبة المئوية لكل بند من بنود المصروفات</p>
+              <h3 className="text-sm font-bold text-[#0f1712]">توزيع المصروفات حسب التصنيف</h3>
+              <p className="mt-1 text-[11px] text-[#607267]">النسبة المئوية لكل بند من بنود المصروفات</p>
             </div>
-            <span className="grid h-8 w-8 place-items-center rounded-lg bg-[#1d3025] text-[#75d99b]">
+            <span className="grid h-8 w-8 place-items-center rounded-lg bg-[#ecfdf5] text-[#059669]">
               <PieIcon size={16} />
             </span>
           </div>
@@ -472,21 +471,21 @@ export default function AnalyticsPage() {
       </div>
 
       {/* 6 Months Trend */}
-      <section className="mt-4 rounded-2xl border border-white/[.06] bg-[#111914] p-5">
+      <section className="mt-4 rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-sm font-bold text-white">مقارنة آخر 6 أشهر</h3>
-            <p className="mt-1 text-[11px] text-[#718078]">
+            <h3 className="text-sm font-bold text-[#0f1712]">مقارنة آخر 6 أشهر</h3>
+            <p className="mt-1 text-[11px] text-[#607267]">
               مقارنة شهرية بين إجمالي الدخل وإجمالي المصروفات
             </p>
           </div>
-          <div className="flex gap-4 text-xs font-medium text-[#84958a]">
+          <div className="flex gap-4 text-xs font-medium text-[#607267]">
             <span className="flex items-center gap-1.5">
-              <span className="h-2.5 w-2.5 rounded-full bg-[#65d891]" />
+              <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
               الدخل
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="h-2.5 w-2.5 rounded-full bg-[#e87979]" />
+              <span className="h-2.5 w-2.5 rounded-full bg-rose-500" />
               المصروفات
             </span>
           </div>
@@ -499,24 +498,24 @@ export default function AnalyticsPage() {
             return (
               <div key={m.month} className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-semibold text-[#c8d4cd]">{m.month}</span>
-                  <span className="text-[11px] text-[#7b8980]">
-                    دخل: <span className="font-semibold text-[#82e6a7]">{formatEGP(m.income)}</span>
+                  <span className="font-semibold text-[#0f1712]">{m.month}</span>
+                  <span className="text-[11px] text-[#607267]">
+                    دخل: <span className="font-semibold text-emerald-700">{formatEGP(m.income)}</span>
                     <span className="px-1.5">|</span>
-                    صرف: <span className="font-semibold text-[#fca5a5]">{formatEGP(m.expense)}</span>
+                    صرف: <span className="font-semibold text-rose-700">{formatEGP(m.expense)}</span>
                   </span>
                 </div>
 
                 <div className="space-y-1.5">
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-[#1b251e]">
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-[#e8edea]">
                     <div
-                      className="h-full rounded-full bg-[#65d891] transition-all duration-300"
+                      className="h-full rounded-full bg-emerald-500 transition-all duration-300"
                       style={{ width: `${(m.income / max) * 100}%` }}
                     />
                   </div>
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-[#1b251e]">
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-[#e8edea]">
                     <div
-                      className="h-full rounded-full bg-[#e87979] transition-all duration-300"
+                      className="h-full rounded-full bg-rose-500 transition-all duration-300"
                       style={{ width: `${(m.expense / max) * 100}%` }}
                     />
                   </div>

@@ -93,17 +93,17 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#0b100d] px-4 py-12 text-[#f3f7f4]">
+    <div className="flex min-h-screen items-center justify-center bg-[#f8faf9] px-4 py-12 text-[#0f1712]">
       <div className="w-full max-w-md">
         {/* Brand Logo */}
         <div className="mb-8 text-center">
           <Link href="/" className="inline-flex items-center gap-3">
-            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-emerald-400 text-[#07110c] shadow-lg shadow-emerald-500/20">
+            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-emerald-500 text-white shadow-xs">
               <Wallet size={26} strokeWidth={2.5} />
             </span>
             <div className="text-right">
-              <span className="block text-xl font-bold tracking-tight text-white">بيني وايز</span>
-              <span className="text-[11px] font-medium tracking-wider text-[#738078]">
+              <span className="block text-xl font-bold tracking-tight text-[#0f1712]">بيني وايز</span>
+              <span className="text-[11px] font-medium tracking-wider text-[#607267]">
                 إدارة المصروفات الشخصية
               </span>
             </div>
@@ -111,16 +111,16 @@ export default function LoginPage() {
         </div>
 
         {/* Card */}
-        <div className="rounded-3xl border border-white/[.08] bg-[#111914] p-6 shadow-2xl sm:p-8">
+        <div className="rounded-3xl border border-[#e5eae7] bg-white p-6 shadow-xl sm:p-8">
           <div className="mb-6">
-            <h2 className="text-xl font-bold text-white">
+            <h2 className="text-xl font-bold text-[#0f1712]">
               {mode === "login"
                 ? "تسجيل الدخول إلى حسابك"
                 : mode === "register"
                 ? "إنشاء حساب سحابي جديد"
                 : "استعادة كلمة المرور"}
             </h2>
-            <p className="mt-1 text-xs text-[#829087]">
+            <p className="mt-1 text-xs text-[#607267]">
               {mode === "login"
                 ? "احفظ بياناتك ومعاملاتك مشفرة ومتاحة على أي جهاز."
                 : mode === "register"
@@ -130,23 +130,23 @@ export default function LoginPage() {
           </div>
 
           {!isConfigured && (
-            <div className="mb-5 rounded-2xl border border-amber-500/20 bg-amber-950/20 p-3.5 text-xs text-[#fcd34d]">
+            <div className="mb-5 rounded-2xl border border-amber-200 bg-amber-50 p-3.5 text-xs text-amber-800">
               <p className="font-semibold">المزامنة السحابية غير مفعلة</p>
-              <p className="mt-1 text-[11px] leading-5 text-amber-200/80">
+              <p className="mt-1 text-[11px] leading-5 text-amber-700">
                 يمكنك المتابعة واستخدام التطبيق محلياً كـ ضيف بحفظ البيانات على هذا الجهاز.
               </p>
             </div>
           )}
 
           {errorMsg && (
-            <div className="mb-5 flex items-center gap-2.5 rounded-2xl border border-red-500/20 bg-red-950/30 p-3.5 text-xs text-red-300">
+            <div className="mb-5 flex items-center gap-2.5 rounded-2xl border border-rose-200 bg-rose-50 p-3.5 text-xs text-rose-700">
               <AlertCircle size={17} className="shrink-0" />
               <span>{errorMsg}</span>
             </div>
           )}
 
           {successMsg && (
-            <div className="mb-5 flex items-center gap-2.5 rounded-2xl border border-emerald-500/20 bg-[#16271c] p-3.5 text-xs text-[#86efac]">
+            <div className="mb-5 flex items-center gap-2.5 rounded-2xl border border-emerald-200 bg-emerald-50 p-3.5 text-xs text-emerald-800">
               <CheckCircle2 size={17} className="shrink-0" />
               <span>{successMsg}</span>
             </div>
@@ -154,7 +154,7 @@ export default function LoginPage() {
 
           {/* Mode Switch Tabs (only if not in forgot mode) */}
           {mode !== "forgot" ? (
-            <div className="mb-6 grid grid-cols-2 rounded-xl bg-[#0c120e] p-1">
+            <div className="mb-6 grid grid-cols-2 rounded-xl border border-[#e5eae7] bg-[#f1f5f3] p-1">
               <button
                 type="button"
                 onClick={() => {
@@ -164,8 +164,8 @@ export default function LoginPage() {
                 }}
                 className={`rounded-lg py-2 text-xs font-semibold transition ${
                   mode === "login"
-                    ? "bg-[#1c3526] text-[#75dfa0] shadow"
-                    : "text-[#819087] hover:text-white"
+                    ? "bg-white text-emerald-700 shadow-xs"
+                    : "text-[#607267] hover:text-[#0f1712]"
                 }`}
               >
                 تسجيل الدخول
@@ -179,8 +179,8 @@ export default function LoginPage() {
                 }}
                 className={`rounded-lg py-2 text-xs font-semibold transition ${
                   mode === "register"
-                    ? "bg-[#1c3526] text-[#75dfa0] shadow"
-                    : "text-[#819087] hover:text-white"
+                    ? "bg-white text-emerald-700 shadow-xs"
+                    : "text-[#607267] hover:text-[#0f1712]"
                 }`}
               >
                 حساب جديد
@@ -195,7 +195,7 @@ export default function LoginPage() {
                   setErrorMsg(null);
                   setSuccessMsg(null);
                 }}
-                className="text-xs font-semibold text-[#82e6a7] hover:underline"
+                className="text-xs font-semibold text-emerald-600 hover:underline"
               >
                 &rarr; العودة لتسجيل الدخول
               </button>
@@ -205,7 +205,7 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {mode === "register" && (
               <label className="block">
-                <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">الاسم بالكامل</span>
+                <span className="mb-1.5 block text-xs font-medium text-[#526359]">الاسم بالكامل</span>
                 <div className="relative">
                   <input
                     required
@@ -215,13 +215,13 @@ export default function LoginPage() {
                     placeholder="الاسم بالكامل"
                     className="field pl-9"
                   />
-                  <User size={15} className="absolute left-3 top-3 text-[#627368]" />
+                  <User size={15} className="absolute left-3 top-3 text-[#8c9c91]" />
                 </div>
               </label>
             )}
 
             <label className="block">
-              <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">البريد الإلكتروني</span>
+              <span className="mb-1.5 block text-xs font-medium text-[#526359]">البريد الإلكتروني</span>
               <div className="relative">
                 <input
                   required
@@ -231,14 +231,14 @@ export default function LoginPage() {
                   placeholder="name@example.com"
                   className="field pl-9"
                 />
-                <Mail size={15} className="absolute left-3 top-3 text-[#627368]" />
+                <Mail size={15} className="absolute left-3 top-3 text-[#8c9c91]" />
               </div>
             </label>
 
             {mode !== "forgot" && (
               <div>
                 <label className="block">
-                  <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">كلمة المرور</span>
+                  <span className="mb-1.5 block text-xs font-medium text-[#526359]">كلمة المرور</span>
                   <div className="relative">
                     <input
                       required
@@ -249,7 +249,7 @@ export default function LoginPage() {
                       placeholder="••••••••"
                       className="field pl-9"
                     />
-                    <Lock size={15} className="absolute left-3 top-3 text-[#627368]" />
+                    <Lock size={15} className="absolute left-3 top-3 text-[#8c9c91]" />
                   </div>
                 </label>
 
@@ -262,7 +262,7 @@ export default function LoginPage() {
                         setErrorMsg(null);
                         setSuccessMsg(null);
                       }}
-                      className="text-[11px] font-semibold text-[#82e6a7] transition hover:text-[#9ef0be] hover:underline"
+                      className="text-[11px] font-semibold text-emerald-600 transition hover:text-emerald-700 hover:underline"
                     >
                       نسيت كلمة المرور؟
                     </button>
@@ -274,7 +274,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-[#69d994] py-3 text-xs font-bold text-[#0a160e] transition hover:bg-[#82e6a7] disabled:opacity-50"
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3 text-xs font-bold text-white transition hover:bg-emerald-700 shadow-sm disabled:opacity-50"
             >
               {loading ? (
                 <span>جاري المعالجة...</span>
@@ -294,10 +294,10 @@ export default function LoginPage() {
           </form>
 
           {/* Continue as guest */}
-          <div className="mt-6 border-t border-white/[.06] pt-5 text-center">
+          <div className="mt-6 border-t border-[#e5eae7] pt-5 text-center">
             <Link
               href="/"
-              className="text-xs font-semibold text-[#82e6a7] transition hover:text-[#9ef0be]"
+              className="text-xs font-semibold text-emerald-600 transition hover:text-emerald-700"
             >
               الاستمرار كضيف والمتابعة على المتصفح المحلي &larr;
             </Link>
@@ -305,8 +305,8 @@ export default function LoginPage() {
         </div>
 
         {/* Security badge */}
-        <div className="mt-6 flex items-center justify-center gap-2 text-[11px] text-[#69796f]">
-          <ShieldCheck size={14} className="text-[#65d891]" />
+        <div className="mt-6 flex items-center justify-center gap-2 text-[11px] text-[#607267]">
+          <ShieldCheck size={14} className="text-emerald-600" />
           <span>تشفير كامل وحماية متقدمة لبياناتك المالية</span>
         </div>
       </div>

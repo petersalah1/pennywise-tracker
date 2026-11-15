@@ -20,20 +20,20 @@ export default function SidebarUserSection() {
 
   return (
     <div className="flex items-center gap-3 px-1">
-      <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#284634] text-xs font-bold text-[#9be9b5]">
+      <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-[#a7f3d0] bg-[#ecfdf5] text-xs font-bold text-[#059669]">
         {userInitial}
       </div>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-xs font-semibold text-white">{userName}</p>
-        <p className="flex items-center gap-1 text-[10px] text-[#718078]">
+        <p className="truncate text-xs font-semibold text-[#0f1712]">{userName}</p>
+        <p className="flex items-center gap-1 text-[10px] text-[#607267]">
           {!isOnline ? (
-            <span className="flex items-center gap-1 text-amber-400">
+            <span className="flex items-center gap-1 text-amber-600">
               <WifiOff size={10} />
               <span>غير متصل (أوفلاين)</span>
             </span>
           ) : isCloudSynced ? (
             <>
-              <Cloud size={10} className="text-[#65d891]" />
+              <Cloud size={10} className="text-[#059669]" />
               <span className="truncate">{user?.email}</span>
             </>
           ) : (
@@ -46,7 +46,7 @@ export default function SidebarUserSection() {
         <button
           onClick={() => signOut()}
           title="تسجيل الخروج"
-          className="rounded-lg p-1.5 text-[#7c8e82] transition hover:bg-white/10 hover:text-red-400"
+          className="rounded-lg p-1.5 text-[#8c9c91] transition hover:bg-rose-50 hover:text-rose-600"
         >
           <LogOut size={15} />
         </button>
@@ -54,7 +54,7 @@ export default function SidebarUserSection() {
         <Link
           href="/login"
           title="تسجيل الدخول / حفظ سحابي"
-          className="rounded-lg p-1.5 text-[#72d99b] transition hover:bg-[#1c3526]"
+          className="rounded-lg p-1.5 text-[#059669] transition hover:bg-[#ecfdf5]"
         >
           <LogIn size={16} />
         </Link>

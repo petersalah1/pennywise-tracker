@@ -83,15 +83,15 @@ export default function PWAInstallPrompt() {
 
   return (
     <div className="fixed bottom-5 left-4 right-4 z-50 mx-auto max-w-md animate-in fade-in slide-in-from-bottom-4 duration-300">
-      <div className="relative overflow-hidden rounded-2xl border border-emerald-500/30 bg-[#121c15] p-4 shadow-2xl backdrop-blur-xl">
+      <div className="relative overflow-hidden rounded-2xl border border-[#e5eae7] bg-white p-4 shadow-xl">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
-            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-emerald-400 text-[#07110c] shadow-lg shadow-emerald-400/20">
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-emerald-500 text-white shadow-xs">
               <Smartphone size={20} />
             </span>
             <div>
-              <p className="text-xs font-bold text-white">تثبيت تطبيق بيني وايز على هاتفك</p>
-              <p className="mt-0.5 text-[11px] text-[#869b8e]">
+              <p className="text-xs font-bold text-[#0f1712]">تثبيت تطبيق بيني وايز على هاتفك</p>
+              <p className="mt-0.5 text-[11px] text-[#607267]">
                 افتحه بشاشة كاملة وسريعة كـ تطبيق هاتف حقيقي
               </p>
             </div>
@@ -99,7 +99,7 @@ export default function PWAInstallPrompt() {
 
           <button
             onClick={handleDismiss}
-            className="rounded-lg p-1 text-[#788a7e] hover:bg-white/5 hover:text-white"
+            className="rounded-lg p-1 text-[#8c9c91] hover:bg-[#f3f6f4] hover:text-[#0f1712]"
             aria-label="إغلاق"
           >
             <X size={16} />
@@ -108,15 +108,15 @@ export default function PWAInstallPrompt() {
 
         {/* iOS Step-by-Step Instructions */}
         {showIOSGuide ? (
-          <div className="mt-3 rounded-xl border border-white/[.06] bg-[#0c120e] p-3 text-xs leading-5 text-[#b9c9be]">
-            <p className="font-semibold text-emerald-400">خطوات التثبيت على الآيفون:</p>
+          <div className="mt-3 rounded-xl border border-[#e5eae7] bg-[#f8faf9] p-3 text-xs leading-5 text-[#526359]">
+            <p className="font-semibold text-emerald-700">خطوات التثبيت على الآيفون:</p>
             <div className="mt-1.5 space-y-1 text-[11px]">
               <p className="flex items-center gap-1.5">
-                1. اضغط على زر المشاركة <Share size={13} className="text-[#65d891]" /> أسفل الشاشة في Safari.
+                1. اضغط على زر المشاركة <Share size={13} className="text-emerald-600" /> أسفل الشاشة في Safari.
               </p>
               <p className="flex items-center gap-1.5">
                 2. مرر للأسفل واختر <strong>«إضافة إلى الشاشة الرئيسية»</strong>{" "}
-                <PlusSquare size={13} className="text-[#65d891]" />.
+                <PlusSquare size={13} className="text-emerald-600" />.
               </p>
               <p>3. اضغط «إضافة» بالأعلى، وسيظهر تطبيقك على الشاشة فوراً!</p>
             </div>
@@ -125,14 +125,14 @@ export default function PWAInstallPrompt() {
           <div className="mt-3 flex items-center gap-2">
             <button
               onClick={handleInstallClick}
-              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#65d891] py-2.5 text-xs font-bold text-[#0b170f] transition hover:bg-[#7ce5a4]"
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-emerald-600 py-2.5 text-xs font-bold text-white transition hover:bg-emerald-700 shadow-xs"
             >
               <Download size={14} />
               <span>تثبيت التطبيق الآن</span>
             </button>
             <button
               onClick={handleDismiss}
-              className="rounded-xl border border-white/10 px-3 py-2.5 text-xs font-medium text-[#8ea093] hover:bg-white/5"
+              className="rounded-xl border border-[#e5eae7] px-3 py-2.5 text-xs font-medium text-[#607267] hover:bg-[#f3f6f4]"
             >
               لاحقاً
             </button>

@@ -149,29 +149,29 @@ export default function TransactionForm({
 
   return (
     <div
-      className="fixed inset-0 z-[70] flex items-center justify-center bg-black/80 p-0 sm:p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[70] flex items-center justify-center bg-black/40 p-0 sm:p-4 backdrop-blur-sm"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onClose();
       }}
     >
       <form
         onSubmit={submit}
-        className="w-full h-full sm:h-auto sm:max-h-[92vh] sm:max-w-[500px] rounded-none sm:rounded-2xl border-0 sm:border sm:border-white/10 bg-[#141c17] shadow-2xl flex flex-col overflow-hidden"
+        className="w-full h-full sm:h-auto sm:max-h-[92vh] sm:max-w-[500px] rounded-none sm:rounded-2xl border-0 sm:border sm:border-[#e5eae7] bg-white shadow-2xl flex flex-col overflow-hidden"
       >
         {/* Sticky Header on Mobile */}
-        <div className="flex items-start justify-between p-5 sm:p-6 pb-4 border-b border-white/[.07] bg-[#141c17] shrink-0">
+        <div className="flex items-start justify-between p-5 sm:p-6 pb-4 border-b border-[#e5eae7] bg-white shrink-0">
           <div>
-            <h3 className="text-lg font-bold text-white">
+            <h3 className="text-lg font-bold text-[#0f1712]">
               {isEditing ? "تعديل المعاملة" : "إضافة حركة مالية جديدة"}
             </h3>
-            <p className="mt-1 text-xs text-[#829087]">
+            <p className="mt-1 text-xs text-[#607267]">
               سجل مصروفاً، دخلاً وارداً، أو تحويلاً بين محافظك الشخصية
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-2 text-[#8d9b92] hover:bg-white/5 hover:text-white"
+            className="rounded-lg p-2 text-[#8c9c91] hover:bg-[#f3f6f4] hover:text-[#0f1712]"
             aria-label="إغلاق"
           >
             <X size={18} />
@@ -181,20 +181,20 @@ export default function TransactionForm({
         {/* Scrollable Form Body without visible scrollbar */}
         <div className="flex-1 overflow-y-auto no-scrollbar p-5 sm:p-6 space-y-4">
           {error && (
-            <div className="rounded-xl border border-red-500/20 bg-red-950/30 p-3 text-xs text-red-300">
+            <div className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs text-rose-700">
               {error}
             </div>
           )}
 
           {/* 3 Mode Tabs: Expense / Income / Transfer */}
-          <div className="grid grid-cols-3 rounded-xl bg-[#0c120e] p-1 text-xs">
+          <div className="grid grid-cols-3 rounded-xl border border-[#e5eae7] bg-[#f1f5f3] p-1 text-xs">
           <button
             type="button"
             onClick={() => setType("expense")}
             className={`flex items-center justify-center gap-1.5 rounded-lg py-2.5 font-semibold transition ${
               type === "expense"
-                ? "bg-[#352020] text-[#ff8585] shadow"
-                : "text-[#819087] hover:text-white"
+                ? "border border-rose-100 bg-white text-rose-600 shadow-xs"
+                : "text-[#607267] hover:text-[#0f1712]"
             }`}
           >
             <ArrowUpRight size={15} /> مصروف
@@ -204,8 +204,8 @@ export default function TransactionForm({
             onClick={() => setType("income")}
             className={`flex items-center justify-center gap-1.5 rounded-lg py-2.5 font-semibold transition ${
               type === "income"
-                ? "bg-[#1c3526] text-[#75dfa0] shadow"
-                : "text-[#819087] hover:text-white"
+                ? "border border-emerald-100 bg-white text-emerald-600 shadow-xs"
+                : "text-[#607267] hover:text-[#0f1712]"
             }`}
           >
             <ArrowDownLeft size={15} /> دخل
@@ -215,8 +215,8 @@ export default function TransactionForm({
             onClick={() => setType("transfer")}
             className={`flex items-center justify-center gap-1.5 rounded-lg py-2.5 font-semibold transition ${
               type === "transfer"
-                ? "bg-[#281a38] text-[#c084fc] shadow"
-                : "text-[#819087] hover:text-white"
+                ? "border border-purple-100 bg-white text-purple-600 shadow-xs"
+                : "text-[#607267] hover:text-[#0f1712]"
             }`}
           >
             <ArrowLeftRight size={15} /> تحويل
@@ -224,9 +224,9 @@ export default function TransactionForm({
         </div>
 
         {type === "transfer" && (
-          <div className="mb-4 flex items-start gap-2 rounded-xl border border-purple-500/20 bg-[#1a1426] p-3 text-xs leading-5 text-[#d8b4fe]">
-            <Info size={15} className="mt-0.5 shrink-0 text-[#c084fc]" />
-            <p className="text-[11px] text-[#c4b1dc]">
+          <div className="mb-4 flex items-start gap-2 rounded-xl border border-purple-200 bg-purple-50 p-3 text-xs leading-5 text-purple-900">
+            <Info size={15} className="mt-0.5 shrink-0 text-purple-600" />
+            <p className="text-[11px] text-purple-800">
               التحويل هنا لنقل الأموال <strong>بين حساباتك الشخصية</strong>. إذا كنت ترسل فلوس{" "}
               <strong>لشخص آخر</strong> عن طريق إنستاباي، اختر <strong>«مصروف»</strong> وحدد
               محفظة إنستاباي.
@@ -238,7 +238,7 @@ export default function TransactionForm({
           /* Transfer Source and Destination */
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <label className="block">
-                <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">
+                <span className="mb-1.5 block text-xs font-medium text-[#526359]">
                   من محفظة (المصدر)
                 </span>
                 <select
@@ -256,7 +256,7 @@ export default function TransactionForm({
               </label>
 
               <label className="block">
-                <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">
+                <span className="mb-1.5 block text-xs font-medium text-[#526359]">
                   إلى محفظة (المستلم)
                 </span>
                 <select
@@ -277,7 +277,7 @@ export default function TransactionForm({
             /* Regular Title & Wallet */
             <>
               <label className="block">
-                <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">
+                <span className="mb-1.5 block text-xs font-medium text-[#526359]">
                   عنوان المعاملة
                 </span>
                 <input
@@ -291,7 +291,7 @@ export default function TransactionForm({
 
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <label className="block">
-                  <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">
+                  <span className="mb-1.5 block text-xs font-medium text-[#526359]">
                     المحفظة / الحساب
                   </span>
                   <select
@@ -309,7 +309,7 @@ export default function TransactionForm({
                 </label>
 
                 <label className="block">
-                  <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">التصنيف</span>
+                  <span className="mb-1.5 block text-xs font-medium text-[#526359]">التصنيف</span>
                   <select
                     required
                     value={categoryId}
@@ -330,7 +330,7 @@ export default function TransactionForm({
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <label className="block">
-              <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">المبلغ (ج.م)</span>
+              <span className="mb-1.5 block text-xs font-medium text-[#526359]">المبلغ (ج.م)</span>
               <input
                 required
                 min="0.01"
@@ -344,7 +344,7 @@ export default function TransactionForm({
             </label>
 
             <label className="block">
-              <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">التاريخ</span>
+              <span className="mb-1.5 block text-xs font-medium text-[#526359]">التاريخ</span>
               <input
                 required
                 type="date"
@@ -356,8 +356,8 @@ export default function TransactionForm({
           </div>
 
           <label className="block">
-            <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">
-              ملاحظات <span className="text-[#68766e]">(اختياري)</span>
+            <span className="mb-1.5 block text-xs font-medium text-[#526359]">
+              ملاحظات <span className="text-[#8c9c91]">(اختياري)</span>
             </span>
             <input
               value={note}
@@ -368,18 +368,18 @@ export default function TransactionForm({
           </label>
 
           {type === "expense" && (
-            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/[.07] bg-[#0c120e] p-3.5 transition hover:border-[#65d891]/30">
+            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-[#e2e8e5] bg-[#f8faf9] p-3.5 transition hover:border-emerald-400">
               <input
                 type="checkbox"
                 checked={isOneOff}
                 onChange={(e) => setIsOneOff(e.target.checked)}
-                className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded accent-[#65d891]"
+                className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded accent-emerald-600"
               />
               <div className="text-right">
-                <span className="block text-xs font-semibold text-white">
+                <span className="block text-xs font-semibold text-[#0f1712]">
                   مصروف استثنائي / شراء كبير (استبعاد من حساب المعدل اليومي)
                 </span>
-                <span className="mt-0.5 block text-[11px] leading-4 text-[#75847b]">
+                <span className="mt-0.5 block text-[11px] leading-4 text-[#607267]">
                   مثل: شراء موبايل، كورس، أجهزة، أو مصاريف غير متكررة حتى لا تُضخم معدل الصرف اليومي المعتاد.
                 </span>
               </div>
@@ -388,20 +388,20 @@ export default function TransactionForm({
         </div>
 
         {/* Sticky Action Footer on Mobile */}
-        <div className="flex gap-3 p-4 sm:p-6 pt-3 border-t border-white/[.07] bg-[#141c17] shrink-0 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] sm:pb-6">
+        <div className="flex gap-3 p-4 sm:p-6 pt-3 border-t border-[#e5eae7] bg-white shrink-0 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] sm:pb-6">
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 rounded-xl border border-white/10 py-3 text-xs font-medium text-[#aab6ae] hover:bg-white/5"
+            className="flex-1 rounded-xl border border-[#e2e8e5] py-3 text-xs font-medium text-[#607267] hover:bg-[#f3f6f4]"
           >
             إلغاء
           </button>
           <button
             type="submit"
-            className={`flex-1 rounded-xl py-3 text-xs font-bold transition ${
+            className={`flex-1 rounded-xl py-3 text-xs font-bold transition shadow-xs ${
               type === "transfer"
-                ? "bg-[#c084fc] text-[#13071f] hover:bg-[#d8b4fe]"
-                : "bg-[#65d891] text-[#0b170f] hover:bg-[#7ce5a4]"
+                ? "bg-purple-600 text-white hover:bg-purple-700"
+                : "bg-emerald-600 text-white hover:bg-emerald-700"
             }`}
           >
             {isEditing ? "حفظ التعديلات" : type === "transfer" ? "إتمام التحويل" : "حفظ المعاملة"}

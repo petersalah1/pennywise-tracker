@@ -18,10 +18,10 @@ const SidebarUserSection = dynamic(() => import("./SidebarUserSection"), {
   ssr: false,
   loading: () => (
     <div className="flex items-center gap-3 px-1 animate-pulse">
-      <div className="h-9 w-9 rounded-full bg-[#284634]/50 shrink-0" />
+      <div className="h-9 w-9 rounded-full bg-[#ecfdf5] shrink-0" />
       <div className="flex-1 space-y-1.5">
-        <div className="h-3 w-16 rounded bg-white/10" />
-        <div className="h-2 w-24 rounded bg-white/5" />
+        <div className="h-3 w-16 rounded bg-[#e5eae7]" />
+        <div className="h-2 w-24 rounded bg-[#e5eae7]/60" />
       </div>
     </div>
   ),
@@ -55,27 +55,27 @@ export default function Sidebar({
         />
       )}
       <aside
-        className={`fixed inset-y-0 right-0 z-50 flex w-[258px] flex-col border-l border-white/[0.06] bg-[#101713] px-5 py-6 transition-transform duration-200 lg:translate-x-0 ${
+        className={`fixed inset-y-0 right-0 z-50 flex w-[258px] flex-col border-l border-[#e5eae7] bg-white px-5 py-6 shadow-xs transition-transform duration-200 lg:translate-x-0 ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
         <div className="flex items-center justify-between px-1">
           <Link href="/" className="flex items-center gap-3" onClick={onClose}>
-            <span className="grid h-10 w-10 place-items-center rounded-xl bg-emerald-400 text-[#07110c]">
+            <span className="grid h-10 w-10 place-items-center rounded-xl bg-emerald-500 text-white shadow-xs">
               <Wallet size={21} strokeWidth={2.5} />
             </span>
             <div>
-              <span className="block text-[16px] font-bold tracking-tight text-white">
+              <span className="block text-[16px] font-bold tracking-tight text-[#0f1712]">
                 بيني وايز
               </span>
-              <span className="text-[10px] font-medium tracking-wider text-[#738078]">
+              <span className="text-[10px] font-medium tracking-wider text-[#607267]">
                 إدارة المصروفات الشخصية
               </span>
             </div>
           </Link>
           <button
             onClick={onClose}
-            className="text-[#8b9990] hover:text-white lg:hidden"
+            className="text-[#8c9c91] hover:text-[#0f1712] lg:hidden"
             aria-label="إغلاق"
           >
             <X size={19} />
@@ -83,7 +83,7 @@ export default function Sidebar({
         </div>
 
         <div className="mt-10">
-          <p className="mb-3 px-3 text-[11px] font-bold uppercase tracking-wider text-[#65736a]">
+          <p className="mb-3 px-3 text-[11px] font-bold uppercase tracking-wider text-[#8c9c91]">
             القائمة الرئيسية
           </p>
           <nav className="space-y-1">
@@ -96,16 +96,16 @@ export default function Sidebar({
                   onClick={onClose}
                   className={`group flex items-center gap-3 rounded-xl px-3.5 py-3 text-[13px] font-medium transition ${
                     active
-                      ? "bg-[#1d3025] text-[#7ce0a5]"
-                      : "text-[#91a097] hover:bg-white/[.045] hover:text-white"
+                      ? "bg-[#ecfdf5] text-[#059669] font-semibold"
+                      : "text-[#526359] hover:bg-[#f3f6f4] hover:text-[#0f1712]"
                   }`}
                 >
                   <Icon
                     size={18}
-                    className={active ? "text-[#65d891]" : "text-[#718078] group-hover:text-white"}
+                    className={active ? "text-[#059669]" : "text-[#8c9c91] group-hover:text-[#0f1712]"}
                   />
                   <span>{label}</span>
-                  {active && <span className="mr-auto h-1.5 w-1.5 rounded-full bg-[#65d891]" />}
+                  {active && <span className="mr-auto h-1.5 w-1.5 rounded-full bg-[#059669]" />}
                 </Link>
               );
             })}
@@ -113,7 +113,7 @@ export default function Sidebar({
         </div>
 
         {/* User Account / Auth Section */}
-        <div className="mt-5 border-t border-white/[.06] pt-4 mt-auto">
+        <div className="mt-5 border-t border-[#e5eae7] pt-4 mt-auto">
           <SidebarUserSection />
         </div>
       </aside>

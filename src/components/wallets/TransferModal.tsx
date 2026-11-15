@@ -87,24 +87,24 @@ export default function TransferModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className="fixed inset-0 z-[70] flex items-center justify-center bg-black/80 p-0 sm:p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[70] flex items-center justify-center bg-black/40 p-0 sm:p-4 backdrop-blur-sm"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
       <form
         onSubmit={submit}
-        className="w-full h-full sm:h-auto sm:max-h-[92vh] sm:max-w-[480px] rounded-none sm:rounded-2xl border-0 sm:border sm:border-white/10 bg-[#141c17] shadow-2xl flex flex-col overflow-hidden"
+        className="w-full h-full sm:h-auto sm:max-h-[92vh] sm:max-w-[480px] rounded-none sm:rounded-2xl border-0 sm:border sm:border-[#e5eae7] bg-white shadow-2xl flex flex-col overflow-hidden"
       >
         {/* Sticky Header on Mobile */}
-        <div className="flex items-start justify-between p-5 sm:p-6 pb-4 border-b border-white/[.07] bg-[#141c17] shrink-0">
+        <div className="flex items-start justify-between p-5 sm:p-6 pb-4 border-b border-[#e5eae7] bg-white shrink-0">
           <div className="flex items-center gap-3">
-            <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#291e3b] text-[#c084fc]">
+            <span className="grid h-10 w-10 place-items-center rounded-xl border border-purple-100 bg-purple-50 text-purple-600">
               <ArrowLeftRight size={20} />
             </span>
             <div>
-              <h3 className="text-base font-bold text-white">تحويل بين محافظك الشخصية</h3>
-              <p className="text-[11px] text-[#829087]">
+              <h3 className="text-base font-bold text-[#0f1712]">تحويل بين محافظك الشخصية</h3>
+              <p className="text-[11px] text-[#607267]">
                 نقل رصيد داخلي من حساب إلى حساب آخر تابع لك
               </p>
             </div>
@@ -112,7 +112,7 @@ export default function TransferModal({ onClose }: { onClose: () => void }) {
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-2 text-[#8d9b92] hover:bg-white/5 hover:text-white"
+            className="rounded-lg p-2 text-[#8c9c91] hover:bg-[#f3f6f4] hover:text-[#0f1712]"
           >
             <X size={18} />
           </button>
@@ -121,11 +121,11 @@ export default function TransferModal({ onClose }: { onClose: () => void }) {
         {/* Scrollable Form Body without visible scrollbar */}
         <div className="flex-1 overflow-y-auto no-scrollbar p-5 sm:p-6 space-y-4">
           {/* Informative Tip */}
-          <div className="flex items-start gap-2.5 rounded-xl border border-purple-500/20 bg-[#1a1426] p-3 text-xs leading-5 text-[#d8b4fe]">
-            <Info size={16} className="mt-0.5 shrink-0 text-[#c084fc]" />
+          <div className="flex items-start gap-2.5 rounded-xl border border-purple-200 bg-purple-50 p-3 text-xs leading-5 text-purple-900">
+            <Info size={16} className="mt-0.5 shrink-0 text-purple-600" />
             <div>
               <p className="font-semibold">توضيح مهم:</p>
-              <p className="text-[11px] text-[#c4b1dc]">
+              <p className="text-[11px] text-purple-800">
                 هذه الخاصية لنقل الأموال <strong>بين حساباتك أنت</strong> (مثلاً: سحب كاش من البنك، أو تحويل من إنستاباي لكاش).
                 <br />
                 إذا كنت تحول فلوس <strong>لشخص آخر</strong> عن طريق إنستاباي، اختر <strong>«مصروف»</strong> وحدد محفظة إنستاباي.
@@ -134,14 +134,14 @@ export default function TransferModal({ onClose }: { onClose: () => void }) {
           </div>
 
           {error && (
-            <div className="rounded-xl border border-red-500/20 bg-red-950/30 p-3 text-xs text-red-300">
+            <div className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs text-rose-700">
               {error}
             </div>
           )}
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <label className="block">
-              <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">
+              <span className="mb-1.5 block text-xs font-medium text-[#526359]">
                 من محفظة (المصدر)
               </span>
               <select
@@ -159,7 +159,7 @@ export default function TransferModal({ onClose }: { onClose: () => void }) {
             </label>
 
             <label className="block">
-              <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">
+              <span className="mb-1.5 block text-xs font-medium text-[#526359]">
                 إلى محفظة (المستلم)
               </span>
               <select
@@ -178,7 +178,7 @@ export default function TransferModal({ onClose }: { onClose: () => void }) {
           </div>
 
           <label className="block">
-            <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">
+            <span className="mb-1.5 block text-xs font-medium text-[#526359]">
               المبلغ المراد تحويله (ج.م)
             </span>
             <input
@@ -194,7 +194,7 @@ export default function TransferModal({ onClose }: { onClose: () => void }) {
           </label>
 
           <label className="block">
-            <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">تاريخ التحويل</span>
+            <span className="mb-1.5 block text-xs font-medium text-[#526359]">تاريخ التحويل</span>
             <input
               required
               type="date"
@@ -205,8 +205,8 @@ export default function TransferModal({ onClose }: { onClose: () => void }) {
           </label>
 
           <label className="block">
-            <span className="mb-1.5 block text-xs font-medium text-[#aab6ae]">
-              سبب أو ملاحظة التحويل <span className="text-[#68766e]">(اختياري)</span>
+            <span className="mb-1.5 block text-xs font-medium text-[#526359]">
+              سبب أو ملاحظة التحويل <span className="text-[#8c9c91]">(اختياري)</span>
             </span>
             <input
               value={note}
@@ -218,17 +218,17 @@ export default function TransferModal({ onClose }: { onClose: () => void }) {
         </div>
 
         {/* Sticky Action Footer on Mobile */}
-        <div className="flex gap-3 p-4 sm:p-6 pt-3 border-t border-white/[.07] bg-[#141c17] shrink-0 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] sm:pb-6">
+        <div className="flex gap-3 p-4 sm:p-6 pt-3 border-t border-[#e5eae7] bg-white shrink-0 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] sm:pb-6">
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 rounded-xl border border-white/10 py-3 text-xs font-medium text-[#aab6ae] hover:bg-white/5"
+            className="flex-1 rounded-xl border border-[#e2e8e5] py-3 text-xs font-medium text-[#607267] hover:bg-[#f3f6f4]"
           >
             إلغاء
           </button>
           <button
             type="submit"
-            className="flex-1 rounded-xl bg-[#c084fc] py-3 text-xs font-bold text-[#140b1f] transition hover:bg-[#d8b4fe]"
+            className="flex-1 rounded-xl bg-purple-600 py-3 text-xs font-bold text-white transition hover:bg-purple-700 shadow-xs"
           >
             تأكيد التحويل
           </button>

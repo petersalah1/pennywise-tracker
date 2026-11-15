@@ -17,13 +17,14 @@ import { useFinance } from "@/context/FinanceContext";
 import { formatEGP } from "@/lib/finance";
 
 const tooltipStyle = {
-  background: "#17211a",
-  border: "1px solid #2a3a30",
+  background: "#ffffff",
+  border: "1px solid #e5eae7",
   borderRadius: 10,
-  color: "#f3f7f4",
+  color: "#0f1712",
   fontSize: 12,
   direction: "rtl" as const,
   textAlign: "right" as const,
+  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
 };
 
 export function WeeklyChart() {
@@ -67,22 +68,22 @@ export function WeeklyChart() {
 
   return (
     <div>
-      <div className="mb-2 flex items-center justify-between text-[11px] text-[#78897f]">
-        <span>إجمالي الأسبوع: <strong className="text-white">{formatEGP(totalWeekly)}</strong></span>
-        <span>متوسط الإنفاق اليومي: <strong className="text-[#69d994]">{formatEGP(avgDailyWeekly)} / يوم</strong></span>
+      <div className="mb-2 flex items-center justify-between text-[11px] text-[#607267]">
+        <span>إجمالي الأسبوع: <strong className="text-[#0f1712]">{formatEGP(totalWeekly)}</strong></span>
+        <span>متوسط الإنفاق اليومي: <strong className="text-emerald-700">{formatEGP(avgDailyWeekly)} / يوم</strong></span>
       </div>
       <div className="h-[205px] w-full" dir="ltr">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
-            <CartesianGrid stroke="#253129" strokeDasharray="3 5" vertical={false} />
+            <CartesianGrid stroke="#e8edea" strokeDasharray="3 5" vertical={false} />
             <XAxis
               dataKey="day"
-              tick={{ fill: "#75837a", fontSize: 11 }}
+              tick={{ fill: "#607267", fontSize: 11 }}
               axisLine={false}
               tickLine={false}
             />
             <YAxis
-              tick={{ fill: "#75837a", fontSize: 10 }}
+              tick={{ fill: "#607267", fontSize: 10 }}
               axisLine={false}
               tickLine={false}
               tickFormatter={(val) => `${val}`}
@@ -95,7 +96,7 @@ export function WeeklyChart() {
             <Bar
               dataKey="amount"
               name="المصروفات"
-              fill="#62d58f"
+              fill="#10b981"
               radius={[6, 6, 0, 0]}
               maxBarSize={34}
             />
@@ -153,15 +154,15 @@ export function CategoryChart() {
         {data.length ? (
           data.slice(0, 5).map((item) => (
             <div key={item.id} className="flex items-center justify-between gap-3 text-xs">
-              <span className="flex items-center gap-2 text-[#9aa79e]">
+              <span className="flex items-center gap-2 text-[#526359]">
                 <span className="h-2.5 w-2.5 rounded-full shrink-0" style={{ background: item.color }} />
                 <span className="truncate">{item.name}</span>
               </span>
-              <span className="font-semibold text-[#e5ece7] shrink-0">{formatEGP(item.value)}</span>
+              <span className="font-semibold text-[#0f1712] shrink-0">{formatEGP(item.value)}</span>
             </div>
           ))
         ) : (
-          <p className="py-6 text-center text-xs text-[#718078]">
+          <p className="py-6 text-center text-xs text-[#8c9c91]">
             لا توجد مصروفات مسجلة حتى الآن.
           </p>
         )}
