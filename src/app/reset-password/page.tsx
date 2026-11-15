@@ -77,7 +77,7 @@ export default function ResetPasswordPage() {
         {/* Brand Logo */}
         <div className="mb-8 text-center">
           <Link href="/" className="inline-flex items-center gap-3">
-            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-emerald-500 text-white shadow-xs">
+            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-blue-600 text-white shadow-xs">
               <Wallet size={26} strokeWidth={2.5} />
             </span>
             <div className="text-right">
@@ -126,7 +126,7 @@ export default function ResetPasswordPage() {
           )}
 
           {successMsg && (
-            <div className="mb-5 flex items-center gap-2.5 rounded-2xl border border-emerald-200 bg-emerald-50 p-3.5 text-xs text-emerald-800">
+            <div className="mb-5 flex items-center gap-2.5 rounded-2xl border border-blue-200 bg-blue-50 p-3.5 text-xs text-blue-800">
               <CheckCircle2 size={17} className="shrink-0" />
               <span>{successMsg}</span>
             </div>
@@ -172,7 +172,7 @@ export default function ResetPasswordPage() {
             <button
               type="submit"
               disabled={loading}
-              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3 text-xs font-bold text-white transition hover:bg-emerald-700 shadow-sm disabled:opacity-50"
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 text-xs font-bold text-white transition hover:bg-blue-700 shadow-sm disabled:opacity-50"
             >
               {loading ? (
                 <span>جاري الحفظ...</span>
@@ -188,7 +188,7 @@ export default function ResetPasswordPage() {
           <div className="mt-6 border-t border-[#e5eae7] pt-5 text-center">
             <Link
               href="/login"
-              className="text-xs font-semibold text-emerald-600 transition hover:text-emerald-700"
+              className="text-xs font-semibold text-blue-600 transition hover:text-blue-700"
             >
               &rarr; العودة لتسجيل الدخول
             </Link>
@@ -197,7 +197,7 @@ export default function ResetPasswordPage() {
 
         {/* Security badge */}
         <div className="mt-6 flex items-center justify-center gap-2 text-[11px] text-[#607267]">
-          <ShieldCheck size={14} className="text-emerald-600" />
+          <ShieldCheck size={14} className="text-blue-600" />
           <span>تشفير كامل وحماية متقدمة لبياناتك المالية</span>
         </div>
       </div>

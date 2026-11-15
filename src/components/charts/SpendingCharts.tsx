@@ -70,7 +70,7 @@ export function WeeklyChart() {
     <div>
       <div className="mb-2 flex items-center justify-between text-[11px] text-[#607267]">
         <span>إجمالي الأسبوع: <strong className="text-[#0f1712]">{formatEGP(totalWeekly)}</strong></span>
-        <span>متوسط الإنفاق اليومي: <strong className="text-emerald-700">{formatEGP(avgDailyWeekly)} / يوم</strong></span>
+        <span>متوسط الإنفاق اليومي: <strong className="text-blue-700">{formatEGP(avgDailyWeekly)} / يوم</strong></span>
       </div>
       <div className="h-[205px] w-full" dir="ltr">
         <ResponsiveContainer width="100%" height="100%">
@@ -96,7 +96,7 @@ export function WeeklyChart() {
             <Bar
               dataKey="amount"
               name="المصروفات"
-              fill="#10b981"
+              fill="#2563eb"
               radius={[6, 6, 0, 0]}
               maxBarSize={34}
             />

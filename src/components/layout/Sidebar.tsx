@@ -18,7 +18,7 @@ const SidebarUserSection = dynamic(() => import("./SidebarUserSection"), {
   ssr: false,
   loading: () => (
     <div className="flex items-center gap-3 px-1 animate-pulse">
-      <div className="h-9 w-9 rounded-full bg-[#ecfdf5] shrink-0" />
+      <div className="h-9 w-9 rounded-full bg-blue-50 shrink-0" />
       <div className="flex-1 space-y-1.5">
         <div className="h-3 w-16 rounded bg-[#e5eae7]" />
         <div className="h-2 w-24 rounded bg-[#e5eae7]/60" />
@@ -61,7 +61,7 @@ export default function Sidebar({
       >
         <div className="flex items-center justify-between px-1">
           <Link href="/" className="flex items-center gap-3" onClick={onClose}>
-            <span className="grid h-10 w-10 place-items-center rounded-xl bg-emerald-500 text-white shadow-xs">
+            <span className="grid h-10 w-10 place-items-center rounded-xl bg-blue-600 text-white shadow-xs">
               <Wallet size={21} strokeWidth={2.5} />
             </span>
             <div>
@@ -96,16 +96,16 @@ export default function Sidebar({
                   onClick={onClose}
                   className={`group flex items-center gap-3 rounded-xl px-3.5 py-3 text-[13px] font-medium transition ${
                     active
-                      ? "bg-[#ecfdf5] text-[#059669] font-semibold"
+                      ? "bg-blue-50 text-blue-700 font-semibold"
                       : "text-[#526359] hover:bg-[#f3f6f4] hover:text-[#0f1712]"
                   }`}
                 >
                   <Icon
                     size={18}
-                    className={active ? "text-[#059669]" : "text-[#8c9c91] group-hover:text-[#0f1712]"}
+                    className={active ? "text-blue-600" : "text-[#8c9c91] group-hover:text-[#0f1712]"}
                   />
                   <span>{label}</span>
-                  {active && <span className="mr-auto h-1.5 w-1.5 rounded-full bg-[#059669]" />}
+                  {active && <span className="mr-auto h-1.5 w-1.5 rounded-full bg-blue-600" />}
                 </Link>
               );
             })}

@@ -98,7 +98,7 @@ export default function LoginPage() {
         {/* Brand Logo */}
         <div className="mb-8 text-center">
           <Link href="/" className="inline-flex items-center gap-3">
-            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-emerald-500 text-white shadow-xs">
+            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-blue-600 text-white shadow-xs">
               <Wallet size={26} strokeWidth={2.5} />
             </span>
             <div className="text-right">
@@ -146,7 +146,7 @@ export default function LoginPage() {
           )}
 
           {successMsg && (
-            <div className="mb-5 flex items-center gap-2.5 rounded-2xl border border-emerald-200 bg-emerald-50 p-3.5 text-xs text-emerald-800">
+            <div className="mb-5 flex items-center gap-2.5 rounded-2xl border border-blue-200 bg-blue-50 p-3.5 text-xs text-blue-800">
               <CheckCircle2 size={17} className="shrink-0" />
               <span>{successMsg}</span>
             </div>
@@ -164,7 +164,7 @@ export default function LoginPage() {
                 }}
                 className={`rounded-lg py-2 text-xs font-semibold transition ${
                   mode === "login"
-                    ? "bg-white text-emerald-700 shadow-xs"
+                    ? "bg-white text-blue-700 shadow-xs"
                     : "text-[#607267] hover:text-[#0f1712]"
                 }`}
               >
@@ -179,7 +179,7 @@ export default function LoginPage() {
                 }}
                 className={`rounded-lg py-2 text-xs font-semibold transition ${
                   mode === "register"
-                    ? "bg-white text-emerald-700 shadow-xs"
+                    ? "bg-white text-blue-700 shadow-xs"
                     : "text-[#607267] hover:text-[#0f1712]"
                 }`}
               >
@@ -195,7 +195,7 @@ export default function LoginPage() {
                   setErrorMsg(null);
                   setSuccessMsg(null);
                 }}
-                className="text-xs font-semibold text-emerald-600 hover:underline"
+                className="text-xs font-semibold text-blue-600 hover:underline"
               >
                 &rarr; العودة لتسجيل الدخول
               </button>
@@ -262,7 +262,7 @@ export default function LoginPage() {
                         setErrorMsg(null);
                         setSuccessMsg(null);
                       }}
-                      className="text-[11px] font-semibold text-emerald-600 transition hover:text-emerald-700 hover:underline"
+                      className="text-[11px] font-semibold text-blue-600 transition hover:text-blue-700 hover:underline"
                     >
                       نسيت كلمة المرور؟
                     </button>
@@ -274,7 +274,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3 text-xs font-bold text-white transition hover:bg-emerald-700 shadow-sm disabled:opacity-50"
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 text-xs font-bold text-white transition hover:bg-blue-700 shadow-sm disabled:opacity-50"
             >
               {loading ? (
                 <span>جاري المعالجة...</span>
@@ -297,7 +297,7 @@ export default function LoginPage() {
           <div className="mt-6 border-t border-[#e5eae7] pt-5 text-center">
             <Link
               href="/"
-              className="text-xs font-semibold text-emerald-600 transition hover:text-emerald-700"
+              className="text-xs font-semibold text-blue-600 transition hover:text-blue-700"
             >
               الاستمرار كضيف والمتابعة على المتصفح المحلي &larr;
             </Link>
@@ -306,7 +306,7 @@ export default function LoginPage() {
 
         {/* Security badge */}
         <div className="mt-6 flex items-center justify-center gap-2 text-[11px] text-[#607267]">
-          <ShieldCheck size={14} className="text-emerald-600" />
+          <ShieldCheck size={14} className="text-blue-600" />
           <span>تشفير كامل وحماية متقدمة لبياناتك المالية</span>
         </div>
       </div>

@@ -25,7 +25,7 @@ export default function TransactionsPage() {
     >
       <div className="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <p className="text-xs font-semibold tracking-wider text-emerald-700">سجل النشاط المالي</p>
+          <p className="text-xs font-semibold tracking-wider text-blue-700">سجل النشاط المالي</p>
           <h2 className="mt-1.5 text-2xl font-bold text-[#0f1712]">المعاملات المالية</h2>
           <p className="mt-1 text-xs text-[#607267]">
             استعراض وتعديل وحذف الحركات المالية مع إمكانية التصدير والبحث المتقدم.
@@ -33,7 +33,7 @@ export default function TransactionsPage() {
         </div>
         <button
           onClick={() => setOpen(true)}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-xs font-bold text-white shadow-sm shadow-emerald-600/20 transition hover:bg-emerald-700"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-xs font-bold text-white shadow-sm shadow-blue-600/20 transition hover:bg-blue-700"
         >
           <Plus size={16} /> إضافة معاملة جديدة
         </button>

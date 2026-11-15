@@ -170,7 +170,7 @@ export default function SettingsPage() {
       subtitle="تخصيص الحساب الشخصي وإدارة الرصيد والنسخ الاحتياطي"
     >
       <div className="mb-7">
-        <p className="text-xs font-semibold tracking-wider text-emerald-700">تفضيلاتك الشخصية</p>
+        <p className="text-xs font-semibold tracking-wider text-blue-700">تفضيلاتك الشخصية</p>
         <h2 className="mt-1.5 text-2xl font-bold text-[#0f1712]">إعدادات المحفظة</h2>
         <p className="mt-1 text-xs text-[#607267]">
           تحكم في بياناتك الشخصية، رصيدك الافتتاحي، ونسخ بياناتك احتياطياً في أي وقت.
@@ -182,7 +182,7 @@ export default function SettingsPage() {
           className={`mb-5 flex items-center gap-2 rounded-xl border p-3.5 text-xs font-medium ${
             feedback.error
               ? "border-rose-200 bg-rose-50 text-rose-700"
-              : "border-emerald-200 bg-emerald-50 text-emerald-800"
+              : "border-blue-200 bg-blue-50 text-blue-800"
           }`}
         >
           {feedback.error ? <AlertTriangle size={16} /> : <Check size={16} />}
@@ -198,7 +198,7 @@ export default function SettingsPage() {
             className="rounded-2xl border border-[#e5eae7] bg-white p-5 sm:p-6 shadow-xs"
           >
             <div className="mb-5 flex items-center gap-3">
-              <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#ecfdf5] text-[#059669]">
+              <span className="grid h-10 w-10 place-items-center rounded-xl bg-blue-50 text-blue-700">
                 <User size={19} />
               </span>
               <div>
@@ -247,7 +247,7 @@ export default function SettingsPage() {
 
             <button
               type="submit"
-              className="mt-6 inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-xs font-bold text-white transition hover:bg-emerald-700 shadow-sm"
+              className="mt-6 inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-xs font-bold text-white transition hover:bg-blue-700 shadow-sm"
             >
               <Save size={15} /> حفظ الإعدادات
             </button>
@@ -264,7 +264,7 @@ export default function SettingsPage() {
               <button
                 type="button"
                 onClick={handleExportBackup}
-                className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-[#ecfdf5] px-4 py-2.5 text-xs font-semibold text-[#059669] transition hover:bg-[#d1fae5]"
+                className="inline-flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-xs font-semibold text-blue-700 transition hover:bg-blue-100"
               >
                 <Download size={15} /> تصدير نسخة احتياطية (JSON)
               </button>
@@ -293,7 +293,7 @@ export default function SettingsPage() {
                   type="button"
                   onClick={handleSyncToCloud}
                   disabled={syncing}
-                  className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-[#ecfdf5] px-4 py-2.5 text-xs font-semibold text-[#059669] transition hover:bg-[#d1fae5] disabled:opacity-50"
+                  className="inline-flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-xs font-semibold text-blue-700 transition hover:bg-blue-100 disabled:opacity-50"
                 >
                   <RefreshCw size={15} className={syncing ? "animate-spin" : ""} />
                   {syncing ? "جارٍ المزامنة..." : "مزامنة البيانات مع السحابة"}
@@ -306,7 +306,7 @@ export default function SettingsPage() {
         {/* Right Info Card */}
         <div className="space-y-4">
           <div className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs">
-            <div className="flex items-center gap-2 text-emerald-600">
+            <div className="flex items-center gap-2 text-blue-600">
               <ShieldCheck size={18} />
               <h3 className="text-sm font-bold text-[#0f1712]">الرصيد المتاح حالياً</h3>
             </div>
@@ -334,7 +334,7 @@ export default function SettingsPage() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 {isOnline ? (
-                  <Wifi size={17} className="text-emerald-600" />
+                  <Wifi size={17} className="text-blue-600" />
                 ) : (
                   <WifiOff size={17} className="text-amber-600" />
                 )}
@@ -343,7 +343,7 @@ export default function SettingsPage() {
               <span
                 className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold border ${
                   isOnline
-                    ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+                    ? "border-blue-200 bg-blue-50 text-blue-800"
                     : "border-amber-200 bg-amber-50 text-amber-800"
                 }`}
               >
@@ -354,7 +354,7 @@ export default function SettingsPage() {
             <div className="mt-4 space-y-2 text-[11px] text-[#607267]">
               <div className="flex justify-between">
                 <span>التشغيل بدون إنترنت:</span>
-                <span className="font-semibold text-emerald-700">مفعّل (يعمل تلقائياً)</span>
+                <span className="font-semibold text-blue-700">مفعّل (يعمل تلقائياً)</span>
               </div>
               <div className="flex justify-between">
                 <span>العمليات المعلقة للمزامنة:</span>
@@ -375,7 +375,7 @@ export default function SettingsPage() {
           </div>
 
           <div className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs">
-            <div className="flex items-center gap-2 text-emerald-600">
+            <div className="flex items-center gap-2 text-blue-600">
               <Wallet size={17} />
               <h4 className="text-xs font-bold text-[#0f1712]">الخصوصية والأمان</h4>
             </div>

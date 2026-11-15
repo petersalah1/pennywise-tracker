@@ -20,7 +20,7 @@ export default function SidebarUserSection() {
 
   return (
     <div className="flex items-center gap-3 px-1">
-      <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-[#a7f3d0] bg-[#ecfdf5] text-xs font-bold text-[#059669]">
+      <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-blue-200 bg-blue-50 text-xs font-bold text-blue-700">
         {userInitial}
       </div>
       <div className="min-w-0 flex-1">
@@ -33,7 +33,7 @@ export default function SidebarUserSection() {
             </span>
           ) : isCloudSynced ? (
             <>
-              <Cloud size={10} className="text-[#059669]" />
+              <Cloud size={10} className="text-blue-600" />
               <span className="truncate">{user?.email}</span>
             </>
           ) : (
@@ -54,7 +54,7 @@ export default function SidebarUserSection() {
         <Link
           href="/login"
           title="تسجيل الدخول / حفظ سحابي"
-          className="rounded-lg p-1.5 text-[#059669] transition hover:bg-[#ecfdf5]"
+          className="rounded-lg p-1.5 text-blue-600 transition hover:bg-blue-50"
         >
           <LogIn size={16} />
         </Link>

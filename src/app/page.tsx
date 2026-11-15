@@ -50,12 +50,11 @@ export default function DashboardPage() {
       {/* Header Greeting */}
       <div className="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <p className="text-xs font-semibold tracking-wider text-emerald-700">
+          <p className="text-xs font-semibold tracking-wider text-blue-700">
             لوحة المتابعة المالية
           </p>
           <h2 suppressHydrationWarning className="mt-1.5 text-2xl font-bold tracking-tight text-[#0f1712] sm:text-[28px]">
             أهلاً بك مجدداً، {userName}
-            <span className="text-emerald-600">.</span>
           </h2>
           <p className="mt-1 text-xs text-[#607267]">
             إليك نظرة دقيقة وفورية على حركة أموالك ومصروفات هذا الشهر.
@@ -63,7 +62,7 @@ export default function DashboardPage() {
         </div>
         <button
           onClick={() => setFormOpen(true)}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-xs font-bold text-white shadow-sm shadow-emerald-600/20 transition hover:bg-emerald-700"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-xs font-bold text-white shadow-sm shadow-blue-600/20 transition hover:bg-blue-700"
         >
           <Plus size={16} /> إضافة معاملة جديدة
         </button>
@@ -87,7 +86,7 @@ export default function DashboardPage() {
                 معدل إنفاقك اليومي من بداية الأسبوع حتى نهايته
               </p>
             </div>
-            <span className="grid h-8 w-8 place-items-center rounded-lg bg-[#ecfdf5] text-[#059669]">
+            <span className="grid h-8 w-8 place-items-center rounded-lg bg-blue-50 text-blue-700">
               <CalendarDays size={16} />
             </span>
           </div>
@@ -100,7 +99,7 @@ export default function DashboardPage() {
               <h3 className="text-sm font-bold text-[#0f1712]">توزيع المصروفات حسب التصنيف</h3>
               <p className="mt-1 text-[11px] text-[#607267]">أين تذهب أموالك الأكثر استهلاكاً</p>
             </div>
-            <span className="grid h-8 w-8 place-items-center rounded-lg bg-[#ecfdf5] text-[#059669]">
+            <span className="grid h-8 w-8 place-items-center rounded-lg bg-blue-50 text-blue-700">
               <PieIcon size={16} />
             </span>
           </div>
@@ -120,7 +119,7 @@ export default function DashboardPage() {
             </div>
             <Link
               href="/categories"
-              className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 hover:text-emerald-700"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-700"
             >
               إدارة الميزانيات <ArrowLeft size={14} />
             </Link>
@@ -134,7 +133,7 @@ export default function DashboardPage() {
               return (
                 <div
                   key={item.id}
-                  className="rounded-xl border border-[#e5eae7] bg-[#f8faf9] p-4 transition hover:border-emerald-300 hover:bg-white shadow-2xs"
+                  className="rounded-xl border border-[#e5eae7] bg-[#f8faf9] p-4 transition hover:border-blue-300 hover:bg-white shadow-2xs"
                 >
                   <div className="flex items-center justify-between">
                     <span className="flex items-center gap-2 text-xs font-semibold text-[#0f1712]">
@@ -147,7 +146,7 @@ export default function DashboardPage() {
                           ? "text-rose-600"
                           : isWarning
                           ? "text-amber-600"
-                          : "text-emerald-600"
+                          : "text-blue-600"
                       }`}
                     >
                       {item.isOver ? "تجاوز السقف!" : `${item.percentage}%`}
@@ -161,7 +160,7 @@ export default function DashboardPage() {
                           ? "bg-rose-500"
                           : isWarning
                           ? "bg-amber-500"
-                          : "bg-emerald-500"
+                          : "bg-blue-600"
                       }`}
                       style={{ width: `${item.percentage}%` }}
                     />
@@ -187,7 +186,7 @@ export default function DashboardPage() {
           </div>
           <Link
             href="/transactions"
-            className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 hover:text-emerald-700"
+            className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-700"
           >
             عرض الكل <ArrowLeft size={14} />
           </Link>

@@ -86,7 +86,7 @@ export default function PWAInstallPrompt() {
       <div className="relative overflow-hidden rounded-2xl border border-[#e5eae7] bg-white p-4 shadow-xl">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
-            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-emerald-500 text-white shadow-xs">
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-blue-600 text-white shadow-xs">
               <Smartphone size={20} />
             </span>
             <div>
@@ -109,14 +109,14 @@ export default function PWAInstallPrompt() {
         {/* iOS Step-by-Step Instructions */}
         {showIOSGuide ? (
           <div className="mt-3 rounded-xl border border-[#e5eae7] bg-[#f8faf9] p-3 text-xs leading-5 text-[#526359]">
-            <p className="font-semibold text-emerald-700">خطوات التثبيت على الآيفون:</p>
+            <p className="font-semibold text-blue-700">خطوات التثبيت على الآيفون:</p>
             <div className="mt-1.5 space-y-1 text-[11px]">
               <p className="flex items-center gap-1.5">
-                1. اضغط على زر المشاركة <Share size={13} className="text-emerald-600" /> أسفل الشاشة في Safari.
+                1. اضغط على زر المشاركة <Share size={13} className="text-blue-600" /> أسفل الشاشة في Safari.
               </p>
               <p className="flex items-center gap-1.5">
                 2. مرر للأسفل واختر <strong>«إضافة إلى الشاشة الرئيسية»</strong>{" "}
-                <PlusSquare size={13} className="text-emerald-600" />.
+                <PlusSquare size={13} className="text-blue-600" />.
               </p>
               <p>3. اضغط «إضافة» بالأعلى، وسيظهر تطبيقك على الشاشة فوراً!</p>
             </div>
@@ -125,7 +125,7 @@ export default function PWAInstallPrompt() {
           <div className="mt-3 flex items-center gap-2">
             <button
               onClick={handleInstallClick}
-              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-emerald-600 py-2.5 text-xs font-bold text-white transition hover:bg-emerald-700 shadow-xs"
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-blue-600 py-2.5 text-xs font-bold text-white transition hover:bg-blue-700 shadow-xs"
             >
               <Download size={14} />
               <span>تثبيت التطبيق الآن</span>

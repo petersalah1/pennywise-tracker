@@ -30,33 +30,33 @@ export default function HeaderUserSection() {
           )}
         </div>
       ) : isSyncingOffline ? (
-        <div className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3.5 py-2 text-xs font-semibold text-emerald-800">
-          <Loader2 size={14} className="animate-spin text-emerald-600" />
+        <div className="flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-3.5 py-2 text-xs font-semibold text-blue-800">
+          <Loader2 size={14} className="animate-spin text-blue-600" />
           <span className="hidden sm:inline">جاري المزامنة...</span>
         </div>
       ) : isLoadingData ? (
         <div className="hidden items-center gap-2 rounded-xl border border-[#e5eae7] bg-[#f8faf9] px-3.5 py-2 sm:flex">
-          <Loader2 size={14} className="animate-spin text-emerald-600" />
+          <Loader2 size={14} className="animate-spin text-blue-600" />
           <span className="text-xs text-[#607267]">تحميل البيانات...</span>
         </div>
       ) : isCloudSynced ? (
-        <div className="hidden items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3.5 py-2 sm:flex">
-          <Cloud size={15} className="text-emerald-600" />
-          <span className="text-xs font-semibold text-emerald-800">متصل بالسحابة</span>
+        <div className="hidden items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-3.5 py-2 sm:flex">
+          <Cloud size={15} className="text-blue-600" />
+          <span className="text-xs font-semibold text-blue-800">متصل بالسحابة</span>
         </div>
       ) : (
         <Link
           href="/login"
-          className="hidden items-center gap-2 rounded-xl border border-[#e5eae7] bg-[#f8faf9] px-3.5 py-2 transition hover:border-emerald-500 hover:bg-white sm:flex"
+          className="hidden items-center gap-2 rounded-xl border border-[#e5eae7] bg-[#f8faf9] px-3.5 py-2 transition hover:border-blue-500 hover:bg-white sm:flex"
         >
           <Laptop size={15} className="text-[#607267]" />
           <span className="text-xs text-[#607267]">
-            حفظ محلي · <span className="font-semibold text-emerald-600">تسجيل للدخول السحابي</span>
+            حفظ محلي · <span className="font-semibold text-blue-600">تسجيل للدخول السحابي</span>
           </span>
         </Link>
       )}
 
-      <div className="grid h-9 w-9 place-items-center rounded-full border border-[#a7f3d0] bg-[#ecfdf5] text-xs font-bold text-[#059669]">
+      <div className="grid h-9 w-9 place-items-center rounded-full border border-blue-200 bg-blue-50 text-xs font-bold text-blue-700">
         {userInitial}
       </div>
     </div>

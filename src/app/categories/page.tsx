@@ -9,6 +9,7 @@ import type { Category, TransactionType } from "@/types/transaction";
 import { formatEGP } from "@/lib/finance";
 
 const palette = [
+  "#2563EB",
   "#F59E0B",
   "#38BDF8",
   "#C084FC",
@@ -100,7 +101,7 @@ export default function CategoriesPage() {
       subtitle="تنظيم حركات الأموال وتحديد سقف المصروفات لكل فئة"
     >
       <div className="mb-7">
-        <p className="text-xs font-semibold tracking-wider text-emerald-700">هيكلة المصروفات</p>
+        <p className="text-xs font-semibold tracking-wider text-blue-700">هيكلة المصروفات</p>
         <h2 className="mt-1.5 text-2xl font-bold text-[#0f1712]">التصنيفات وسقف الإنفاق</h2>
         <p className="mt-1 text-xs text-[#607267]">
           قسّم أموالك إلى بنود واضحة وحدد ميزانية شهرية لكل بند لضبط الاستهلاك.
@@ -112,7 +113,7 @@ export default function CategoriesPage() {
           className={`mb-5 flex items-center gap-2 rounded-xl border p-3.5 text-xs font-medium ${
             feedbackMessage.error
               ? "border-rose-200 bg-rose-50 text-rose-700"
-              : "border-emerald-200 bg-emerald-50 text-emerald-800"
+              : "border-blue-200 bg-blue-50 text-blue-800"
           }`}
         >
           <Check size={16} />
@@ -154,7 +155,7 @@ export default function CategoriesPage() {
                   {list.map((category) => (
                     <div
                       key={category.id}
-                      className="group flex items-center justify-between gap-3 rounded-xl border border-[#e2e8e5] bg-[#f8faf9] px-3.5 py-3 transition hover:border-emerald-300 hover:bg-white"
+                      className="group flex items-center justify-between gap-3 rounded-xl border border-[#e2e8e5] bg-[#f8faf9] px-3.5 py-3 transition hover:border-blue-300 hover:bg-white"
                     >
                       <div className="flex min-w-0 items-center gap-3">
                         <span
@@ -208,7 +209,7 @@ export default function CategoriesPage() {
         >
           <div className="mb-5 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#ecfdf5] text-[#059669]">
+              <span className="grid h-9 w-9 place-items-center rounded-xl bg-blue-50 text-blue-700">
                 <Tags size={17} />
               </span>
               <div>
@@ -287,7 +288,7 @@ export default function CategoriesPage() {
                   aria-label={`اختيار اللون ${item}`}
                   className={`h-7 w-7 rounded-full transition-transform ${
                     color === item
-                      ? "scale-110 ring-2 ring-emerald-500 ring-offset-2 ring-offset-white"
+                      ? "scale-110 ring-2 ring-blue-500 ring-offset-2 ring-offset-white"
                       : "hover:scale-105"
                   }`}
                   style={{ background: item }}
@@ -298,7 +299,7 @@ export default function CategoriesPage() {
 
           <button
             type="submit"
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3 text-xs font-bold text-white transition hover:bg-emerald-700 shadow-sm"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 text-xs font-bold text-white transition hover:bg-blue-700 shadow-sm"
           >
             <Plus size={15} />
             {editingCategory ? "حفظ تعديل التصنيف" : "إضافة التصنيف"}

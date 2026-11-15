@@ -39,7 +39,7 @@ export default function SummaryCards() {
       label: "إجمالي الرصيد المتاح",
       value: formatEGP(balance),
       icon: Wallet,
-      color: "green",
+      color: "blue",
       note: "الرصيد الافتتاحي + الدخل − المصروفات",
     },
     {
@@ -83,6 +83,8 @@ export default function SummaryCards() {
                   ? "border-rose-100 bg-rose-50 text-rose-600"
                   : color === "amber"
                   ? "border-amber-100 bg-amber-50 text-amber-600"
+                  : color === "blue"
+                  ? "border-blue-100 bg-blue-50 text-blue-600"
                   : "border-emerald-100 bg-emerald-50 text-emerald-600"
               }`}
             >

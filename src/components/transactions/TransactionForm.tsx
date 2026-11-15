@@ -368,12 +368,12 @@ export default function TransactionForm({
           </label>
 
           {type === "expense" && (
-            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-[#e2e8e5] bg-[#f8faf9] p-3.5 transition hover:border-emerald-400">
+            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-[#e2e8e5] bg-[#f8faf9] p-3.5 transition hover:border-blue-400">
               <input
                 type="checkbox"
                 checked={isOneOff}
                 onChange={(e) => setIsOneOff(e.target.checked)}
-                className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded accent-emerald-600"
+                className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded accent-blue-600"
               />
               <div className="text-right">
                 <span className="block text-xs font-semibold text-[#0f1712]">
@@ -401,7 +401,7 @@ export default function TransactionForm({
             className={`flex-1 rounded-xl py-3 text-xs font-bold transition shadow-xs ${
               type === "transfer"
                 ? "bg-purple-600 text-white hover:bg-purple-700"
-                : "bg-emerald-600 text-white hover:bg-emerald-700"
+                : "bg-blue-600 text-white hover:bg-blue-700"
             }`}
           >
             {isEditing ? "حفظ التعديلات" : type === "transfer" ? "إتمام التحويل" : "حفظ المعاملة"}

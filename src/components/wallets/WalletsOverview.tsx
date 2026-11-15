@@ -57,7 +57,7 @@ export default function WalletsOverview() {
 
             <Link
               href="/wallets"
-              className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 hover:text-emerald-700"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-700"
             >
               <span>إدارة الحسابات</span>
               <ArrowLeft size={14} />
@@ -74,7 +74,7 @@ export default function WalletsOverview() {
             return (
               <div
                 key={wallet.id}
-                className="relative overflow-hidden rounded-xl border border-[#e5eae7] bg-[#f8faf9] p-4 transition hover:border-emerald-300 hover:bg-white shadow-2xs"
+                className="relative overflow-hidden rounded-xl border border-[#e5eae7] bg-[#f8faf9] p-4 transition hover:border-blue-300 hover:bg-white shadow-2xs"
               >
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-2 text-xs font-medium text-[#0f1712]">

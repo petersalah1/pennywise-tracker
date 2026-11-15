@@ -182,7 +182,7 @@ export default function AnalyticsPage() {
       subtitle="تحليل نمط المصروفات ومتوسط الإنفاق اليومي والشهري"
     >
       <div className="mb-7">
-        <p className="text-xs font-semibold tracking-wider text-emerald-700">الرؤى والاتجاهات المالية</p>
+        <p className="text-xs font-semibold tracking-wider text-blue-700">الرؤى والاتجاهات المالية</p>
         <h2 className="mt-1.5 text-2xl font-bold text-[#0f1712]">التحليلات ومتوسط الإنفاق</h2>
         <p className="mt-1 text-xs text-[#607267]">
           رؤية متكاملة توضح معدل استهلاكك اليومي، وتتيح لك عزل المصروفات الاستثنائية (كالموبايل أو الكورسات) لضبط دقة التقسيم.
@@ -215,7 +215,7 @@ export default function AnalyticsPage() {
         <div className="mb-4 flex flex-col justify-between gap-3 lg:flex-row lg:items-center">
           <div>
             <div className="flex items-center gap-2">
-              <Clock size={17} className="text-emerald-600" />
+              <Clock size={17} className="text-blue-600" />
               <h3 className="text-sm font-bold text-[#0f1712]">
                 تحليل متوسط الإنفاق اليومي ووتيرة الصرف
               </h3>
@@ -235,7 +235,7 @@ export default function AnalyticsPage() {
                 onClick={() => setCalculationMode("routine")}
                 className={`rounded-lg px-3 py-1.5 font-semibold transition ${
                   calculationMode === "routine"
-                    ? "bg-white text-emerald-700 shadow-xs"
+                    ? "bg-white text-blue-700 shadow-xs"
                     : "text-[#607267] hover:text-[#0f1712]"
                 }`}
               >
@@ -246,7 +246,7 @@ export default function AnalyticsPage() {
                 onClick={() => setCalculationMode("all")}
                 className={`rounded-lg px-3 py-1.5 font-semibold transition ${
                   calculationMode === "all"
-                    ? "bg-white text-emerald-700 shadow-xs"
+                    ? "bg-white text-blue-700 shadow-xs"
                     : "text-[#607267] hover:text-[#0f1712]"
                 }`}
               >
@@ -350,7 +350,7 @@ export default function AnalyticsPage() {
               <span className="text-xs text-[#607267]">
                 {calculationMode === "routine" ? "المعدل اليومي الروتيني" : "المعدل اليومي الكلي"}
               </span>
-              <span className="grid h-7 w-7 place-items-center rounded-lg bg-emerald-50 text-emerald-600">
+              <span className="grid h-7 w-7 place-items-center rounded-lg bg-blue-50 text-blue-600">
                 <Clock size={14} />
               </span>
             </div>
@@ -424,7 +424,7 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Insight callout */}
-        <div className="mt-4 flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-xs text-emerald-800">
+        <div className="mt-4 flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-xs text-blue-900">
           <span>
             {dailyStats.totalSpentThisMonth === 0 ? (
               "لم تسجل أي مصروفات خلال هذا الشهر حتى الآن."
@@ -449,7 +449,7 @@ export default function AnalyticsPage() {
               <h3 className="text-sm font-bold text-[#0f1712]">المصروفات الأسبوعية</h3>
               <p className="mt-1 text-[11px] text-[#607267]">معدل الصرف اليومي خلال الأسبوع الجاري</p>
             </div>
-            <span className="grid h-8 w-8 place-items-center rounded-lg bg-[#ecfdf5] text-[#059669]">
+            <span className="grid h-8 w-8 place-items-center rounded-lg bg-blue-50 text-blue-700">
               <CalendarDays size={16} />
             </span>
           </div>
@@ -462,7 +462,7 @@ export default function AnalyticsPage() {
               <h3 className="text-sm font-bold text-[#0f1712]">توزيع المصروفات حسب التصنيف</h3>
               <p className="mt-1 text-[11px] text-[#607267]">النسبة المئوية لكل بند من بنود المصروفات</p>
             </div>
-            <span className="grid h-8 w-8 place-items-center rounded-lg bg-[#ecfdf5] text-[#059669]">
+            <span className="grid h-8 w-8 place-items-center rounded-lg bg-blue-50 text-blue-700">
               <PieIcon size={16} />
             </span>
           </div>

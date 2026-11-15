@@ -96,7 +96,7 @@ export default function TransactionTable({ limit }: { limit?: number }) {
 
           <div className="flex flex-wrap items-center gap-2">
             {/* Search */}
-            <div className="flex min-w-0 items-center gap-2 rounded-xl border border-[#e2e8e5] bg-[#f8faf9] px-3 focus-within:border-emerald-500 focus-within:bg-white transition">
+            <div className="flex min-w-0 items-center gap-2 rounded-xl border border-[#e2e8e5] bg-[#f8faf9] px-3 focus-within:border-blue-500 focus-within:bg-white transition">
               <Search size={14} className="shrink-0 text-[#8c9c91]" />
               <input
                 value={query}
@@ -149,7 +149,7 @@ export default function TransactionTable({ limit }: { limit?: number }) {
             <button
               onClick={handleExport}
               disabled={filteredRows.length === 0}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-200 bg-[#ecfdf5] px-3 py-2 text-xs font-semibold text-[#059669] transition hover:bg-[#d1fae5] disabled:opacity-40"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-700 transition hover:bg-blue-100 disabled:opacity-40"
               title="تصدير النتائج كملف Excel / CSV"
             >
               <Download size={14} />
@@ -326,7 +326,7 @@ export default function TransactionTable({ limit }: { limit?: number }) {
             عرض {shown.length} من أصل {filteredRows.length} معاملة
           </span>
           {limit && filteredRows.length > limit && (
-            <span className="font-semibold text-emerald-700">يتم عرض أحدث {limit} معاملات فقط</span>
+            <span className="font-semibold text-blue-700">يتم عرض أحدث {limit} معاملات فقط</span>
           )}
         </div>
       </div>

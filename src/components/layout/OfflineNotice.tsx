@@ -63,9 +63,9 @@ export default function OfflineNotice() {
           </div>
         </div>
       ) : (
-        <div className="flex items-center justify-between gap-3 rounded-2xl border border-emerald-300 bg-emerald-50 p-3.5 shadow-xl">
+        <div className="flex items-center justify-between gap-3 rounded-2xl border border-blue-300 bg-blue-50 p-3.5 shadow-xl">
           <div className="flex items-center gap-3">
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-emerald-100 text-emerald-700">
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-blue-100 text-blue-700">
               {isSyncingOffline ? (
                 <RefreshCw size={17} className="animate-spin" />
               ) : (
@@ -73,12 +73,12 @@ export default function OfflineNotice() {
               )}
             </span>
             <div className="min-w-0">
-              <p className="text-xs font-bold text-emerald-900">
+              <p className="text-xs font-bold text-blue-900">
                 {isSyncingOffline
                   ? "تمت استعادة الاتصال! جاري مزامنة البيانات السحابية..."
                   : "تمت استعادة الاتصال بالإنترنت ومزامنة كافة التعديلات"}
               </p>
-              <p className="mt-0.5 text-[11px] text-emerald-800">
+              <p className="mt-0.5 text-[11px] text-blue-800">
                 {isSyncingOffline
                   ? "يتم رفع المعاملات والتعديلات المعلقة الآن..."
                   : "حسابك الآن متطابق تماماً مع السحابة."}
@@ -88,7 +88,7 @@ export default function OfflineNotice() {
 
           <button
             onClick={() => setShowRestored(false)}
-            className="rounded-lg p-1 text-emerald-700 hover:bg-emerald-100"
+            className="rounded-lg p-1 text-blue-700 hover:bg-blue-100"
             aria-label="إغلاق"
           >
             <X size={15} />

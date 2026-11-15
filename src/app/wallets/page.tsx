@@ -22,6 +22,7 @@ import type { Wallet, WalletType } from "@/types/transaction";
 import TransferModal from "@/components/wallets/TransferModal";
 
 const palette = [
+  "#2563EB",
   "#10B981",
   "#38BDF8",
   "#A855F7",
@@ -134,7 +135,7 @@ export default function WalletsPage() {
     >
       <div className="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <p className="text-xs font-semibold tracking-wider text-emerald-700">مصادر أموالك</p>
+          <p className="text-xs font-semibold tracking-wider text-blue-700">مصادر أموالك</p>
           <h2 className="mt-1.5 text-2xl font-bold text-[#0f1712]">المحافظ والحسابات</h2>
           <p className="mt-1 text-xs text-[#607267]">
             إجمالي رصيدك الفعلي موزعاً بدقة لمعرفة أين تتواجد أموالك الآن.
@@ -155,7 +156,7 @@ export default function WalletsPage() {
           className={`mb-5 flex items-center gap-2 rounded-xl border p-3.5 text-xs font-medium ${
             feedback.error
               ? "border-rose-200 bg-rose-50 text-rose-700"
-              : "border-emerald-200 bg-emerald-50 text-emerald-800"
+              : "border-blue-200 bg-blue-50 text-blue-800"
           }`}
         >
           <Check size={16} />
@@ -190,7 +191,7 @@ export default function WalletsPage() {
               return (
                 <div
                   key={wallet.id}
-                  className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs transition hover:border-[#ccd6d0]"
+                  className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs transition hover:border-blue-300"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -265,7 +266,7 @@ export default function WalletsPage() {
         >
           <div className="mb-5 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#ecfdf5] text-[#059669]">
+              <span className="grid h-9 w-9 place-items-center rounded-xl bg-blue-50 text-blue-700">
                 <WalletIcon size={17} />
               </span>
               <div>
@@ -342,7 +343,7 @@ export default function WalletsPage() {
                   aria-label={`اختيار اللون ${item}`}
                   className={`h-7 w-7 rounded-full transition-transform ${
                     color === item
-                      ? "scale-110 ring-2 ring-emerald-500 ring-offset-2 ring-offset-white"
+                      ? "scale-110 ring-2 ring-blue-500 ring-offset-2 ring-offset-white"
                       : "hover:scale-105"
                   }`}
                   style={{ background: item }}
@@ -353,7 +354,7 @@ export default function WalletsPage() {
 
           <button
             type="submit"
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3 text-xs font-bold text-white transition hover:bg-emerald-700 shadow-sm"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 text-xs font-bold text-white transition hover:bg-blue-700 shadow-sm"
           >
             <Plus size={15} />
             {editingWallet ? "حفظ تعديلات المحفظة" : "إضافة المحفظة"}
