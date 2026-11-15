@@ -99,7 +99,7 @@ export default function TransferModal({ onClose }: { onClose: () => void }) {
         {/* Sticky Header on Mobile */}
         <div className="flex items-start justify-between p-5 sm:p-6 pb-4 border-b border-[#e5eae7] bg-white shrink-0">
           <div className="flex items-center gap-3">
-            <span className="grid h-10 w-10 place-items-center rounded-xl border border-purple-100 bg-purple-50 text-purple-600">
+            <span className="grid h-10 w-10 place-items-center rounded-xl border border-blue-100 bg-blue-50 text-blue-700">
               <ArrowLeftRight size={20} />
             </span>
             <div>
@@ -121,11 +121,11 @@ export default function TransferModal({ onClose }: { onClose: () => void }) {
         {/* Scrollable Form Body without visible scrollbar */}
         <div className="flex-1 overflow-y-auto no-scrollbar p-5 sm:p-6 space-y-4">
           {/* Informative Tip */}
-          <div className="flex items-start gap-2.5 rounded-xl border border-purple-200 bg-purple-50 p-3 text-xs leading-5 text-purple-900">
-            <Info size={16} className="mt-0.5 shrink-0 text-purple-600" />
+          <div className="flex items-start gap-2.5 rounded-xl border border-blue-200 bg-blue-50 p-3 text-xs leading-5 text-blue-900">
+            <Info size={16} className="mt-0.5 shrink-0 text-blue-600" />
             <div>
               <p className="font-semibold">توضيح مهم:</p>
-              <p className="text-[11px] text-purple-800">
+              <p className="text-[11px] text-blue-800">
                 هذه الخاصية لنقل الأموال <strong>بين حساباتك أنت</strong> (مثلاً: سحب كاش من البنك، أو تحويل من إنستاباي لكاش).
                 <br />
                 إذا كنت تحول فلوس <strong>لشخص آخر</strong> عن طريق إنستاباي، اختر <strong>«مصروف»</strong> وحدد محفظة إنستاباي.
@@ -222,13 +222,13 @@ export default function TransferModal({ onClose }: { onClose: () => void }) {
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 rounded-xl border border-[#e2e8e5] py-3 text-xs font-medium text-[#607267] hover:bg-[#f3f6f4]"
+            className="flex-1 rounded-xl border border-[#e2e8e5] py-3 text-xs font-semibold text-[#526359] hover:bg-[#f3f6f4] hover:text-[#0f1712] transition"
           >
             إلغاء
           </button>
           <button
             type="submit"
-            className="flex-1 rounded-xl bg-purple-600 py-3 text-xs font-bold text-white transition hover:bg-purple-700 shadow-xs"
+            className="flex-1 rounded-xl bg-blue-600 py-3 text-xs font-bold text-white transition hover:bg-blue-700 shadow-sm shadow-blue-600/20"
           >
             تأكيد التحويل
           </button>

@@ -264,12 +264,12 @@ export default function SettingsPage() {
               <button
                 type="button"
                 onClick={handleExportBackup}
-                className="inline-flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-xs font-semibold text-blue-700 transition hover:bg-blue-100"
+                className="inline-flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-xs font-semibold text-blue-700 shadow-2xs transition hover:bg-blue-100"
               >
                 <Download size={15} /> تصدير نسخة احتياطية (JSON)
               </button>
 
-              <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-[#e2e8e5] bg-[#f8faf9] px-4 py-2.5 text-xs font-semibold text-[#0f1712] transition hover:bg-[#f1f5f3]">
+              <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-xs font-semibold text-blue-700 shadow-2xs transition hover:bg-blue-100">
                 <Upload size={15} /> استيراد نسخة احتياطية
                 <input
                   ref={fileInputRef}
@@ -283,7 +283,7 @@ export default function SettingsPage() {
               <button
                 type="button"
                 onClick={handleReset}
-                className="inline-flex items-center gap-2 rounded-xl border border-rose-200 bg-rose-50 px-4 py-2.5 text-xs font-semibold text-rose-700 transition hover:bg-rose-100"
+                className="inline-flex items-center gap-2 rounded-xl border border-rose-200 bg-rose-50 px-4 py-2.5 text-xs font-semibold text-rose-700 shadow-2xs transition hover:bg-rose-100"
               >
                 <RotateCcw size={15} /> إعادة ضبط المصنع
               </button>

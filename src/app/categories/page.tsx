@@ -174,18 +174,18 @@ export default function CategoriesPage() {
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-1 opacity-90">
+                      <div className="flex items-center gap-1.5 opacity-90">
                         <button
                           title="تعديل التصنيف"
                           onClick={() => startEdit(category)}
-                          className="rounded-lg p-1.5 text-[#8c9c91] transition hover:bg-[#f1f5f3] hover:text-[#0f1712]"
+                          className="rounded-lg border border-[#e2e8e5] bg-white p-1.5 text-blue-600 shadow-2xs transition hover:bg-blue-50 hover:border-blue-200"
                         >
                           <Edit2 size={13} />
                         </button>
                         <button
                           title="حذف التصنيف"
                           onClick={() => handleDelete(category)}
-                          className="rounded-lg p-1.5 text-[#8c9c91] transition hover:bg-rose-50 hover:text-rose-600"
+                          className="rounded-lg border border-[#e2e8e5] bg-white p-1.5 text-rose-500 shadow-2xs transition hover:bg-rose-50 hover:border-rose-200 hover:text-rose-600"
                         >
                           <Trash2 size={13} />
                         </button>
@@ -227,7 +227,7 @@ export default function CategoriesPage() {
               <button
                 type="button"
                 onClick={cancelEdit}
-                className="flex items-center gap-1 rounded-lg border border-[#e2e8e5] px-2 py-1 text-[11px] text-[#607267] hover:bg-[#f3f6f4]"
+                className="flex items-center gap-1 rounded-lg border border-rose-200 bg-rose-50 px-2.5 py-1 text-[11px] font-semibold text-rose-700 transition hover:bg-rose-100"
               >
                 <X size={13} /> إلغاء
               </button>

@@ -46,17 +46,17 @@ export default function SidebarUserSection() {
         <button
           onClick={() => signOut()}
           title="تسجيل الخروج"
-          className="rounded-lg p-1.5 text-[#8c9c91] transition hover:bg-rose-50 hover:text-rose-600"
+          className="rounded-lg border border-[#e2e8e5] bg-white p-1.5 text-rose-500 shadow-2xs transition hover:bg-rose-50 hover:border-rose-200 hover:text-rose-600"
         >
-          <LogOut size={15} />
+          <LogOut size={14} />
         </button>
       ) : (
         <Link
           href="/login"
           title="تسجيل الدخول / حفظ سحابي"
-          className="rounded-lg p-1.5 text-blue-600 transition hover:bg-blue-50"
+          className="rounded-lg border border-blue-200 bg-blue-50 p-1.5 text-blue-600 shadow-2xs transition hover:bg-blue-100"
         >
-          <LogIn size={16} />
+          <LogIn size={15} />
         </Link>
       )}
     </div>

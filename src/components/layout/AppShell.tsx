@@ -9,7 +9,7 @@ const HeaderUserSection = dynamic(() => import("./HeaderUserSection"), {
   ssr: false,
   loading: () => (
     <div className="flex items-center gap-2 sm:gap-3">
-      <div className="h-9 w-9 rounded-full bg-[#1c3324]/50 animate-pulse" />
+      <div className="h-9 w-9 rounded-full bg-blue-100 animate-pulse" />
     </div>
   ),
 });

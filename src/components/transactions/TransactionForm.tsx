@@ -191,10 +191,10 @@ export default function TransactionForm({
           <button
             type="button"
             onClick={() => setType("expense")}
-            className={`flex items-center justify-center gap-1.5 rounded-lg py-2.5 font-semibold transition ${
+            className={`flex items-center justify-center gap-1.5 rounded-lg py-2.5 font-semibold transition border ${
               type === "expense"
-                ? "border border-rose-100 bg-white text-rose-600 shadow-xs"
-                : "text-[#607267] hover:text-[#0f1712]"
+                ? "border-rose-200 bg-white text-rose-600 shadow-xs"
+                : "border-transparent text-[#607267] hover:text-[#0f1712]"
             }`}
           >
             <ArrowUpRight size={15} /> مصروف
@@ -202,10 +202,10 @@ export default function TransactionForm({
           <button
             type="button"
             onClick={() => setType("income")}
-            className={`flex items-center justify-center gap-1.5 rounded-lg py-2.5 font-semibold transition ${
+            className={`flex items-center justify-center gap-1.5 rounded-lg py-2.5 font-semibold transition border ${
               type === "income"
-                ? "border border-emerald-100 bg-white text-emerald-600 shadow-xs"
-                : "text-[#607267] hover:text-[#0f1712]"
+                ? "border-emerald-200 bg-white text-emerald-600 shadow-xs"
+                : "border-transparent text-[#607267] hover:text-[#0f1712]"
             }`}
           >
             <ArrowDownLeft size={15} /> دخل
@@ -213,10 +213,10 @@ export default function TransactionForm({
           <button
             type="button"
             onClick={() => setType("transfer")}
-            className={`flex items-center justify-center gap-1.5 rounded-lg py-2.5 font-semibold transition ${
+            className={`flex items-center justify-center gap-1.5 rounded-lg py-2.5 font-semibold transition border ${
               type === "transfer"
-                ? "border border-purple-100 bg-white text-purple-600 shadow-xs"
-                : "text-[#607267] hover:text-[#0f1712]"
+                ? "border-blue-200 bg-white text-blue-600 shadow-xs"
+                : "border-transparent text-[#607267] hover:text-[#0f1712]"
             }`}
           >
             <ArrowLeftRight size={15} /> تحويل
@@ -224,9 +224,9 @@ export default function TransactionForm({
         </div>
 
         {type === "transfer" && (
-          <div className="mb-4 flex items-start gap-2 rounded-xl border border-purple-200 bg-purple-50 p-3 text-xs leading-5 text-purple-900">
-            <Info size={15} className="mt-0.5 shrink-0 text-purple-600" />
-            <p className="text-[11px] text-purple-800">
+          <div className="mb-4 flex items-start gap-2 rounded-xl border border-blue-200 bg-blue-50 p-3 text-xs leading-5 text-blue-900">
+            <Info size={15} className="mt-0.5 shrink-0 text-blue-600" />
+            <p className="text-[11px] text-blue-800">
               التحويل هنا لنقل الأموال <strong>بين حساباتك الشخصية</strong>. إذا كنت ترسل فلوس{" "}
               <strong>لشخص آخر</strong> عن طريق إنستاباي، اختر <strong>«مصروف»</strong> وحدد
               محفظة إنستاباي.
@@ -392,17 +392,13 @@ export default function TransactionForm({
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 rounded-xl border border-[#e2e8e5] py-3 text-xs font-medium text-[#607267] hover:bg-[#f3f6f4]"
+            className="flex-1 rounded-xl border border-[#e2e8e5] bg-[#f8faf9] py-3 text-xs font-semibold text-[#526359] transition hover:bg-[#f1f5f3] hover:text-[#0f1712]"
           >
             إلغاء
           </button>
           <button
             type="submit"
-            className={`flex-1 rounded-xl py-3 text-xs font-bold transition shadow-xs ${
-              type === "transfer"
-                ? "bg-purple-600 text-white hover:bg-purple-700"
-                : "bg-blue-600 text-white hover:bg-blue-700"
-            }`}
+            className="flex-1 rounded-xl bg-blue-600 py-3 text-xs font-bold text-white transition hover:bg-blue-700 shadow-sm shadow-blue-600/20"
           >
             {isEditing ? "حفظ التعديلات" : type === "transfer" ? "إتمام التحويل" : "حفظ المعاملة"}
           </button>

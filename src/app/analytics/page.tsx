@@ -324,7 +324,7 @@ export default function AnalyticsPage() {
                         className={`rounded-lg px-2.5 py-1 text-[11px] font-semibold transition ${
                           isExcluded
                             ? "border border-amber-300 bg-amber-100 text-amber-800 hover:bg-amber-200"
-                            : "border border-[#e2e8e5] bg-[#f8faf9] text-[#607267] hover:bg-[#f1f5f3] hover:text-[#0f1712]"
+                            : "border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100"
                         }`}
                       >
                         {isExcluded ? "مستبعد من الحساب" : "مشمول في الحساب"}
@@ -371,7 +371,7 @@ export default function AnalyticsPage() {
               <span className="text-xs text-[#607267]">
                 {dailyStats.totalMonthlyBudget > 0 ? "المعدل اليومي الآمن" : "متوسط آخر 30 يوماً"}
               </span>
-              <span className="grid h-7 w-7 place-items-center rounded-lg bg-purple-50 text-purple-600">
+              <span className="grid h-7 w-7 place-items-center rounded-lg bg-blue-50 text-blue-600">
                 <Target size={14} />
               </span>
             </div>

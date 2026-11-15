@@ -96,7 +96,7 @@ export default function TransactionTable({ limit }: { limit?: number }) {
 
           <div className="flex flex-wrap items-center gap-2">
             {/* Search */}
-            <div className="flex min-w-0 items-center gap-2 rounded-xl border border-[#e2e8e5] bg-[#f8faf9] px-3 focus-within:border-blue-500 focus-within:bg-white transition">
+            <div className="flex min-w-0 items-center gap-2 rounded-xl border border-[#e2e8e5] bg-white px-3 shadow-2xs focus-within:border-blue-500 transition">
               <Search size={14} className="shrink-0 text-[#8c9c91]" />
               <input
                 value={query}
@@ -110,7 +110,7 @@ export default function TransactionTable({ limit }: { limit?: number }) {
             <select
               value={walletFilter}
               onChange={(e) => setWalletFilter(e.target.value)}
-              className="rounded-xl border border-[#e2e8e5] bg-[#f8faf9] px-2.5 py-2 text-xs text-[#0f1712] outline-none hover:bg-[#f1f5f3]"
+              className="rounded-xl border border-[#e2e8e5] bg-white px-3 py-2 text-xs font-medium text-[#0f1712] shadow-2xs outline-none hover:border-blue-300 focus:border-blue-500 transition"
             >
               <option value="all">كل المحافظ</option>
               {wallets.map((w) => (
@@ -124,7 +124,7 @@ export default function TransactionTable({ limit }: { limit?: number }) {
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="rounded-xl border border-[#e2e8e5] bg-[#f8faf9] px-2.5 py-2 text-xs text-[#0f1712] outline-none hover:bg-[#f1f5f3]"
+              className="rounded-xl border border-[#e2e8e5] bg-white px-3 py-2 text-xs font-medium text-[#0f1712] shadow-2xs outline-none hover:border-blue-300 focus:border-blue-500 transition"
             >
               <option value="all">كل الأنواع</option>
               <option value="expense">المصروفات فقط</option>
@@ -136,7 +136,7 @@ export default function TransactionTable({ limit }: { limit?: number }) {
             <select
               value={dateFilter}
               onChange={(e) => setDateFilter(e.target.value)}
-              className="rounded-xl border border-[#e2e8e5] bg-[#f8faf9] px-2.5 py-2 text-xs text-[#0f1712] outline-none hover:bg-[#f1f5f3]"
+              className="rounded-xl border border-[#e2e8e5] bg-white px-3 py-2 text-xs font-medium text-[#0f1712] shadow-2xs outline-none hover:border-blue-300 focus:border-blue-500 transition"
             >
               <option value="all">كل الفترات</option>
               <option value="today">اليوم</option>
@@ -149,7 +149,7 @@ export default function TransactionTable({ limit }: { limit?: number }) {
             <button
               onClick={handleExport}
               disabled={filteredRows.length === 0}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-700 transition hover:bg-blue-100 disabled:opacity-40"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-700 shadow-2xs transition hover:bg-blue-100 disabled:opacity-40"
               title="تصدير النتائج كملف Excel / CSV"
             >
               <Download size={14} />
@@ -189,7 +189,7 @@ export default function TransactionTable({ limit }: { limit?: number }) {
                         <span
                           className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl border ${
                             isTransfer
-                              ? "border-purple-100 bg-purple-50 text-purple-600"
+                              ? "border-blue-100 bg-blue-50 text-blue-600"
                               : isIncome
                               ? "border-emerald-100 bg-emerald-50 text-emerald-600"
                               : "border-rose-100 bg-rose-50 text-rose-600"
@@ -278,7 +278,7 @@ export default function TransactionTable({ limit }: { limit?: number }) {
                     <td
                       className={`px-4 py-3.5 text-left text-xs font-bold tabular-nums ${
                         isTransfer
-                          ? "text-purple-600"
+                          ? "text-blue-600"
                           : isIncome
                           ? "text-emerald-600"
                           : "text-rose-600"
@@ -289,20 +289,20 @@ export default function TransactionTable({ limit }: { limit?: number }) {
                     </td>
 
                     <td className="px-4 py-3.5">
-                      <div className="flex items-center justify-center gap-1">
+                      <div className="flex items-center justify-center gap-1.5">
                         <button
                           title="تعديل المعاملة"
                           onClick={() => setEditingTransaction(item)}
-                          className="rounded-lg p-1.5 text-[#8c9c91] transition hover:bg-[#f1f5f3] hover:text-[#0f1712]"
+                          className="rounded-lg border border-[#e2e8e5] bg-white p-1.5 text-blue-600 shadow-2xs transition hover:bg-blue-50 hover:border-blue-200"
                         >
-                          <Edit2 size={14} />
+                          <Edit2 size={13} />
                         </button>
                         <button
                           title="حذف المعاملة"
                           onClick={() => handleDelete(item.id, item.title)}
-                          className="rounded-lg p-1.5 text-[#8c9c91] transition hover:bg-rose-50 hover:text-rose-600"
+                          className="rounded-lg border border-[#e2e8e5] bg-white p-1.5 text-rose-500 shadow-2xs transition hover:bg-rose-50 hover:border-rose-200 hover:text-rose-600"
                         >
-                          <Trash2 size={14} />
+                          <Trash2 size={13} />
                         </button>
                       </div>
                     </td>

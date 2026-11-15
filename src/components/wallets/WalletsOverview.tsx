@@ -49,7 +49,7 @@ export default function WalletsOverview() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setTransferOpen(true)}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-purple-200 bg-purple-50 px-3 py-2 text-xs font-semibold text-purple-700 transition hover:bg-purple-100"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-700 transition hover:bg-blue-100"
             >
               <ArrowLeftRight size={14} />
               <span>تحويل بين المحافظ</span>
