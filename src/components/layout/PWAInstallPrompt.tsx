@@ -90,7 +90,7 @@ export default function PWAInstallPrompt() {
               <Smartphone size={20} />
             </span>
             <div>
-              <p className="text-xs font-bold text-[#0f1712]">تثبيت تطبيق بيني وايز على هاتفك</p>
+              <p className="text-xs font-bold text-[#0f1712]">تثبيت تطبيق محفظتي على هاتفك</p>
               <p className="mt-0.5 text-[11px] text-[#607267]">
                 افتحه بشاشة كاملة وسريعة كـ تطبيق هاتف حقيقي
               </p>

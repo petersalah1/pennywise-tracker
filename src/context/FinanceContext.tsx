@@ -294,7 +294,21 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
           wallets: parsed.wallets && parsed.wallets.length > 0 ? parsed.wallets : DEFAULT_WALLETS,
           transactions: parsed.transactions || [],
           categories:
-            parsed.categories && parsed.categories.length > 0 ? parsed.categories : DEFAULT_CATEGORIES,
+            parsed.categories && parsed.categories.length > 0
+              ? parsed.categories.map((c: Category) => {
+                  let b = c.budget ? Number(c.budget) : undefined;
+                  if (
+                    (c.id.startsWith("food") && b === 4000) ||
+                    (c.id.startsWith("transport") && b === 1500) ||
+                    (c.id.startsWith("shopping") && b === 2000) ||
+                    (c.id.startsWith("bills") && b === 2500) ||
+                    (c.id.startsWith("health") && b === 1000)
+                  ) {
+                    b = undefined;
+                  }
+                  return { ...c, budget: b };
+                })
+              : DEFAULT_CATEGORIES,
         });
       } else if (userId) {
         // New logged-in user with no local cache: start fresh (cloud will fill in)
@@ -402,14 +416,26 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
           .eq("user_id", userId)
           .order("created_at", { ascending: true });
 
-        let loadedCategories: Category[] = (categoriesData || []).map((c) => ({
-          id: String(c.id),
-          name: c.name,
-          type: c.type,
-          color: c.color,
-          icon: c.icon || "tag",
-          budget: c.budget ? Number(c.budget) : undefined,
-        }));
+        let loadedCategories: Category[] = (categoriesData || []).map((c) => {
+          let b = c.budget ? Number(c.budget) : undefined;
+          if (
+            (c.id.startsWith("food") && b === 4000) ||
+            (c.id.startsWith("transport") && b === 1500) ||
+            (c.id.startsWith("shopping") && b === 2000) ||
+            (c.id.startsWith("bills") && b === 2500) ||
+            (c.id.startsWith("health") && b === 1000)
+          ) {
+            b = undefined;
+          }
+          return {
+            id: String(c.id),
+            name: c.name,
+            type: c.type,
+            color: c.color,
+            icon: c.icon || "tag",
+            budget: b,
+          };
+        });
 
         // If user has no categories in Supabase, seed clean defaults
         if (loadedCategories.length === 0) {
@@ -1003,7 +1029,14 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
     let updatedCat: Category | null = null;
     const nextCategories = data.categories.map((item) => {
       if (item.id === id) {
-        updatedCat = { ...item, ...input };
+        const nextBudget = "budget" in input
+          ? (input.budget && input.budget > 0 ? Number(input.budget) : undefined)
+          : item.budget;
+        updatedCat = {
+          ...item,
+          ...input,
+          budget: nextBudget,
+        };
         return updatedCat;
       }
       return item;
@@ -1024,14 +1057,17 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
       }
 
       try {
+        const updatePayload: Record<string, any> = {};
+        if (input.name) updatePayload.name = input.name;
+        if (input.type) updatePayload.type = input.type;
+        if (input.color) updatePayload.color = input.color;
+        if ("budget" in input) {
+          updatePayload.budget = input.budget && input.budget > 0 ? Number(input.budget) : null;
+        }
+
         const { error } = await supabase
           .from("categories")
-          .update({
-            ...(input.name ? { name: input.name } : {}),
-            ...(input.type ? { type: input.type } : {}),
-            ...(input.color ? { color: input.color } : {}),
-            ...(input.budget !== undefined ? { budget: input.budget } : {}),
-          })
+          .update(updatePayload)
           .eq("id", id)
           .eq("user_id", userId);
 

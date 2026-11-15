@@ -102,7 +102,7 @@ export default function LoginPage() {
               <Wallet size={26} strokeWidth={2.5} />
             </span>
             <div className="text-right">
-              <span className="block text-xl font-bold tracking-tight text-[#0f1712]">بيني وايز</span>
+              <span className="block text-xl font-bold tracking-tight text-[#0f1712]">محفظتي</span>
               <span className="text-[11px] font-medium tracking-wider text-[#607267]">
                 إدارة المصروفات الشخصية
               </span>

@@ -8,11 +8,11 @@ export const DEFAULT_WALLETS: Wallet[] = [
 ];
 
 export const DEFAULT_CATEGORIES: Category[] = [
-  { id: "food", name: "طعام ومشروبات", type: "expense", color: "#F59E0B", icon: "utensils", budget: 4000 },
-  { id: "transport", name: "مواصلات ووقود", type: "expense", color: "#38BDF8", icon: "car-front", budget: 1500 },
-  { id: "shopping", name: "تسوق ومشتريات", type: "expense", color: "#C084FC", icon: "shopping-bag", budget: 2000 },
-  { id: "bills", name: "فواتير والتزامات", type: "expense", color: "#FB7185", icon: "receipt", budget: 2500 },
-  { id: "health", name: "صحة وعلاج", type: "expense", color: "#34D399", icon: "heart-pulse", budget: 1000 },
+  { id: "food", name: "طعام ومشروبات", type: "expense", color: "#F59E0B", icon: "utensils" },
+  { id: "transport", name: "مواصلات ووقود", type: "expense", color: "#38BDF8", icon: "car-front" },
+  { id: "shopping", name: "تسوق ومشتريات", type: "expense", color: "#C084FC", icon: "shopping-bag" },
+  { id: "bills", name: "فواتير والتزامات", type: "expense", color: "#FB7185", icon: "receipt" },
+  { id: "health", name: "صحة وعلاج", type: "expense", color: "#34D399", icon: "heart-pulse" },
   { id: "other-expense", name: "مصاريف أخرى", type: "expense", color: "#94A3B8", icon: "ellipsis" },
   { id: "salary", name: "راتب شهري", type: "income", color: "#34D399", icon: "briefcase-business" },
   { id: "freelance", name: "عمل حر (Freelance)", type: "income", color: "#60A5FA", icon: "laptop" },

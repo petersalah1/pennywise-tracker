@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "بيني وايز — إدارة وتتبع المصروفات الشخصية",
-    short_name: "بيني وايز",
+    name: "محفظتي — إدارة وتتبع المصروفات الشخصية",
+    short_name: "محفظتي",
     description: "تتبع دخلك ومصروفاتك ومحافظك المالية والميزانية الشهرية بالجنيه المصري",
     start_url: "/",
     display: "standalone",

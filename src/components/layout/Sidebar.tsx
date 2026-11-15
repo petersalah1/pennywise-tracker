@@ -66,7 +66,7 @@ export default function Sidebar({
             </span>
             <div>
               <span className="block text-[16px] font-bold tracking-tight text-[#0f1712]">
-                بيني وايز
+                محفظتي
               </span>
               <span className="text-[10px] font-medium tracking-wider text-[#607267]">
                 إدارة المصروفات الشخصية
