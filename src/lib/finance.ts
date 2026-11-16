@@ -65,7 +65,7 @@ export function exportTransactionsToCSV(
   const headers = ["العنوان", "النوع", "المبلغ (ج.م)", "المحفظة / الحساب", "التصنيف", "التاريخ", "ملاحظات"];
   const rows = transactions.map((t) => {
     const category = getCategory(categories, t.categoryId)?.name || "غير محدد";
-    const wallet = getWallet(wallets, t.walletId)?.name || "افتراضي";
+    const wallet = getWallet(wallets, t.walletId)?.name || "المحفظة الرئيسية";
     const toWallet = t.toWalletId ? ` -> ${getWallet(wallets, t.toWalletId)?.name || ""}` : "";
     const type = t.type === "income" ? "دخل" : t.type === "expense" ? "مصروف" : "تحويل بين محافظ";
     const note = t.note ? `"${t.note.replace(/"/g, '""')}"` : "";

@@ -122,6 +122,7 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
 
   // Track the user ID that is currently loaded into `data` state
   const loadedUserIdRef = useRef<string | null | undefined>(undefined);
+  const [dataOwnerId, setDataOwnerId] = useState<string | null | undefined>(undefined);
 
   // Offline / Network States
   const [isOnline, setIsOnline] = useState<boolean>(true);
@@ -329,6 +330,7 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
       console.error("Could not load local finance data", error);
     } finally {
       loadedUserIdRef.current = activeUserId;
+      setDataOwnerId(activeUserId);
       setReady(true);
       if (!activeUserId || !isConfigured) {
         setIsLoadingData(false);
@@ -366,16 +368,16 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const activeUserId = userId || null;
     // CRITICAL: Only persist if ready, auth has resolved,
-    // AND the current state belongs to the active user (prevents saving guest data into a user's cache upon login)
-    if (ready && !authLoading && loadedUserIdRef.current === activeUserId) {
+    // AND dataOwnerId strictly matches activeUserId (prevents saving guest data into a user's cache upon login)
+    if (ready && !authLoading && dataOwnerId === activeUserId) {
       persistLocally(data, activeUserId);
     }
-  }, [data, ready, userId, authLoading]);
+  }, [data, ready, userId, authLoading, dataOwnerId]);
 
   // 4. Supabase Cloud Sync & Self-Healing (With Offline-First Resilience)
   useEffect(() => {
     if (authLoading || !userId || !supabase || !isConfigured) return;
-    if (loadedUserIdRef.current !== userId) return;
+    if (dataOwnerId !== userId) return;
 
     // If completely offline on boot, skip cloud fetch to avoid hanging; local data is already ready
     if (typeof navigator !== "undefined" && !navigator.onLine) {
@@ -518,7 +520,27 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
           console.error("Failed to query transactions from Supabase", txError);
         }
 
-        let loadedTransactions: Transaction[] = (transactionsData || []).map((t) => ({
+        const validWalletIds = new Set(loadedWallets.map((w) => w.id));
+
+        // Purge any orphan/guest transactions that leaked into Supabase (e.g. wallet_id = "cash")
+        const rawTxs = transactionsData || [];
+        const orphanGuestTxs = rawTxs.filter(
+          (t) =>
+            !t.wallet_id ||
+            !validWalletIds.has(String(t.wallet_id))
+        );
+
+        if (orphanGuestTxs.length > 0) {
+          for (const orphan of orphanGuestTxs) {
+            await supabase!.from("transactions").delete().eq("id", orphan.id).eq("user_id", userId);
+          }
+        }
+
+        const cleanTxs = rawTxs.filter(
+          (t) => t.wallet_id && validWalletIds.has(String(t.wallet_id))
+        );
+
+        const loadedTransactions: Transaction[] = cleanTxs.map((t) => ({
           id: String(t.id),
           title: t.title,
           amount: Number(t.amount),
@@ -531,32 +553,6 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
           isOneOff: Boolean((t as { is_one_off?: boolean }).is_one_off || (t.note && t.note.includes("[استثنائي]"))),
         }));
 
-        // OFFLINE RECONCILIATION: Only check this specific user's cached transactions
-        const cloudTxIds = new Set(loadedTransactions.map((t) => t.id));
-        const localTransactions = cachedData?.transactions || [];
-        const unsyncedLocals = localTransactions.filter((lt) => !cloudTxIds.has(lt.id));
-
-        if (unsyncedLocals.length > 0) {
-          loadedTransactions = [...unsyncedLocals, ...loadedTransactions].sort((a, b) =>
-            b.date.localeCompare(a.date)
-          );
-
-          for (const tx of unsyncedLocals) {
-            await supabase!.from("transactions").upsert({
-              id: tx.id,
-              user_id: userId,
-              category_id: tx.categoryId || null,
-              wallet_id: tx.walletId || null,
-              to_wallet_id: tx.toWalletId || null,
-              title: tx.title,
-              amount: tx.amount,
-              type: tx.type,
-              date: tx.date,
-              note: tx.note || null,
-            });
-          }
-        }
-
         if (!isMounted) return;
 
         const mergedData: FinanceData = {
@@ -568,6 +564,7 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
         };
 
         setData(mergedData);
+        setDataOwnerId(userId);
         persistLocally(mergedData, userId);
       } catch (err) {
         console.error("Failed to load Supabase cloud data", err);

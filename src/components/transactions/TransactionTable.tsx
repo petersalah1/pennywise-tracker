@@ -243,7 +243,7 @@ export default function TransactionTable({ limit }: { limit?: number }) {
                             className="h-2 w-2 rounded-full"
                             style={{ background: wallet?.color || "#888" }}
                           />
-                          <span>{wallet?.name || "افتراضي"}</span>
+                          <span>{wallet?.name || "المحفظة الرئيسية"}</span>
                         </span>
                       )}
                     </td>
