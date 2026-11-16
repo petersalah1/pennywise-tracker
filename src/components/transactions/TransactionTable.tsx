@@ -86,13 +86,8 @@ export default function TransactionTable({ limit }: { limit?: number }) {
     <>
       <div className="overflow-hidden rounded-2xl border border-[#e5eae7] bg-white shadow-xs">
         {/* Header Controls */}
-        <div className="flex flex-col gap-3 border-b border-[#e5eae7] p-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h3 className="text-sm font-semibold text-[#0f1712]">سجل المعاملات المالية</h3>
-            <p className="mt-1 text-[11px] text-[#607267]">
-              عرض وتصفية حركات الدخل والمصروفات والتحويلات بين المحافظ
-            </p>
-          </div>
+        <div className="flex flex-col gap-3 border-b border-[#e5eae7] p-4 sm:flex-row sm:items-center sm:justify-between dark:border-[#222933]">
+          <h3 className="text-sm font-semibold text-[#0f1712] dark:text-[#f0f4f2]">سجل المعاملات المالية</h3>
 
           <div className="flex flex-wrap items-center gap-2">
             {/* Search */}

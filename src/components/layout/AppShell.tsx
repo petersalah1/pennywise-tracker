@@ -21,7 +21,7 @@ export default function AppShell({
 }: {
   children: React.ReactNode;
   title: string;
-  subtitle: string;
+  subtitle?: string;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -40,7 +40,7 @@ export default function AppShell({
             </button>
             <div>
               <h1 className="text-[17px] font-semibold tracking-tight text-foreground">{title}</h1>
-              <p className="mt-0.5 text-[11px] text-muted-foreground">{subtitle}</p>
+              {subtitle && <p className="mt-0.5 text-[11px] text-muted-foreground">{subtitle}</p>}
             </div>
           </div>
 

@@ -55,7 +55,7 @@ export default function Sidebar({
         />
       )}
       <aside
-        className={`fixed inset-y-0 right-0 z-50 flex w-[258px] flex-col border-l border-[#e5eae7] bg-white px-5 py-6 shadow-xs transition-transform duration-200 lg:translate-x-0 ${
+        className={`fixed inset-y-0 right-0 z-50 flex w-[258px] flex-col border-l border-[#e5eae7] bg-white px-5 py-6 shadow-xs transition-transform duration-200 lg:translate-x-0 dark:border-[#222933] dark:bg-[#151921] ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -65,17 +65,17 @@ export default function Sidebar({
               <Wallet size={21} strokeWidth={2.5} />
             </span>
             <div>
-              <span className="block text-[16px] font-bold tracking-tight text-[#0f1712]">
+              <span className="block text-[16px] font-bold tracking-tight text-[#0f1712] dark:text-[#f0f4f2]">
                 محفظتي
               </span>
-              <span className="text-[10px] font-medium tracking-wider text-[#607267]">
+              <span className="text-[10px] font-medium tracking-wider text-[#607267] dark:text-[#8b9aa7]">
                 إدارة المصروفات الشخصية
               </span>
             </div>
           </Link>
           <button
             onClick={onClose}
-            className="text-[#8c9c91] hover:text-[#0f1712] lg:hidden"
+            className="text-[#8c9c91] hover:text-[#0f1712] dark:text-[#7A8696] dark:hover:text-[#F3F4F6] lg:hidden"
             aria-label="إغلاق"
           >
             <X size={19} />
@@ -113,7 +113,7 @@ export default function Sidebar({
         </div>
 
         {/* User Account / Auth Section */}
-        <div className="mt-5 border-t border-[#e5eae7] pt-4 mt-auto">
+        <div className="mt-5 border-t border-[#e5eae7] pt-4 mt-auto dark:border-[#222933]">
           <SidebarUserSection />
         </div>
       </aside>

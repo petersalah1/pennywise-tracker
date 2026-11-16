@@ -43,22 +43,13 @@ export default function DashboardPage() {
   }, [categories, transactions]);
 
   return (
-    <AppShell
-      title="نظرة عامة"
-      subtitle="ملخص شامل لوضعك المالي ومتابعة مدخراتك ومصروفاتك"
-    >
+    <AppShell title="نظرة عامة">
       {/* Header Greeting */}
       <div className="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <p className="text-xs font-semibold tracking-wider text-blue-700">
-            لوحة المتابعة المالية
-          </p>
-          <h2 suppressHydrationWarning className="mt-1.5 text-2xl font-bold tracking-tight text-[#0f1712] sm:text-[28px]">
+          <h2 suppressHydrationWarning className="text-2xl font-bold tracking-tight text-[#0f1712] sm:text-[28px]">
             أهلاً بك مجدداً، {userName}
           </h2>
-          <p className="mt-1 text-xs text-[#607267]">
-            إليك نظرة دقيقة وفورية على حركة أموالك ومصروفات هذا الشهر.
-          </p>
         </div>
         <button
           onClick={() => setFormOpen(true)}
@@ -82,9 +73,6 @@ export default function DashboardPage() {
           <div className="mb-4 flex items-center justify-between">
             <div>
               <h3 className="text-sm font-bold text-[#0f1712]">المصروفات الأسبوعية</h3>
-              <p className="mt-1 text-[11px] text-[#607267]">
-                معدل إنفاقك اليومي من بداية الأسبوع حتى نهايته
-              </p>
             </div>
             <span className="grid h-8 w-8 place-items-center rounded-lg bg-blue-50 text-blue-700">
               <CalendarDays size={16} />
@@ -96,8 +84,7 @@ export default function DashboardPage() {
         <section className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs">
           <div className="mb-3 flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold text-[#0f1712]">توزيع المصروفات حسب التصنيف</h3>
-              <p className="mt-1 text-[11px] text-[#607267]">أين تذهب أموالك الأكثر استهلاكاً</p>
+              <h3 className="text-sm font-bold text-[#0f1712]">توزيع المصروفات</h3>
             </div>
             <span className="grid h-8 w-8 place-items-center rounded-lg bg-blue-50 text-blue-700">
               <PieIcon size={16} />
@@ -112,10 +99,7 @@ export default function DashboardPage() {
         <section className="mt-6 rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs">
           <div className="mb-4 flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold text-[#0f1712]">متابعة الميزانيات وسقف المصروفات الشهري</h3>
-              <p className="mt-1 text-[11px] text-[#607267]">
-                مراقبة نسبة استهلاك الميزانية المحددة لكل تصنيف خلال هذا الشهر
-              </p>
+              <h3 className="text-sm font-bold text-[#0f1712]">سقف المصروفات الشهري</h3>
             </div>
             <Link
               href="/categories"
@@ -180,13 +164,10 @@ export default function DashboardPage() {
       {/* Recent Activity */}
       <section className="mt-6">
         <div className="mb-3 flex items-center justify-between">
-          <div>
-            <h3 className="text-sm font-bold text-[#0f1712]">أحدث المعاملات</h3>
-            <p className="mt-1 text-[11px] text-[#607267]">عرض سريع لآخر الحركات المالية المسجلة</p>
-          </div>
+          <h3 className="text-sm font-bold text-[#0f1712] dark:text-[#f0f4f2]">أحدث المعاملات</h3>
           <Link
             href="/transactions"
-            className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-700"
+            className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
           >
             عرض الكل <ArrowLeft size={14} />
           </Link>
@@ -195,8 +176,7 @@ export default function DashboardPage() {
       </section>
 
       {/* Footer */}
-      <div className="mt-8 flex flex-col items-center justify-between gap-2 border-t border-[#e5eae7] pt-4 text-[11px] text-[#8c9c91] sm:flex-row">
-        <span>صُمم لمساعدتك على بناء عادات مالية أفضل واستقرار مالي دائم.</span>
+      <div className="mt-8 flex items-center justify-center border-t border-[#e5eae7] pt-4 text-[11px] text-[#8c9c91] dark:border-[#222933] dark:text-[#6f7e8c]">
         <span>كافة الحسابات بالجنيه المصري (EGP)</span>
       </div>
 

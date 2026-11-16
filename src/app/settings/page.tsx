@@ -165,24 +165,17 @@ export default function SettingsPage() {
   }
 
   return (
-    <AppShell
-      title="الإعدادات والبيانات"
-      subtitle="تخصيص الحساب الشخصي وإدارة الرصيد والنسخ الاحتياطي"
-    >
-      <div className="mb-7">
-        <p className="text-xs font-semibold tracking-wider text-blue-700">تفضيلاتك الشخصية</p>
-        <h2 className="mt-1.5 text-2xl font-bold text-[#0f1712]">إعدادات المحفظة</h2>
-        <p className="mt-1 text-xs text-[#607267]">
-          تحكم في بياناتك الشخصية، رصيدك الافتتاحي، ونسخ بياناتك احتياطياً في أي وقت.
-        </p>
+    <AppShell title="الإعدادات">
+      <div className="mb-6">
+        <h2 className="text-xl font-bold text-[#0f1712] dark:text-[#f0f4f2]">إعدادات المحفظة</h2>
       </div>
 
       {feedback && (
         <div
           className={`mb-5 flex items-center gap-2 rounded-xl border p-3.5 text-xs font-medium ${
             feedback.error
-              ? "border-rose-200 bg-rose-50 text-rose-700"
-              : "border-blue-200 bg-blue-50 text-blue-800"
+              ? "border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-900/40 dark:bg-rose-950/30 dark:text-rose-400"
+              : "border-blue-200 bg-blue-50 text-blue-800 dark:border-blue-900/40 dark:bg-blue-950/30 dark:text-blue-400"
           }`}
         >
           {feedback.error ? <AlertTriangle size={16} /> : <Check size={16} />}
@@ -195,18 +188,13 @@ export default function SettingsPage() {
         <div className="space-y-6">
           <form
             onSubmit={handleSaveProfile}
-            className="rounded-2xl border border-[#e5eae7] bg-white p-5 sm:p-6 shadow-xs"
+            className="rounded-2xl border border-[#e5eae7] bg-white p-5 sm:p-6 shadow-xs dark:border-[#222933] dark:bg-[#151921]"
           >
             <div className="mb-5 flex items-center gap-3">
-              <span className="grid h-10 w-10 place-items-center rounded-xl bg-blue-50 text-blue-700">
+              <span className="grid h-10 w-10 place-items-center rounded-xl bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400">
                 <User size={19} />
               </span>
-              <div>
-                <h3 className="text-sm font-bold text-[#0f1712]">البيانات الشخصية والرصيد</h3>
-                <p className="text-[11px] text-[#607267]">
-                  الاسم المعروض والرصيد الافتتاحي قبل بدء التتبع
-                </p>
-              </div>
+              <h3 className="text-sm font-bold text-[#0f1712] dark:text-[#f0f4f2]">البيانات الشخصية والرصيد</h3>
             </div>
 
             <div className="space-y-4">
@@ -254,13 +242,10 @@ export default function SettingsPage() {
           </form>
 
           {/* Backup & Restore Section */}
-          <div className="rounded-2xl border border-[#e5eae7] bg-white p-5 sm:p-6 shadow-xs">
-            <h3 className="text-sm font-bold text-[#0f1712]">النسخ الاحتياطي واستعادة البيانات</h3>
-            <p className="mt-1 text-[11px] text-[#607267]">
-              احتفظ بنسخة من سجلاتك المالية على حاسوبك واسترجعها متى شئت دون فقد أي بيانات.
-            </p>
+          <div className="rounded-2xl border border-[#e5eae7] bg-white p-5 sm:p-6 shadow-xs dark:border-[#222933] dark:bg-[#151921]">
+            <h3 className="text-sm font-bold text-[#0f1712] dark:text-[#f0f4f2]">النسخ الاحتياطي واستعادة البيانات</h3>
 
-            <div className="mt-5 flex flex-wrap gap-3">
+            <div className="mt-4 flex flex-wrap gap-3">
               <button
                 type="button"
                 onClick={handleExportBackup}
@@ -305,40 +290,40 @@ export default function SettingsPage() {
 
         {/* Right Info Card */}
         <div className="space-y-4">
-          <div className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs">
-            <div className="flex items-center gap-2 text-blue-600">
+          <div className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs dark:border-[#222933] dark:bg-[#151921]">
+            <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
               <ShieldCheck size={18} />
-              <h3 className="text-sm font-bold text-[#0f1712]">الرصيد المتاح حالياً</h3>
+              <h3 className="text-sm font-bold text-[#0f1712] dark:text-[#f0f4f2]">الرصيد المتاح حالياً</h3>
             </div>
-            <p className="mt-4 text-2xl font-bold text-[#0f1712]">{formatEGP(balance)}</p>
-            <p className="mt-2 text-[11px] text-[#607267]">العملة: الجنيه المصري (EGP)</p>
+            <p className="mt-4 text-2xl font-bold text-[#0f1712] dark:text-[#f0f4f2]">{formatEGP(balance)}</p>
+            <p className="mt-2 text-[11px] text-[#607267] dark:text-[#8b9aa7]">العملة: الجنيه المصري (EGP)</p>
 
-            <div className="mt-5 space-y-2 border-t border-[#f1f5f3] pt-4 text-[11px] text-[#607267]">
+            <div className="mt-5 space-y-2 border-t border-[#f1f5f3] pt-4 text-[11px] text-[#607267] dark:border-[#222933] dark:text-[#8b9aa7]">
               <div className="flex justify-between">
                 <span>الرصيد الافتتاحي:</span>
-                <span className="font-semibold text-[#0f1712]">{formatEGP(openingBalance)}</span>
+                <span className="font-semibold text-[#0f1712] dark:text-[#f0f4f2]">{formatEGP(openingBalance)}</span>
               </div>
               <div className="flex justify-between">
                 <span>عدد المعاملات المسجلة:</span>
-                <span className="font-semibold text-[#0f1712]">{transactions.length}</span>
+                <span className="font-semibold text-[#0f1712] dark:text-[#f0f4f2]">{transactions.length}</span>
               </div>
               <div className="flex justify-between">
                 <span>عدد التصنيفات:</span>
-                <span className="font-semibold text-[#0f1712]">{categories.length}</span>
+                <span className="font-semibold text-[#0f1712] dark:text-[#f0f4f2]">{categories.length}</span>
               </div>
             </div>
           </div>
 
           {/* Offline & Sync Status Card */}
-          <div className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs">
+          <div className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs dark:border-[#222933] dark:bg-[#151921]">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 {isOnline ? (
-                  <Wifi size={17} className="text-blue-600" />
+                  <Wifi size={17} className="text-blue-600 dark:text-blue-400" />
                 ) : (
-                  <WifiOff size={17} className="text-amber-600" />
+                  <WifiOff size={17} className="text-amber-600 dark:text-amber-400" />
                 )}
-                <h4 className="text-xs font-bold text-[#0f1712]">حالة الاتصال والمزامنة (Offline)</h4>
+                <h4 className="text-xs font-bold text-[#0f1712] dark:text-[#f0f4f2]">حالة الاتصال والمزامنة (Offline)</h4>
               </div>
               <span
                 className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold border ${

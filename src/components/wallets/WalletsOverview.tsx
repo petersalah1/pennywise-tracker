@@ -37,14 +37,9 @@ export default function WalletsOverview() {
 
   return (
     <>
-      <section className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs">
+      <section className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs dark:border-[#222933] dark:bg-[#151921]">
         <div className="mb-4 flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
-          <div>
-            <h3 className="text-sm font-bold text-[#0f1712]">محافظي وحساباتي المالية</h3>
-            <p className="mt-1 text-[11px] text-[#607267]">
-              توزيع رصيدك الفعلي بين الكاش، البنك، إنستاباي، والمحافظ الإلكترونية
-            </p>
-          </div>
+          <h3 className="text-sm font-bold text-[#0f1712] dark:text-[#f0f4f2]">محافظي وحساباتي المالية</h3>
 
           <div className="flex items-center gap-2">
             <button

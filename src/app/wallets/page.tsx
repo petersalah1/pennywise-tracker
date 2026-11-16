@@ -129,22 +129,13 @@ export default function WalletsPage() {
   }
 
   return (
-    <AppShell
-      title="المحافظ والحسابات المالية"
-      subtitle="تتبع وتوزيع أموالك بين الكاش، البنوك، إنستاباي، والمحافظ الرقمية"
-    >
-      <div className="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-        <div>
-          <p className="text-xs font-semibold tracking-wider text-blue-700">مصادر أموالك</p>
-          <h2 className="mt-1.5 text-2xl font-bold text-[#0f1712]">المحافظ والحسابات</h2>
-          <p className="mt-1 text-xs text-[#607267]">
-            إجمالي رصيدك الفعلي موزعاً بدقة لمعرفة أين تتواجد أموالك الآن.
-          </p>
-        </div>
+    <AppShell title="المحافظ والحسابات">
+      <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <h2 className="text-xl font-bold text-[#0f1712] dark:text-[#f0f4f2]">المحافظ والحسابات</h2>
 
         <button
           onClick={() => setTransferOpen(true)}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-xs font-bold text-white shadow-sm shadow-blue-600/20 transition hover:bg-blue-700"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold text-white shadow-xs transition hover:bg-blue-700 active:bg-blue-800"
         >
           <ArrowLeftRight size={16} />
           <span>تحويل بين المحافظ</span>
@@ -165,17 +156,17 @@ export default function WalletsPage() {
       )}
 
       {/* Total Balance Card */}
-      <div className="mb-6 rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs">
+      <div className="mb-6 rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs dark:border-[#222933] dark:bg-[#151921]">
         <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
           <div>
-            <p className="text-xs text-[#607267]">مجموع أرصدة كافة المحافظ</p>
-            <p className="mt-1 text-2xl font-extrabold text-[#0f1712] sm:text-3xl">
+            <p className="text-xs text-[#607267] dark:text-[#8b9aa7]">مجموع أرصدة كافة المحافظ</p>
+            <p className="mt-1 text-2xl font-extrabold text-[#0f1712] dark:text-[#f0f4f2] sm:text-3xl">
               {formatEGP(balance)}
             </p>
           </div>
-          <div className="text-xs text-[#607267]">
+          <div className="text-xs text-[#607267] dark:text-[#8b9aa7]">
             <span>عدد المحافظ النشطة: </span>
-            <span className="font-bold text-[#0f1712]">{wallets.length} محافظ</span>
+            <span className="font-bold text-[#0f1712] dark:text-[#f0f4f2]">{wallets.length} محافظ</span>
           </div>
         </div>
       </div>
@@ -191,7 +182,7 @@ export default function WalletsPage() {
               return (
                 <div
                   key={wallet.id}
-                  className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs transition hover:border-blue-300"
+                  className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs transition hover:border-blue-300 dark:border-[#222933] dark:bg-[#151921] dark:hover:border-[#2a3441]"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -205,8 +196,8 @@ export default function WalletsPage() {
                         <Icon size={19} />
                       </span>
                       <div>
-                        <h4 className="text-sm font-bold text-[#0f1712]">{wallet.name}</h4>
-                        <p className="text-[10px] text-[#607267]">
+                        <h4 className="text-sm font-bold text-[#0f1712] dark:text-[#f0f4f2]">{wallet.name}</h4>
+                        <p className="text-[10px] text-[#607267] dark:text-[#8b9aa7]">
                           {wallet.type === "cash"
                             ? "نقدية كاش"
                             : wallet.type === "bank"
@@ -222,33 +213,33 @@ export default function WalletsPage() {
                       <button
                         title="تعديل المحفظة"
                         onClick={() => startEdit(wallet)}
-                        className="rounded-lg border border-[#e2e8e5] bg-white p-1.5 text-blue-600 shadow-2xs transition hover:bg-blue-50 hover:border-blue-200"
+                        className="rounded-lg border border-[#e2e8e5] bg-white p-1.5 text-blue-600 shadow-2xs transition hover:bg-blue-50 hover:border-blue-200 dark:border-[#2a3441] dark:bg-[#1c222c] dark:text-blue-400 dark:hover:bg-[#222a36]"
                       >
                         <Edit2 size={13} />
                       </button>
                       <button
                         title="حذف المحفظة"
                         onClick={() => handleDelete(wallet)}
-                        className="rounded-lg border border-[#e2e8e5] bg-white p-1.5 text-rose-500 shadow-2xs transition hover:bg-rose-50 hover:border-rose-200 hover:text-rose-600"
+                        className="rounded-lg border border-[#e2e8e5] bg-white p-1.5 text-rose-500 shadow-2xs transition hover:bg-rose-50 hover:border-rose-200 hover:text-rose-600 dark:border-[#2a3441] dark:bg-[#1c222c] dark:text-rose-400 dark:hover:bg-[#222a36]"
                       >
                         <Trash2 size={13} />
                       </button>
                     </div>
                   </div>
 
-                  <div className="mt-4 border-t border-[#f1f5f3] pt-3">
+                  <div className="mt-4 border-t border-[#f1f5f3] pt-3 dark:border-[#222933]">
                     <div className="flex items-baseline justify-between">
-                      <span className="text-xs text-[#607267]">الرصيد الفعلي الحالي:</span>
+                      <span className="text-xs text-[#607267] dark:text-[#8b9aa7]">الرصيد الفعلي الحالي:</span>
                       <span
                         className={`text-lg font-bold tabular-nums ${
-                          liveBalance >= 0 ? "text-[#0f1712]" : "text-rose-600"
+                          liveBalance >= 0 ? "text-[#0f1712] dark:text-[#f0f4f2]" : "text-rose-600 dark:text-rose-400"
                         }`}
                       >
                         {formatEGP(liveBalance)}
                       </span>
                     </div>
 
-                    <div className="mt-1 flex items-center justify-between text-[11px] text-[#8c9c91]">
+                    <div className="mt-1 flex items-center justify-between text-[11px] text-[#8c9c91] dark:text-[#6f7e8c]">
                       <span>الرصيد المبدئي:</span>
                       <span>{formatEGP(wallet.initialBalance)}</span>
                     </div>
@@ -262,21 +253,16 @@ export default function WalletsPage() {
         {/* Add / Edit Wallet Form */}
         <form
           onSubmit={submit}
-          className="h-fit rounded-2xl border border-[#e5eae7] bg-white p-5 sm:p-6 shadow-xs"
+          className="h-fit rounded-2xl border border-[#e5eae7] bg-white p-5 sm:p-6 shadow-xs dark:border-[#222933] dark:bg-[#151921]"
         >
           <div className="mb-5 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <span className="grid h-9 w-9 place-items-center rounded-xl bg-blue-50 text-blue-700">
+              <span className="grid h-9 w-9 place-items-center rounded-xl bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400">
                 <WalletIcon size={17} />
               </span>
-              <div>
-                <h3 className="text-sm font-bold text-[#0f1712]">
-                  {editingWallet ? "تعديل المحفظة" : "إضافة محفظة أو حساب جديد"}
-                </h3>
-                <p className="text-[11px] text-[#607267]">
-                  {editingWallet ? `تعديل بيانات: ${editingWallet.name}` : "إضافة مصدر مالي"}
-                </p>
-              </div>
+              <h3 className="text-sm font-bold text-[#0f1712] dark:text-[#f0f4f2]">
+                {editingWallet ? "تعديل المحفظة" : "إضافة محفظة أو حساب جديد"}
+              </h3>
             </div>
             {editingWallet && (
               <button

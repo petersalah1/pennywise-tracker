@@ -96,16 +96,9 @@ export default function CategoriesPage() {
   }
 
   return (
-    <AppShell
-      title="التصنيفات والميزانية"
-      subtitle="تنظيم حركات الأموال وتحديد سقف المصروفات لكل فئة"
-    >
-      <div className="mb-7">
-        <p className="text-xs font-semibold tracking-wider text-blue-700">هيكلة المصروفات</p>
-        <h2 className="mt-1.5 text-2xl font-bold text-[#0f1712]">التصنيفات وسقف الإنفاق</h2>
-        <p className="mt-1 text-xs text-[#607267]">
-          قسّم أموالك إلى بنود واضحة وحدد ميزانية شهرية لكل بند لضبط الاستهلاك.
-        </p>
+    <AppShell title="التصنيفات والميزانية">
+      <div className="mb-6">
+        <h2 className="text-xl font-bold text-[#0f1712] dark:text-[#f0f4f2]">التصنيفات وسقف الإنفاق</h2>
       </div>
 
       {feedbackMessage && (
@@ -131,23 +124,23 @@ export default function CategoriesPage() {
             return (
               <section
                 key={kind}
-                className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs"
+                className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs dark:border-[#222933] dark:bg-[#151921]"
               >
                 <div className="mb-4 flex items-center gap-3">
                   <span
                     className={`grid h-9 w-9 place-items-center rounded-xl border ${
                       isIncome
-                        ? "border-emerald-100 bg-emerald-50 text-emerald-600"
-                        : "border-amber-100 bg-amber-50 text-amber-600"
+                        ? "border-emerald-100 bg-emerald-50 text-emerald-600 dark:border-emerald-900/40 dark:bg-emerald-950/30 dark:text-emerald-400"
+                        : "border-amber-100 bg-amber-50 text-amber-600 dark:border-amber-900/40 dark:bg-amber-950/30 dark:text-amber-400"
                     }`}
                   >
                     {isIncome ? <BriefcaseBusiness size={17} /> : <Utensils size={17} />}
                   </span>
                   <div>
-                    <h3 className="text-sm font-bold text-[#0f1712]">
+                    <h3 className="text-sm font-bold text-[#0f1712] dark:text-[#f0f4f2]">
                       {isIncome ? "تصنيفات الدخل" : "تصنيفات المصروفات"}
                     </h3>
-                    <p className="text-[11px] text-[#607267]">{list.length} تصنيفات نشطة</p>
+                    <p className="text-[11px] text-[#607267] dark:text-[#8b9aa7]">{list.length} تصنيفات نشطة</p>
                   </div>
                 </div>
 
@@ -205,23 +198,16 @@ export default function CategoriesPage() {
         {/* Add/Edit Form */}
         <form
           onSubmit={submit}
-          className="h-fit rounded-2xl border border-[#e5eae7] bg-white p-5 sm:p-6 shadow-xs"
+          className="h-fit rounded-2xl border border-[#e5eae7] bg-white p-5 sm:p-6 shadow-xs dark:border-[#222933] dark:bg-[#151921]"
         >
           <div className="mb-5 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <span className="grid h-9 w-9 place-items-center rounded-xl bg-blue-50 text-blue-700">
+              <span className="grid h-9 w-9 place-items-center rounded-xl bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400">
                 <Tags size={17} />
               </span>
-              <div>
-                <h3 className="text-sm font-bold text-[#0f1712]">
-                  {editingCategory ? "تعديل التصنيف" : "إنشاء تصنيف جديد"}
-                </h3>
-                <p className="text-[11px] text-[#607267]">
-                  {editingCategory
-                    ? `تعديل بيانات: ${editingCategory.name}`
-                    : "إضافة بند تصنيف جديد"}
-                </p>
-              </div>
+              <h3 className="text-sm font-bold text-[#0f1712] dark:text-[#f0f4f2]">
+                {editingCategory ? "تعديل التصنيف" : "إنشاء تصنيف جديد"}
+              </h3>
             </div>
             {editingCategory && (
               <button

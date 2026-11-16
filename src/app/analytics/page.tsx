@@ -177,54 +177,40 @@ export default function AnalyticsPage() {
   const netSavings = income - expenses;
 
   return (
-    <AppShell
-      title="التقارير والتحليلات"
-      subtitle="تحليل نمط المصروفات ومتوسط الإنفاق اليومي والشهري"
-    >
-      <div className="mb-7">
-        <p className="text-xs font-semibold tracking-wider text-blue-700">الرؤى والاتجاهات المالية</p>
-        <h2 className="mt-1.5 text-2xl font-bold text-[#0f1712]">التحليلات ومتوسط الإنفاق</h2>
-        <p className="mt-1 text-xs text-[#607267]">
-          رؤية متكاملة توضح معدل استهلاكك اليومي، وتتيح لك عزل المصروفات الاستثنائية (كالموبايل أو الكورسات) لضبط دقة التقسيم.
-        </p>
+    <AppShell title="التقارير والتحليلات">
+      <div className="mb-6">
+        <h2 className="text-xl font-bold text-[#0f1712] dark:text-[#f0f4f2]">التحليلات ومتوسط الإنفاق</h2>
       </div>
 
       {/* Top Summary KPI Cards */}
       <div className="mb-6 grid gap-3 sm:grid-cols-3">
         {[
-          { label: "إجمالي الدخل الوارد", value: formatEGP(income), tone: "text-emerald-600" },
-          { label: "إجمالي المصروفات المنفقة", value: formatEGP(expenses), tone: "text-rose-600" },
+          { label: "إجمالي الدخل الوارد", value: formatEGP(income), tone: "text-emerald-600 dark:text-emerald-400" },
+          { label: "إجمالي المصروفات المنفقة", value: formatEGP(expenses), tone: "text-rose-600 dark:text-rose-400" },
           {
             label: "صافي التدفق المالي (الوفر)",
             value: formatEGP(netSavings),
-            tone: netSavings >= 0 ? "text-emerald-600" : "text-rose-600",
+            tone: netSavings >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400",
           },
         ].map((x) => (
           <div
             key={x.label}
-            className="rounded-2xl border border-[#e5eae7] bg-white p-4 shadow-xs"
+            className="rounded-2xl border border-[#e5eae7] bg-white p-4 shadow-xs dark:border-[#222933] dark:bg-[#151921]"
           >
-            <p className="text-[11px] font-medium text-[#607267]">{x.label}</p>
+            <p className="text-[11px] font-medium text-[#607267] dark:text-[#8b9aa7]">{x.label}</p>
             <p className={`mt-2 text-xl font-bold ${x.tone}`}>{x.value}</p>
           </div>
         ))}
       </div>
 
       {/* Daily Spending Intelligence Section */}
-      <section className="mb-6 rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs">
+      <section className="mb-6 rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs dark:border-[#222933] dark:bg-[#151921]">
         <div className="mb-4 flex flex-col justify-between gap-3 lg:flex-row lg:items-center">
-          <div>
-            <div className="flex items-center gap-2">
-              <Clock size={17} className="text-blue-600" />
-              <h3 className="text-sm font-bold text-[#0f1712]">
-                تحليل متوسط الإنفاق اليومي ووتيرة الصرف
-              </h3>
-            </div>
-            <p className="mt-1 text-[11px] text-[#607267]">
-              {calculationMode === "routine"
-                ? "يتم الآن عزل المصروفات الكبيرة/الاستثنائية ليعكس المتوسط وتيرة معيشتك اليومية الفعلية."
-                : "يتم الآن حساب كافة المصروفات شاملة المشتريات الاستثنائية والكبيرة."}
-            </p>
+          <div className="flex items-center gap-2">
+            <Clock size={17} className="text-blue-600 dark:text-blue-400" />
+            <h3 className="text-sm font-bold text-[#0f1712] dark:text-[#f0f4f2]">
+              تحليل متوسط الإنفاق اليومي
+            </h3>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
@@ -443,26 +429,20 @@ export default function AnalyticsPage() {
 
       {/* Charts Grid */}
       <div className="grid gap-4 xl:grid-cols-2">
-        <section className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs">
+        <section className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs dark:border-[#222933] dark:bg-[#151921]">
           <div className="mb-4 flex items-center justify-between">
-            <div>
-              <h3 className="text-sm font-bold text-[#0f1712]">المصروفات الأسبوعية</h3>
-              <p className="mt-1 text-[11px] text-[#607267]">معدل الصرف اليومي خلال الأسبوع الجاري</p>
-            </div>
-            <span className="grid h-8 w-8 place-items-center rounded-lg bg-blue-50 text-blue-700">
+            <h3 className="text-sm font-bold text-[#0f1712] dark:text-[#f0f4f2]">المصروفات الأسبوعية</h3>
+            <span className="grid h-8 w-8 place-items-center rounded-lg bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400">
               <CalendarDays size={16} />
             </span>
           </div>
           <WeeklyChart />
         </section>
 
-        <section className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs">
+        <section className="rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs dark:border-[#222933] dark:bg-[#151921]">
           <div className="mb-3 flex items-center justify-between">
-            <div>
-              <h3 className="text-sm font-bold text-[#0f1712]">توزيع المصروفات حسب التصنيف</h3>
-              <p className="mt-1 text-[11px] text-[#607267]">النسبة المئوية لكل بند من بنود المصروفات</p>
-            </div>
-            <span className="grid h-8 w-8 place-items-center rounded-lg bg-blue-50 text-blue-700">
+            <h3 className="text-sm font-bold text-[#0f1712] dark:text-[#f0f4f2]">توزيع المصروفات حسب التصنيف</h3>
+            <span className="grid h-8 w-8 place-items-center rounded-lg bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400">
               <PieIcon size={16} />
             </span>
           </div>
@@ -471,15 +451,10 @@ export default function AnalyticsPage() {
       </div>
 
       {/* 6 Months Trend */}
-      <section className="mt-4 rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs">
+      <section className="mt-4 rounded-2xl border border-[#e5eae7] bg-white p-5 shadow-xs dark:border-[#222933] dark:bg-[#151921]">
         <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-sm font-bold text-[#0f1712]">مقارنة آخر 6 أشهر</h3>
-            <p className="mt-1 text-[11px] text-[#607267]">
-              مقارنة شهرية بين إجمالي الدخل وإجمالي المصروفات
-            </p>
-          </div>
-          <div className="flex gap-4 text-xs font-medium text-[#607267]">
+          <h3 className="text-sm font-bold text-[#0f1712] dark:text-[#f0f4f2]">مقارنة آخر 6 أشهر</h3>
+          <div className="flex gap-4 text-xs font-medium text-[#607267] dark:text-[#8b9aa7]">
             <span className="flex items-center gap-1.5">
               <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
               الدخل
