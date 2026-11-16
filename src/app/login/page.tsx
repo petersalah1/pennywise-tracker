@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Wallet, Lock, Mail, User, ArrowRight, ShieldCheck, AlertCircle, CheckCircle2 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { clearGuestData } from "@/context/FinanceContext";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -63,6 +64,7 @@ export default function LoginPage() {
         if (res.error) {
           setErrorMsg(res.error);
         } else {
+          clearGuestData();
           router.push("/");
         }
       } else if (mode === "register") {
@@ -70,6 +72,7 @@ export default function LoginPage() {
         if (res.error) {
           setErrorMsg(res.error);
         } else {
+          clearGuestData();
           setSuccessMsg("تم إنشاء الحساب بنجاح! جاري تحويلك إلى لوحة التحكم...");
           setTimeout(() => {
             router.push("/");

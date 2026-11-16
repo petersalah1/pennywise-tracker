@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import type { Category, FinanceData, Transaction, TransactionType, Wallet } from "@/types/transaction";
 import { DEFAULT_CATEGORIES, DEFAULT_WALLETS, INITIAL_TRANSACTIONS, encodeNoteWithOneOff, isOneOffTransaction } from "@/lib/finance";
 import { useAuth } from "@/context/AuthContext";
@@ -59,6 +59,17 @@ type FinanceContextValue = {
 const STORAGE_KEY = "egp-tracker-data-v3";
 const LEGACY_STORAGE_KEY_V2 = "egp-tracker-data-v2";
 
+export function clearGuestData() {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(LEGACY_STORAGE_KEY_V2);
+    localStorage.removeItem("egp-tracker-sync-queue-guest");
+  } catch (err) {
+    console.error("Failed to clear guest data", err);
+  }
+}
+
 const DEFAULT_DATA: FinanceData = {
   userName: "مستخدم",
   openingBalance: 0,
@@ -97,7 +108,7 @@ function saveSyncQueue(queue: OfflineSyncAction[], userId?: string | null) {
 }
 
 export function FinanceProvider({ children }: { children: React.ReactNode }) {
-  const { user, isConfigured } = useAuth();
+  const { user, isConfigured, isLoading: authLoading } = useAuth();
   const userId = user?.id;
   const [data, setData] = useState<FinanceData>({
     userName: "مستخدم جديد",
@@ -109,8 +120,8 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(true);
 
-  // Track previous userId to detect account switches
-  const [prevUserId, setPrevUserId] = useState<string | undefined>(undefined);
+  // Track the user ID that is currently loaded into `data` state
+  const loadedUserIdRef = useRef<string | null | undefined>(undefined);
 
   // Offline / Network States
   const [isOnline, setIsOnline] = useState<boolean>(true);
@@ -120,10 +131,11 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
   // Helper to save to local cache safely
   const persistLocally = (freshData: FinanceData, targetUserId?: string | null) => {
     try {
-      const key = getCacheKey(targetUserId !== undefined ? targetUserId : userId);
+      const activeUserId = targetUserId !== undefined ? targetUserId : (userId || null);
+      const key = getCacheKey(activeUserId);
       localStorage.setItem(key, JSON.stringify(freshData));
       // Only update the shared STORAGE_KEY for guest users (no userId)
-      if (!userId && targetUserId === undefined) {
+      if (!activeUserId) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(freshData));
       }
     } catch (e) {
@@ -247,49 +259,40 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
     setIsSyncingOffline(false);
   };
 
-  // 0. When user switches accounts or logs out: reset data immediately to prevent leakage
+  // 1. Initial Load & Account Switch / Logout Lifecycle
   useEffect(() => {
-    if (prevUserId !== undefined && prevUserId !== userId) {
-      // User changed (logout or different account) — wipe state immediately
-      setReady(false);
-      setData({
-        userName: "مستخدم جديد",
-        openingBalance: 0,
-        wallets: DEFAULT_WALLETS,
-        transactions: [],
-        categories: DEFAULT_CATEGORIES,
-      });
-      localStorage.removeItem(STORAGE_KEY);
-      localStorage.removeItem(LEGACY_STORAGE_KEY_V2);
-    }
-    setPrevUserId(userId);
-  }, [userId]);
+    // Wait until auth state has fully resolved to avoid treating logged-in users as guests
+    if (authLoading) return;
 
-  // 1. Initial Load from LocalStorage Cache on Mount
-  useEffect(() => {
+    const activeUserId = userId || null;
+    const isAccountSwitch =
+      loadedUserIdRef.current !== undefined && loadedUserIdRef.current !== activeUserId;
+
+    if (isAccountSwitch) {
+      setReady(false);
+      // When logging in, completely purge guest operations from local storage
+      // so operations done while not logged in NEVER carry over or get counted.
+      if (activeUserId) {
+        clearGuestData();
+      }
+    }
+
     try {
-      // IMPORTANT: Only load user-specific cache when logged in.
-      // Never fall back to the shared STORAGE_KEY for a logged-in user to prevent
-      // data leakage between accounts.
-      const activeKey = getCacheKey(userId);
+      const activeKey = getCacheKey(activeUserId);
       let saved: string | null = null;
 
-      if (userId) {
-        // Logged-in user: load only their own cache key
+      if (activeUserId) {
+        // Logged-in user: load strictly their own isolated cache
         saved = localStorage.getItem(activeKey);
-        // Do NOT fall back to generic STORAGE_KEY — that belongs to the previous/other user
       } else {
-        // Guest user: load from generic cache or legacy
-        saved = localStorage.getItem(STORAGE_KEY);
-        if (!saved) {
-          saved = localStorage.getItem(LEGACY_STORAGE_KEY_V2);
-        }
+        // Guest user: load from generic guest cache (if any)
+        saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY_V2);
       }
 
       if (saved) {
         const parsed = JSON.parse(saved);
         setData({
-          userName: parsed.userName || "مستخدم جديد",
+          userName: parsed.userName || (activeUserId ? "مستخدم جديد" : "مستخدم"),
           openingBalance: Number(parsed.openingBalance) || 0,
           wallets: parsed.wallets && parsed.wallets.length > 0 ? parsed.wallets : DEFAULT_WALLETS,
           transactions: parsed.transactions || [],
@@ -310,10 +313,12 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
                 })
               : DEFAULT_CATEGORIES,
         });
-      } else if (userId) {
-        // New logged-in user with no local cache: start fresh (cloud will fill in)
+      } else {
+        // Fresh start: no previous cache for this identity
         setData({
-          userName: "مستخدم جديد",
+          userName: activeUserId
+            ? ((user?.user_metadata?.user_name as string) || "مستخدم جديد")
+            : "مستخدم",
           openingBalance: 0,
           wallets: DEFAULT_WALLETS,
           transactions: [],
@@ -323,12 +328,13 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
     } catch (error) {
       console.error("Could not load local finance data", error);
     } finally {
+      loadedUserIdRef.current = activeUserId;
       setReady(true);
-      if (!userId || !isConfigured) {
+      if (!activeUserId || !isConfigured) {
         setIsLoadingData(false);
       }
     }
-  }, [userId, isConfigured]);
+  }, [userId, authLoading, isConfigured]);
 
   // 2. Network Status & Auto-Sync Listener
   useEffect(() => {
@@ -358,14 +364,18 @@ export function FinanceProvider({ children }: { children: React.ReactNode }) {
 
   // 3. Always persist any state changes to Local Storage
   useEffect(() => {
-    if (ready) {
-      persistLocally(data, userId);
+    const activeUserId = userId || null;
+    // CRITICAL: Only persist if ready, auth has resolved,
+    // AND the current state belongs to the active user (prevents saving guest data into a user's cache upon login)
+    if (ready && !authLoading && loadedUserIdRef.current === activeUserId) {
+      persistLocally(data, activeUserId);
     }
-  }, [data, ready, userId]);
+  }, [data, ready, userId, authLoading]);
 
   // 4. Supabase Cloud Sync & Self-Healing (With Offline-First Resilience)
   useEffect(() => {
-    if (!userId || !supabase || !isConfigured) return;
+    if (authLoading || !userId || !supabase || !isConfigured) return;
+    if (loadedUserIdRef.current !== userId) return;
 
     // If completely offline on boot, skip cloud fetch to avoid hanging; local data is already ready
     if (typeof navigator !== "undefined" && !navigator.onLine) {

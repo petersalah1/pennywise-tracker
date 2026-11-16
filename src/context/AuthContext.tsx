@@ -161,6 +161,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signOut = async () => {
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.removeItem("egp-tracker-data-v3");
+        localStorage.removeItem("egp-tracker-data-v2");
+        localStorage.removeItem("egp-tracker-sync-queue-guest");
+      } catch {}
+    }
     if (!supabase) return;
     await supabase.auth.signOut();
     setUser(null);
