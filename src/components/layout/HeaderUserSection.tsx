@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Cloud, Laptop, Loader2, WifiOff } from "lucide-react";
 import { useFinance } from "@/context/FinanceContext";
+import ThemeToggle from "./ThemeToggle";
 
 export default function HeaderUserSection() {
   const { userName, isCloudSynced, isLoadingData, isOnline, pendingSyncCount, isSyncingOffline } =
@@ -55,6 +56,8 @@ export default function HeaderUserSection() {
           </span>
         </Link>
       )}
+
+      <ThemeToggle />
 
       <div className="grid h-9 w-9 place-items-center rounded-full border border-blue-200 bg-blue-50 text-xs font-bold text-blue-700">
         {userInitial}
