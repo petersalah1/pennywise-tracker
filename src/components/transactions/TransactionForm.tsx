@@ -194,7 +194,7 @@ export default function TransactionForm({
             className={`flex items-center justify-center gap-1.5 rounded-lg py-2.5 font-semibold transition border ${
               type === "expense"
                 ? "border-rose-200 bg-white text-rose-600 shadow-xs"
-                : "border-transparent text-[#607267] hover:text-[#0f1712]"
+                : "border-transparent text-[#607267] hover:text-[#0f1712] dark:hover:bg-surface-hover"
             }`}
           >
             <ArrowUpRight size={15} /> مصروف
@@ -205,7 +205,7 @@ export default function TransactionForm({
             className={`flex items-center justify-center gap-1.5 rounded-lg py-2.5 font-semibold transition border ${
               type === "income"
                 ? "border-emerald-200 bg-white text-emerald-600 shadow-xs"
-                : "border-transparent text-[#607267] hover:text-[#0f1712]"
+                : "border-transparent text-[#607267] hover:text-[#0f1712] dark:hover:bg-surface-hover"
             }`}
           >
             <ArrowDownLeft size={15} /> دخل
@@ -216,7 +216,7 @@ export default function TransactionForm({
             className={`flex items-center justify-center gap-1.5 rounded-lg py-2.5 font-semibold transition border ${
               type === "transfer"
                 ? "border-blue-200 bg-white text-blue-600 shadow-xs"
-                : "border-transparent text-[#607267] hover:text-[#0f1712]"
+                : "border-transparent text-[#607267] hover:text-[#0f1712] dark:hover:bg-surface-hover"
             }`}
           >
             <ArrowLeftRight size={15} /> تحويل
@@ -392,13 +392,13 @@ export default function TransactionForm({
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 rounded-xl border border-[#e2e8e5] bg-[#f8faf9] py-3 text-xs font-semibold text-[#526359] transition hover:bg-[#f1f5f3] hover:text-[#0f1712]"
+            className="flex-1 rounded-xl border border-[#e2e8e5] bg-[#f8faf9] py-3 text-xs font-semibold text-[#526359] transition hover:bg-[#f1f5f3] hover:text-[#0f1712] dark:border-[#303744] dark:bg-[#1E2530] dark:text-[#A0A7B4] dark:hover:bg-[#29303D] dark:hover:text-[#F3F4F6]"
           >
             إلغاء
           </button>
           <button
             type="submit"
-            className="flex-1 rounded-xl bg-blue-600 py-3 text-xs font-bold text-white transition hover:bg-blue-700 shadow-sm shadow-blue-600/20"
+            className="flex-1 rounded-xl bg-primary py-3 text-xs font-bold text-white transition hover:bg-primary-hover shadow-sm shadow-blue-600/20 active:scale-[0.99]"
           >
             {isEditing ? "حفظ التعديلات" : type === "transfer" ? "إتمام التحويل" : "حفظ المعاملة"}
           </button>

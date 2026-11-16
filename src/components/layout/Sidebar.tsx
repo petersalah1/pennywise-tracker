@@ -96,16 +96,16 @@ export default function Sidebar({
                   onClick={onClose}
                   className={`group flex items-center gap-3 rounded-xl px-3.5 py-3 text-[13px] font-medium transition ${
                     active
-                      ? "bg-blue-50 text-blue-700 font-semibold"
-                      : "text-[#526359] hover:bg-[#f3f6f4] hover:text-[#0f1712]"
+                      ? "bg-blue-50 text-blue-700 font-semibold dark:bg-blue-500/15 dark:text-blue-400 dark:border dark:border-blue-500/20"
+                      : "text-[#526359] hover:bg-[#f3f6f4] hover:text-[#0f1712] dark:text-[#A0A7B4] dark:hover:bg-[#222833] dark:hover:text-[#F3F4F6]"
                   }`}
                 >
                   <Icon
                     size={18}
-                    className={active ? "text-blue-600" : "text-[#8c9c91] group-hover:text-[#0f1712]"}
+                    className={active ? "text-blue-600 dark:text-blue-400" : "text-[#8c9c91] group-hover:text-[#0f1712] dark:text-[#7A8696] dark:group-hover:text-[#F3F4F6]"}
                   />
                   <span>{label}</span>
-                  {active && <span className="mr-auto h-1.5 w-1.5 rounded-full bg-blue-600" />}
+                  {active && <span className="mr-auto h-1.5 w-1.5 rounded-full bg-blue-600 dark:bg-blue-400" />}
                 </Link>
               );
             })}

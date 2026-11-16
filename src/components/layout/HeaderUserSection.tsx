@@ -48,18 +48,18 @@ export default function HeaderUserSection() {
       ) : (
         <Link
           href="/login"
-          className="hidden items-center gap-2 rounded-xl border border-[#e5eae7] bg-[#f8faf9] px-3.5 py-2 transition hover:border-blue-500 hover:bg-white sm:flex"
+          className="hidden items-center gap-2 rounded-xl border border-[#e5eae7] bg-[#f8faf9] px-3.5 py-2 transition hover:border-blue-500 hover:bg-white sm:flex dark:border-[#303744] dark:bg-[#1E2530] dark:hover:bg-[#29303D]"
         >
-          <Laptop size={15} className="text-[#607267]" />
-          <span className="text-xs text-[#607267]">
-            حفظ محلي · <span className="font-semibold text-blue-600">تسجيل للدخول السحابي</span>
+          <Laptop size={15} className="text-[#607267] dark:text-[#A0A7B4]" />
+          <span className="text-xs text-[#607267] dark:text-[#A0A7B4]">
+            حفظ محلي · <span className="font-semibold text-blue-600 dark:text-blue-400">تسجيل للدخول السحابي</span>
           </span>
         </Link>
       )}
 
       <ThemeToggle />
 
-      <div className="grid h-9 w-9 place-items-center rounded-full border border-blue-200 bg-blue-50 text-xs font-bold text-blue-700">
+      <div className="grid h-9 w-9 place-items-center rounded-full border border-blue-200 bg-blue-50 text-xs font-bold text-blue-700 dark:border-blue-500/30 dark:bg-blue-500/15 dark:text-blue-300">
         {userInitial}
       </div>
     </div>

@@ -222,13 +222,13 @@ export default function TransferModal({ onClose }: { onClose: () => void }) {
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 rounded-xl border border-[#e2e8e5] py-3 text-xs font-semibold text-[#526359] hover:bg-[#f3f6f4] hover:text-[#0f1712] transition"
+            className="flex-1 rounded-xl border border-[#e2e8e5] py-3 text-xs font-semibold text-[#526359] hover:bg-[#f3f6f4] hover:text-[#0f1712] transition dark:border-[#303744] dark:bg-[#1E2530] dark:text-[#A0A7B4] dark:hover:bg-[#29303D] dark:hover:text-[#F3F4F6]"
           >
             إلغاء
           </button>
           <button
             type="submit"
-            className="flex-1 rounded-xl bg-blue-600 py-3 text-xs font-bold text-white transition hover:bg-blue-700 shadow-sm shadow-blue-600/20"
+            className="flex-1 rounded-xl bg-primary py-3 text-xs font-bold text-white transition hover:bg-primary-hover shadow-sm shadow-blue-600/20 active:scale-[0.99]"
           >
             تأكيد التحويل
           </button>

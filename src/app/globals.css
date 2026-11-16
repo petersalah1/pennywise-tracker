@@ -3,7 +3,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* =========================================================================
-   Phase 1: Design Tokens (Centralized Semantic Variables)
+   Phase 1.1: Design Tokens & Neutral Charcoal Hierarchy
    ========================================================================= */
 
 :root {
@@ -13,6 +13,8 @@
   --background: #F7F8FA;
   --surface: #FFFFFF;
   --surface-subtle: #F1F3F6;
+  --surface-hover: #ECEFF3;
+  --surface-active: #E2E6EC;
 
   /* Typography */
   --foreground: #172033;
@@ -20,6 +22,7 @@
 
   /* Borders & Dividers */
   --border: #E5E7EB;
+  --border-subtle: #F0F2F5;
 
   /* Brand / Action (Blue #245BDB) */
   --primary: #245BDB;
@@ -33,17 +36,20 @@
 .dark, [data-theme="dark"] {
   color-scheme: dark;
 
-  /* Neutral Charcoal Surfaces */
-  --background: #101318;
-  --surface: #191E26;
-  --surface-subtle: #222833;
+  /* Neutral Charcoal Hierarchy (Zero green tint, clear elevation) */
+  --background: #101318;       /* Base app background */
+  --surface: #191E26;          /* Main cards, panels, sidebar, header */
+  --surface-subtle: #222833;   /* Secondary boxes, table header, inactive tabs */
+  --surface-hover: #29303D;    /* Clean visible hover without glowing */
+  --surface-active: #313A4A;   /* Pressed / active selection */
 
   /* Typography */
-  --foreground: #F3F4F6;
-  --muted-foreground: #A0A7B4;
+  --foreground: #F3F4F6;       /* High contrast crisp text */
+  --muted-foreground: #A0A7B4; /* Legible secondary captions */
 
   /* Borders & Dividers */
-  --border: #303744;
+  --border: #303744;           /* Structural card and container borders */
+  --border-subtle: #252B36;    /* Soft dividers between rows and list items */
 
   /* Brand / Action (Blue #245BDB) */
   --primary: #245BDB;
@@ -58,9 +64,12 @@
   --color-background: var(--background);
   --color-surface: var(--surface);
   --color-surface-subtle: var(--surface-subtle);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-active: var(--surface-active);
   --color-foreground: var(--foreground);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
   --color-success: var(--success);
@@ -96,6 +105,10 @@ button {
   cursor: pointer;
 }
 
+/* =========================================================================
+   Inputs, Forms & Focus States
+   ========================================================================= */
+
 .field {
   width: 100%;
   border: 1px solid var(--border);
@@ -105,7 +118,7 @@ button {
   color: var(--foreground);
   font-size: 13px;
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s, color 0.2s;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, color 0.15s ease;
 }
 
 .field::placeholder {
@@ -114,7 +127,7 @@ button {
 
 .field:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(36, 91, 219, 0.15);
+  box-shadow: 0 0 0 3px rgba(36, 91, 219, 0.2);
 }
 
 .field option {
@@ -133,7 +146,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 ::selection {
-  background: rgba(36, 91, 219, 0.2);
+  background: rgba(36, 91, 219, 0.25);
 }
 
 /* Hide scrollbar utility */
@@ -145,7 +158,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   scrollbar-width: none;
 }
 
-/* Phase 1 transition bridge: harmonizes existing hardcoded hex utilities in dark mode without full page redesigns */
+/* =========================================================================
+   Dark Mode Visual Refinement (Surfaces, Hovers, Badges, Tables, Sidebar)
+   ========================================================================= */
+
+/* 1. Base Dark Theme Surfaces */
 .dark body {
   background-color: var(--background);
   color: var(--foreground);
@@ -156,24 +173,25 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .dark .bg-\[\#f8faf9\] {
-  background-color: var(--background);
+  background-color: var(--surface-subtle);
 }
 
 .dark .bg-\[\#f1f5f3\] {
   background-color: var(--surface-subtle);
 }
 
-.dark .bg-\[\#f3f6f4\]:hover,
-.dark .hover\:bg-\[\#f3f6f4\]:hover {
-  background-color: var(--surface-subtle);
-}
-
+/* 2. Dark Borders */
 .dark .border-\[\#e5eae7\],
 .dark .border-\[\#e2e8e5\],
 .dark .border-\[\#dce4df\] {
   border-color: var(--border);
 }
 
+.dark .border-\[\#f1f5f3\] {
+  border-color: var(--border-subtle);
+}
+
+/* 3. Dark Typography */
 .dark .text-\[\#0f1712\] {
   color: var(--foreground);
 }
@@ -188,8 +206,199 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   opacity: 0.85;
 }
 
+/* 4. Subtle Calm Shadows in Dark Mode (No glowing/heavy halos) */
 .dark .shadow-xs,
 .dark .shadow-2xs,
 .dark .shadow-sm {
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.35);
+}
+
+/* 5. Refined Hover States (Subtle charcoal surface shifts) */
+.dark .hover\:bg-\[\#f8faf9\]:hover,
+.dark .hover\:bg-\[\#f1f5f3\]:hover,
+.dark .hover\:bg-\[\#f3f6f4\]:hover,
+.dark .bg-\[\#f3f6f4\]:hover {
+  background-color: var(--surface-hover) !important;
+  color: var(--foreground);
+}
+
+.dark .hover\:bg-white:hover {
+  background-color: var(--surface-hover) !important;
+}
+
+.dark .hover\:border-blue-300:hover,
+.dark .hover\:border-blue-200:hover,
+.dark .hover\:border-blue-400:hover {
+  border-color: rgba(36, 91, 219, 0.45) !important;
+}
+
+.dark .hover\:border-\[\#ccd6d0\]:hover {
+  border-color: #404B5D !important;
+}
+
+/* 6. Form Controls & Dropdown Selects in Dark Mode */
+.dark input:not([type="checkbox"]):not([type="radio"]),
+.dark select,
+.dark textarea {
+  background-color: var(--surface);
+  color: var(--foreground);
+  border-color: var(--border);
+}
+
+.dark select option {
+  background-color: var(--surface);
+  color: var(--foreground);
+}
+
+.dark input:focus,
+.dark select:focus,
+.dark textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(36, 91, 219, 0.25);
+}
+
+/* 7. Tables in Dark Mode */
+.dark thead tr {
+  background-color: var(--surface-subtle);
+  border-color: var(--border);
+}
+
+.dark tbody tr {
+  border-color: var(--border-subtle);
+  transition: background-color 0.15s ease;
+}
+
+.dark tbody tr:hover {
+  background-color: var(--surface-hover) !important;
+}
+
+/* 8. Table Action Buttons (Edit & Delete) in Dark Mode */
+.dark td button[title*="تعديل"],
+.dark .group button[title*="تعديل"] {
+  background-color: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: #93B4FA !important;
+  transition: all 0.15s ease;
+}
+
+.dark td button[title*="تعديل"]:hover,
+.dark .group button[title*="تعديل"]:hover {
+  background-color: rgba(36, 91, 219, 0.18) !important;
+  border-color: rgba(36, 91, 219, 0.35) !important;
+  color: #BFDBFE !important;
+}
+
+.dark td button[title*="حذف"],
+.dark .group button[title*="حذف"] {
+  background-color: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: #F8B4A5 !important;
+  transition: all 0.15s ease;
+}
+
+.dark td button[title*="حذف"]:hover,
+.dark .group button[title*="حذف"]:hover {
+  background-color: rgba(229, 138, 114, 0.18) !important;
+  border-color: rgba(229, 138, 114, 0.35) !important;
+  color: #FECDD3 !important;
+}
+
+/* 9. Sidebar Navigation in Dark Mode */
+.dark aside {
+  background-color: var(--surface);
+  border-color: var(--border);
+}
+
+.dark aside nav a:not(.font-semibold) {
+  color: var(--muted-foreground);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.dark aside nav a:not(.font-semibold):hover {
+  background-color: var(--surface-hover) !important;
+  color: var(--foreground) !important;
+}
+
+.dark aside nav a.bg-blue-50 {
+  background-color: rgba(36, 91, 219, 0.15) !important;
+  color: #93B4FA !important;
+  border: 1px solid rgba(36, 91, 219, 0.25);
+}
+
+/* 10. Tinted Badges, Indicators & Buttons in Dark Mode */
+.dark .bg-blue-50 {
+  background-color: rgba(36, 91, 219, 0.12) !important;
+  color: #93B4FA !important;
+}
+
+.dark .border-blue-200,
+.dark .border-blue-100 {
+  border-color: rgba(36, 91, 219, 0.25) !important;
+}
+
+.dark .hover\:bg-blue-50:hover,
+.dark .hover\:bg-blue-100:hover {
+  background-color: rgba(36, 91, 219, 0.22) !important;
+}
+
+.dark .text-blue-600,
+.dark .text-blue-700,
+.dark .text-blue-800,
+.dark .text-blue-900 {
+  color: #93B4FA !important;
+}
+
+/* Rose / Expense */
+.dark .bg-rose-50 {
+  background-color: rgba(229, 138, 114, 0.12) !important;
+  color: #F8B4A5 !important;
+}
+
+.dark .border-rose-200,
+.dark .border-rose-100 {
+  border-color: rgba(229, 138, 114, 0.25) !important;
+}
+
+.dark .hover\:bg-rose-50:hover,
+.dark .hover\:bg-rose-100:hover {
+  background-color: rgba(229, 138, 114, 0.22) !important;
+}
+
+.dark .text-rose-600,
+.dark .text-rose-700 {
+  color: #F8B4A5 !important;
+}
+
+/* Emerald / Income */
+.dark .bg-emerald-50 {
+  background-color: rgba(53, 183, 121, 0.12) !important;
+  color: #8CE0B7 !important;
+}
+
+.dark .border-emerald-200,
+.dark .border-emerald-100 {
+  border-color: rgba(53, 183, 121, 0.25) !important;
+}
+
+.dark .text-emerald-600,
+.dark .text-emerald-700 {
+  color: #8CE0B7 !important;
+}
+
+/* Amber / Warning */
+.dark .bg-amber-50,
+.dark .bg-amber-100 {
+  background-color: rgba(245, 158, 11, 0.12) !important;
+  color: #FCD34D !important;
+}
+
+.dark .border-amber-200,
+.dark .border-amber-300 {
+  border-color: rgba(245, 158, 11, 0.25) !important;
+}
+
+.dark .text-amber-800,
+.dark .text-amber-700,
+.dark .text-amber-900 {
+  color: #FCD34D !important;
 }

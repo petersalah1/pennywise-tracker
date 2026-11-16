@@ -17,14 +17,14 @@ import { useFinance } from "@/context/FinanceContext";
 import { formatEGP } from "@/lib/finance";
 
 const tooltipStyle = {
-  background: "#ffffff",
-  border: "1px solid #e5eae7",
-  borderRadius: 10,
-  color: "#0f1712",
+  backgroundColor: "var(--surface)",
+  borderColor: "var(--border)",
+  borderRadius: 12,
+  color: "var(--foreground)",
   fontSize: 12,
   direction: "rtl" as const,
   textAlign: "right" as const,
-  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+  boxShadow: "0 8px 24px rgba(0, 0, 0, 0.25)",
 };
 
 export function WeeklyChart() {
@@ -75,15 +75,15 @@ export function WeeklyChart() {
       <div className="h-[205px] w-full" dir="ltr">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
-            <CartesianGrid stroke="#e8edea" strokeDasharray="3 5" vertical={false} />
+            <CartesianGrid stroke="var(--border-subtle)" strokeDasharray="3 5" vertical={false} />
             <XAxis
               dataKey="day"
-              tick={{ fill: "#607267", fontSize: 11 }}
+              tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
               axisLine={false}
               tickLine={false}
             />
             <YAxis
-              tick={{ fill: "#607267", fontSize: 10 }}
+              tick={{ fill: "var(--muted-foreground)", fontSize: 10 }}
               axisLine={false}
               tickLine={false}
               tickFormatter={(val) => `${val}`}
@@ -96,7 +96,7 @@ export function WeeklyChart() {
             <Bar
               dataKey="amount"
               name="المصروفات"
-              fill="#2563eb"
+              fill="var(--primary)"
               radius={[6, 6, 0, 0]}
               maxBarSize={34}
             />
